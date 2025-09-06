@@ -166,14 +166,14 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
       icon: Phone,
       title: "Call Us Anytime",
       subtitle: "we're here whenever you need us.",
-      info: "+1 (555) 123-4567",
+      info: "+91-(837)-(431)-(6403)",
       color: "from-orange-500 to-orange-600"
     },
     {
       icon: Mail,
       title: "Email Us Directly", 
       subtitle: "we're here whenever you need us.",
-      info: "info@aris-ai.com",
+      info: "arisinfo.in@gmail.com",
       color: "from-orange-500 to-orange-600"
     },
     {
@@ -254,7 +254,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="text-center space-y-8">
             <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
                 CONTACT US
               </h1>
               <div className="text-2xl md:text-3xl font-bold text-orange-500 mb-8 leading-tight">
@@ -535,7 +535,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                     </div>
                     <div>
                       <div className="font-medium text-white mb-1">Email Address</div>
-                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">info@aris-ai.com</div>
+                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">arisinfo.in@gmail.com</div>
                       <div className="text-orange-500 text-sm mt-1">Response within 24 hours</div>
                     </div>
                   </div>
@@ -546,7 +546,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                     </div>
                     <div>
                       <div className="font-medium text-white mb-1">Phone Number</div>
-                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">+1 (555) 123-4567</div>
+                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">+91-(837)-(431)-(6403)</div>
                       <div className="text-orange-500 text-sm mt-1">Available 9 AM - 6 PM PST</div>
                     </div>
                   </div>
@@ -688,13 +688,13 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Mail className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">info@aris.ai</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">arisinfo.in@gmail.com</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+1 (555) 123-4567</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91-(837)-(431)-(6403)</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">

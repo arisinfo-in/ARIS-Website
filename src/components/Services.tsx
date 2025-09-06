@@ -7,7 +7,7 @@ import {
   Settings, Cpu, Network, BarChart, LineChart, ScatterChart,
   Activity, Gauge, Target as TargetIcon, Rocket, Eye, Lock,
   RefreshCw, Layers, GitBranch, Workflow, Zap as ZapIcon,
-  Linkedin, Twitter, Instagram, Youtube
+  Linkedin, Twitter, Instagram, Youtube, Menu, X
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -42,6 +42,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<'consulting' | 'analytics' | 'ai-solutions' | 'training'>('consulting');
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -72,31 +73,31 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Clear AI Vision', 'Risk Mitigation', 'Competitive Advantage'],
       duration: '4-6 weeks',
       deliverables: ['AI Strategy Document', 'Implementation Timeline', 'Success Metrics'],
-      pricing: 'Starting from $15,000',
+      pricing: 'Starting from ₹12,45,000',
       category: 'consulting'
     },
     {
       id: 'data-governance',
       title: 'Data Governance & Strategy',
-      description: 'Establish robust data governance frameworks for quality, security, and compliance.',
+      description: 'Establish data governance frameworks for quality, security, and compliance.',
       icon: Shield,
       features: ['Data Quality Assessment', 'Compliance Framework', 'Security Protocols'],
       benefits: ['Regulatory Compliance', 'Data Security', 'Operational Efficiency'],
       duration: '6-8 weeks',
       deliverables: ['Data Governance Policy', 'Compliance Checklist', 'Training Materials'],
-      pricing: 'Starting from $12,000',
+      pricing: 'Starting from ₹9,96,000',
       category: 'consulting'
     },
     {
       id: 'digital-transformation',
       title: 'Digital Transformation',
-      description: 'Guide your organization through digital transformation with AI-powered solutions.',
+      description: 'Guide organizations through digital transformation with AI solutions.',
       icon: Rocket,
       features: ['Current State Analysis', 'Technology Assessment', 'Change Management'],
       benefits: ['Operational Efficiency', 'Cost Reduction', 'Market Competitiveness'],
       duration: '8-12 weeks',
       deliverables: ['Transformation Roadmap', 'Technology Stack', 'Success Metrics'],
-      pricing: 'Starting from $25,000',
+      pricing: 'Starting from ₹20,75,000',
       category: 'consulting'
     },
 
@@ -110,7 +111,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Future Insights', 'Risk Mitigation', 'Strategic Planning'],
       duration: '6-10 weeks',
       deliverables: ['Predictive Models', 'Analytics Dashboard', 'Model Documentation'],
-      pricing: 'Starting from $18,000',
+      pricing: 'Starting from ₹14,94,000',
       category: 'analytics'
     },
     {
@@ -122,7 +123,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Data-Driven Decisions', 'Real-time Insights', 'Performance Monitoring'],
       duration: '4-8 weeks',
       deliverables: ['BI Dashboards', 'Automated Reports', 'Data Pipeline'],
-      pricing: 'Starting from $14,000',
+      pricing: 'Starting from ₹11,62,000',
       category: 'analytics'
     },
     {
@@ -134,7 +135,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Improved Understanding', 'Better Communication', 'Faster Insights'],
       duration: '3-6 weeks',
       deliverables: ['Interactive Dashboards', 'Visualization Library', 'Templates'],
-      pricing: 'Starting from $10,000',
+      pricing: 'Starting from ₹8,30,000',
       category: 'analytics'
     },
 
@@ -148,7 +149,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Process Automation', 'Pattern Recognition', 'Scalable Solutions'],
       duration: '8-12 weeks',
       deliverables: ['Trained Models', 'API Integration', 'Performance Metrics'],
-      pricing: 'Starting from $20,000',
+      pricing: 'Starting from ₹16,60,000',
       category: 'ai-solutions'
     },
     {
@@ -160,7 +161,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Automated Analysis', 'Customer Insights', 'Efficiency Gains'],
       duration: '6-10 weeks',
       deliverables: ['NLP Models', 'Analysis Tools', 'API Endpoints'],
-      pricing: 'Starting from $16,000',
+      pricing: 'Starting from ₹13,28,000',
       category: 'ai-solutions'
     },
     {
@@ -172,7 +173,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Automated Inspection', 'Quality Control', 'Security Enhancement'],
       duration: '10-14 weeks',
       deliverables: ['Vision Models', 'Processing Pipeline', 'Integration APIs'],
-      pricing: 'Starting from $22,000',
+      pricing: 'Starting from ₹18,26,000',
       category: 'ai-solutions'
     },
 
@@ -186,7 +187,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Skill Development', 'Team Alignment', 'Knowledge Transfer'],
       duration: '2-8 weeks',
       deliverables: ['Training Materials', 'Project Portfolio', 'Certification'],
-      pricing: 'Starting from $8,000',
+      pricing: 'Starting from ₹6,64,000',
       category: 'training'
     },
     {
@@ -198,7 +199,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Knowledge Sharing', 'Team Building', 'Practical Understanding'],
       duration: '1-3 days',
       deliverables: ['Workshop Materials', 'Action Plans', 'Follow-up Resources'],
-      pricing: 'Starting from $5,000',
+      pricing: 'Starting from ₹4,15,000',
       category: 'training'
     },
     {
@@ -210,7 +211,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
       benefits: ['Expert Guidance', 'Accelerated Learning', 'Risk Mitigation'],
       duration: 'Ongoing',
       deliverables: ['Mentorship Plan', 'Progress Reports', 'Resource Library'],
-      pricing: 'Starting from $3,000/month',
+      pricing: 'Starting from ₹2,49,000/month',
       category: 'training'
     }
   ];
@@ -268,6 +269,8 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
               <Logo size="sm" />
             </div>
           </div>
+          
+          {/* Desktop Navigation */}
           <nav className={`hidden md:flex transform transition-all duration-700 delay-300 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
             <div className="flex space-x-6">
               <button onClick={onNavigateHome} className="text-gray-300 hover:text-orange-400 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full hover:bg-gray-700/50">
@@ -292,6 +295,68 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
               </button>
             </div>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-gray-300 hover:text-orange-400 transition-colors duration-300"
+            aria-label="Toggle mobile menu"
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        <div className={`md:hidden fixed top-20 left-4 right-4 z-40 transition-all duration-300 ${
+          isMobileMenuOpen 
+            ? 'opacity-100 translate-y-0 pointer-events-auto' 
+            : 'opacity-0 -translate-y-4 pointer-events-none'
+        }`}>
+          <div className="bg-gray-800/95 backdrop-blur-sm rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
+            <nav className="py-4">
+              <div className="space-y-2">
+                <button 
+                  onClick={onNavigateHome}
+                  className="w-full text-left px-6 py-3 text-gray-300 hover:text-orange-400 hover:bg-gray-700/50 transition-all duration-300 flex items-center"
+                >
+                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-3"></span>
+                  Home
+                </button>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-full text-left px-6 py-3 text-orange-400 hover:bg-gray-700/50 transition-all duration-300 flex items-center"
+                >
+                  <span className="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
+                  Services
+                </button>
+                <button 
+                  onClick={onNavigateTraining}
+                  className="w-full text-left px-6 py-3 text-gray-300 hover:text-orange-400 hover:bg-gray-700/50 transition-all duration-300 flex items-center"
+                >
+                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-3"></span>
+                  Training
+                </button>
+                <button 
+                  onClick={onNavigateAbout}
+                  className="w-full text-left px-6 py-3 text-gray-300 hover:text-orange-400 hover:bg-gray-700/50 transition-all duration-300 flex items-center"
+                >
+                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-3"></span>
+                  About
+                </button>
+                <button 
+                  onClick={onNavigateContact}
+                  className="w-full text-left px-6 py-3 text-gray-300 hover:text-orange-400 hover:bg-gray-700/50 transition-all duration-300 flex items-center"
+                >
+                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-3"></span>
+                  Contact
+                </button>
+              </div>
+            </nav>
+          </div>
         </div>
       </header>
 
@@ -327,7 +392,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="text-center space-y-8">
             <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
                 OUR SERVICES
               </h1>
               <div className="text-2xl md:text-3xl font-bold text-orange-500 mb-8 leading-tight">
@@ -384,14 +449,14 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
               {activeCategory === 'training' && 'Professional Training Services'}
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              {activeCategory === 'consulting' && 'Expert guidance to develop and implement AI strategies that align with your business objectives'}
+              {activeCategory === 'consulting' && 'Expert guidance to develop and implement AI strategies that align with your businesses.'}
               {activeCategory === 'analytics' && 'Transform your data into actionable insights with cutting-edge analytics solutions'}
               {activeCategory === 'ai-solutions' && 'Custom AI solutions designed to solve your specific business challenges'}
               {activeCategory === 'training' && 'Comprehensive training programs to build AI capabilities within your organization'}
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {(activeCategory === 'consulting' ? consultingServices :
               activeCategory === 'analytics' ? analyticsServices :
               activeCategory === 'ai-solutions' ? aiSolutions :
@@ -400,75 +465,65 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
               return (
                 <div 
                   key={service.id}
-                  className="group bg-gray-700/50 backdrop-blur-sm rounded-3xl p-8 border border-gray-600/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer"
+                  className="group bg-gray-700/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-600/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer"
                   onClick={() => handleServiceSelect(service.id)}
                 >
                   {/* Service Header */}
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300">
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </div>
-                    <div className="text-right">
-                      <div className="text-orange-400 font-bold text-lg">{service.pricing}</div>
-                      <div className="text-gray-400 text-sm">{service.duration}</div>
+                  <div className="flex items-start justify-start mb-5">
+                    <div className="w-14 h-14 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+                      <IconComponent className="w-7 h-7 text-white" />
                     </div>
                   </div>
 
                   {/* Service Title */}
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-orange-400 transition-colors duration-300">
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-orange-400 transition-colors duration-300">
                     {service.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-gray-300 mb-6 leading-relaxed">
+                  <p className="text-gray-300 mb-5 leading-relaxed text-base">
                     {service.description}
                   </p>
 
-                  {/* Features */}
-                  <div className="mb-6">
-                    <h4 className="text-white font-semibold mb-3 flex items-center">
+                  {/* Features - Show only 2 */}
+                  <div className="mb-5">
+                    <h4 className="text-white font-semibold mb-3 flex items-center text-base">
                       <Lightbulb className="w-4 h-4 text-orange-400 mr-2" />
                       Key Features
                     </h4>
-                    <div className="grid grid-cols-2 gap-2">
-                      {service.features.map((feature, featureIndex) => (
+                    <div className="space-y-2">
+                      {service.features.slice(0, 2).map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-center space-x-2 text-sm">
-                          <CheckCircle className="w-3 h-3 text-orange-400 flex-shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-orange-400 flex-shrink-0" />
                           <span className="text-gray-400">{feature}</span>
                         </div>
                       ))}
+                      {service.features.length > 2 && (
+                        <div className="text-sm text-gray-500">
+                          +{service.features.length - 2} more features
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* Benefits */}
-                  <div className="mb-6">
-                    <h4 className="text-white font-semibold mb-3 flex items-center">
+                  {/* Benefits - Show only 2 */}
+                  <div className="mb-5">
+                    <h4 className="text-white font-semibold mb-3 flex items-center text-base">
                       <Star className="w-4 h-4 text-orange-400 mr-2" />
                       Benefits
                     </h4>
                     <div className="space-y-2">
-                      {service.benefits.map((benefit, benefitIndex) => (
+                      {service.benefits.slice(0, 2).map((benefit, benefitIndex) => (
                         <div key={benefitIndex} className="flex items-center space-x-2 text-sm">
-                          <CheckCircle className="w-3 h-3 text-green-400 flex-shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
                           <span className="text-gray-400">{benefit}</span>
                         </div>
                       ))}
-                    </div>
-                  </div>
-
-                  {/* Deliverables */}
-                  <div className="mb-6">
-                    <h4 className="text-white font-semibold mb-3 flex items-center">
-                      <Award className="w-4 h-4 text-orange-400 mr-2" />
-                      Deliverables
-                    </h4>
-                    <div className="space-y-2">
-                      {service.deliverables.map((deliverable, deliverableIndex) => (
-                        <div key={deliverableIndex} className="flex items-center space-x-2 text-sm">
-                          <CheckCircle className="w-3 h-3 text-blue-400 flex-shrink-0" />
-                          <span className="text-gray-400">{deliverable}</span>
+                      {service.benefits.length > 2 && (
+                        <div className="text-sm text-gray-500">
+                          +{service.benefits.length - 2} more benefits
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
 
@@ -478,7 +533,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
                       e.stopPropagation();
                       handleServiceSelect(service.id);
                     }}
-                    className="w-full mt-6 bg-gradient-to-r from-orange-600 to-orange-700 text-white py-3 px-6 rounded-xl font-semibold hover:from-orange-700 hover:to-orange-800 transition-all duration-300 hover:scale-105 hover:shadow-lg group-hover:shadow-orange-500/25 flex items-center justify-center"
+                    className="w-full mt-6 bg-gradient-to-r from-orange-600 to-orange-700 text-white py-3 px-6 rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all duration-300 hover:scale-105 hover:shadow-lg group-hover:shadow-orange-500/25 flex items-center justify-center"
                   >
                     Get Started
                     <ArrowRight className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
@@ -586,17 +641,12 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
             ].map((step, index) => {
               const IconComponent = step.icon;
               return (
-                <div key={index} className="text-center relative">
-                  <div className="w-20 h-20 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 relative z-10">
+                <div key={index} className="text-center">
+                  <div className="w-20 h-20 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
                     <IconComponent className="w-10 h-10 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-3">{step.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{step.description}</p>
-                  
-                  {/* Connecting Line */}
-                  {index < 3 && (
-                    <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-orange-500/30 transform translate-x-4"></div>
-                  )}
                 </div>
               );
             })}
@@ -817,13 +867,13 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Mail className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">info@aris.ai</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">arisinfo.in@gmail.com</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+1 (555) 123-4567</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91-(837)-(431)-(6403)</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
@@ -944,7 +994,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
         <div className="absolute top-1/2 left-10 w-1.5 h-1.5 bg-orange-300 rounded-full animate-pulse opacity-50"></div>
       </footer>
 
-      <style jsx>{`
+      <style>{`
         .bg-grid-pattern {
           background-image: 
             linear-gradient(rgba(249, 115, 22, 0.1) 1px, transparent 1px),
