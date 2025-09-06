@@ -4,7 +4,7 @@ import {
   ArrowRight, Star, Clock, Target, Lightbulb, Shield, Globe,
   ChevronDown, ChevronUp, User, TrendingUp, Code, Database,
   FileSpreadsheet, PieChart, Calendar, MapPin, Phone, Mail,
-  Linkedin, Twitter, Instagram, Youtube
+  Linkedin, Twitter, Instagram, Youtube, Calculator, Cpu
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -69,12 +69,12 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
       description: 'Advanced course on vibe analytics, data preprocessing, and AI models.',
       duration: '2 weeks',
       level: 'Advanced',
-      price: '$1,299',
+      price: '₹5,000',
       icon: Brain,
       features: ['Data Pattern Recognition', 'Predictive Modeling', 'AI Model Training'],
       highlights: ['Hands-on Projects', 'Industry Case Studies', 'Expert Mentorship'],
-      schedule: 'Mon-Fri, 2 hours/day',
-      instructor: 'Dr. Sarah Chen',
+      schedule: 'Mon-Fri, 1.5 hours/day',
+      instructor: 'Syed Shabaz',
       certification: true,
       category: 'main'
     },
@@ -84,12 +84,12 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
       description: 'Comprehensive program combining data analytics with cutting-edge AI technologies.',
       duration: '6 weeks',
       level: 'Intermediate to Advanced',
-      price: '$2,999',
+      price: '₹10,000',
       icon: BarChart3,
       features: ['Statistical Analysis', 'Machine Learning', 'Deep Learning'],
       highlights: ['Project Portfolio', 'Industry Networking', 'Career Guidance'],
-      schedule: 'Mon-Fri, 3 hours/day',
-      instructor: 'Marcus Rodriguez',
+      schedule: 'Mon-Fri, 2 hours/day',
+      instructor: 'Syed Rahman Hussain',
       certification: true,
       category: 'main'
     },
@@ -99,12 +99,12 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
       description: 'Transform data into actionable insights with effective AI prompting techniques.',
       duration: '2 weeks',
       level: 'Beginner to Intermediate',
-      price: '$899',
+      price: '₹5,000',
       icon: Zap,
       features: ['AI Prompt Engineering', 'Tool Integration', 'Workflow Automation'],
       highlights: ['Practical Exercises', 'Tool Access', 'Community Access'],
       schedule: 'Mon-Fri, 1.5 hours/day',
-      instructor: 'Alex Thompson',
+      instructor: 'Mohammed Imtiyaz',
       certification: true,
       category: 'main'
     },
@@ -113,29 +113,29 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
       id: 'excel-data-analysis',
       title: 'Excel Data Analysis',
       description: 'Master Excel for data analysis with advanced formulas and visualization.',
-      duration: '1 week',
+      duration: '2 week',
       level: 'Beginner to Intermediate',
-      price: '$499',
+      price: '₹5,000',
       icon: FileSpreadsheet,
       features: ['Advanced Formulas', 'Pivot Tables', 'Data Visualization'],
       highlights: ['Practical Workbook', 'Real Data Sets', 'Excel Certification'],
       schedule: 'Mon-Fri, 2 hours/day',
-      instructor: 'Emily Watson',
+      instructor: 'Syed Rahman Hussain',
       certification: true,
       category: 'additional'
     },
     {
       id: 'power-bi-analyst',
       title: 'Power BI Data Analyst',
-      description: 'Convert huge data into actionable insights with Power BI data visualization and interactive dashboards.',
+      description: 'Convert data into actionable insights with Power BI visualization and interactive dashboards.',
       duration: '2 weeks',
       level: 'Intermediate',
-      price: '$799',
+      price: '₹8,000',
       icon: PieChart,
       features: ['Data Modeling', 'DAX Formulas', 'Dashboard Design'],
       highlights: ['Project Portfolio', 'Power BI Pro Access', 'Microsoft Certification Prep'],
       schedule: 'Mon-Fri, 2 hours/day',
-      instructor: 'Marcus Rodriguez',
+      instructor: 'Syed Rahman Hussain',
       certification: true,
       category: 'additional'
     },
@@ -145,12 +145,12 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
       description: 'Master Python programming for data analysis and visualization.',
       duration: '3 weeks',
       level: 'Intermediate',
-      price: '$1,199',
+      price: '₹8,000',
       icon: Code,
       features: ['Python Fundamentals', 'Pandas & NumPy', 'Data Visualization'],
       highlights: ['Coding Projects', 'Jupyter Notebooks', 'Portfolio Building'],
       schedule: 'Mon-Fri, 2.5 hours/day',
-      instructor: 'Dr. Sarah Chen',
+      instructor: 'Syed Rahman Hussain',
       certification: true,
       category: 'additional'
     },
@@ -160,12 +160,42 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
       description: 'Learn SQL fundamentals and database design for data analysis.',
       duration: '2 weeks',
       level: 'Beginner to Intermediate',
-      price: '$699',
+      price: '₹5,000',
       icon: Database,
       features: ['SQL Fundamentals', 'Database Design', 'Query Optimization'],
       highlights: ['Database Projects', 'Real-world Scenarios', 'Performance Tuning'],
       schedule: 'Mon-Fri, 2 hours/day',
-      instructor: 'Alex Thompson',
+      instructor: 'Syed Rahman Hussain',
+      certification: true,
+      category: 'additional'
+    },
+    {
+      id: 'statistical-analysis',
+      title: 'Statistical Analysis',
+      description: 'Master statistical methods and hypothesis testing for data-driven decision making.',
+      duration: '2 weeks',
+      level: 'Intermediate to Advanced',
+      price: '₹5,000',
+      icon: Calculator,
+      features: ['Hypothesis Testing', 'Regression Analysis', 'Statistical Modeling'],
+      highlights: ['Statistical Software Access', 'Real Data Projects', 'Advanced Certification'],
+      schedule: 'Mon-Fri, 2.5 hours/day',
+      instructor: 'Mohammed Imtiyaz',
+      certification: true,
+      category: 'additional'
+    },
+    {
+      id: 'machine-learning-models',
+      title: 'Machine Learning Models',
+      description: 'Build and deploy machine learning models for predictive analytics and automation.',
+      duration: '2 weeks',
+      level: 'Advanced',
+      price: '₹5,000',
+      icon: Cpu,
+      features: ['Model Development', 'Algorithm Selection', 'Model Deployment'],
+      highlights: ['ML Project Portfolio', 'Cloud Platform Access', 'Industry Certification'],
+      schedule: 'Mon-Fri, 3 hours/day',
+      instructor: 'Mohammed Imtiyaz',
       certification: true,
       category: 'additional'
     }
@@ -287,7 +317,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="text-center space-y-8">
             <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
                 TRAINING PROGRAMS
               </h1>
               <div className="text-2xl md:text-3xl font-bold text-orange-500 mb-8 leading-tight">
@@ -348,88 +378,98 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {(activeCategory === 'main' ? mainPrograms : additionalPrograms).map((program, index) => {
               const IconComponent = program.icon;
               return (
                 <div 
                   key={program.id}
-                  className="group bg-gray-700/50 backdrop-blur-sm rounded-3xl p-8 border border-gray-600/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer"
+                  className="group bg-gray-700/50 backdrop-blur-sm rounded-2xl p-4 border border-gray-600/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer"
                   onClick={() => handleProgramSelect(program.id)}
                 >
                   {/* Program Header */}
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300">
-                      <IconComponent className="w-8 h-8 text-white" />
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+                      <IconComponent className="w-6 h-6 text-white" />
                     </div>
                     <div className="text-right">
-                      <div className="text-orange-400 font-bold text-lg">{program.price}</div>
-                      <div className="text-gray-400 text-sm">{program.duration}</div>
+                      <div className="text-orange-400 font-bold text-sm">{program.price}</div>
+                      <div className="text-gray-400 text-xs">{program.duration}</div>
                     </div>
                   </div>
 
                   {/* Program Title & Level */}
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors duration-300">
+                  <h3 className="text-lg font-bold text-white mb-3 group-hover:text-orange-400 transition-colors duration-300">
                     {program.title}
                   </h3>
-                  <div className="flex items-center space-x-4 mb-4">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-600/20 text-orange-400 border border-orange-500/30">
+                  <div className="flex flex-col space-y-2 mb-3">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-600/20 text-orange-400 border border-orange-500/30">
                       <Target className="w-3 h-3 mr-1" />
                       {program.level}
                     </span>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-600/20 text-blue-400 border border-blue-500/30">
                       <Clock className="w-3 h-3 mr-1" />
                       {program.schedule}
                     </span>
                   </div>
 
                   {/* Description */}
-                  <p className="text-gray-300 mb-6 leading-relaxed">
+                  <p className="text-gray-300 mb-4 leading-relaxed text-sm">
                     {program.description}
                   </p>
 
-                  {/* Features */}
-                  <div className="mb-6">
-                    <h4 className="text-white font-semibold mb-3 flex items-center">
-                      <Lightbulb className="w-4 h-4 text-orange-400 mr-2" />
+                  {/* Features - Show only 1 */}
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2 flex items-center text-sm">
+                      <Lightbulb className="w-3 h-3 text-orange-400 mr-1" />
                       Key Features
                     </h4>
-                    <div className="grid grid-cols-2 gap-2">
-                      {program.features.map((feature, featureIndex) => (
-                        <div key={featureIndex} className="flex items-center space-x-2 text-sm">
+                    <div className="space-y-1">
+                      {program.features.slice(0, 1).map((feature, featureIndex) => (
+                        <div key={featureIndex} className="flex items-center space-x-2 text-xs">
                           <CheckCircle className="w-3 h-3 text-orange-400 flex-shrink-0" />
                           <span className="text-gray-400">{feature}</span>
                         </div>
                       ))}
+                      {program.features.length > 1 && (
+                        <div className="text-xs text-gray-500">
+                          +{program.features.length - 1} more features
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* Highlights */}
-                  <div className="mb-6">
-                    <h4 className="text-white font-semibold mb-3 flex items-center">
-                      <Star className="w-4 h-4 text-orange-400 mr-2" />
+                  {/* Highlights - Show only 1 */}
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold mb-2 flex items-center text-sm">
+                      <Star className="w-3 h-3 text-orange-400 mr-1" />
                       What You'll Get
                     </h4>
-                    <div className="space-y-2">
-                      {program.highlights.map((highlight, highlightIndex) => (
-                        <div key={highlightIndex} className="flex items-center space-x-2 text-sm">
+                    <div className="space-y-1">
+                      {program.highlights.slice(0, 1).map((highlight, highlightIndex) => (
+                        <div key={highlightIndex} className="flex items-center space-x-2 text-xs">
                           <CheckCircle className="w-3 h-3 text-green-400 flex-shrink-0" />
                           <span className="text-gray-400">{highlight}</span>
                         </div>
                       ))}
+                      {program.highlights.length > 1 && (
+                        <div className="text-xs text-gray-500">
+                          +{program.highlights.length - 1} more benefits
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   {/* Instructor & Certification */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-600/50">
-                    <div className="flex items-center space-x-2">
-                      <User className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-400 text-sm">{program.instructor}</span>
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-600/50 mb-3">
+                    <div className="flex items-center space-x-1">
+                      <User className="w-3 h-3 text-gray-400" />
+                      <span className="text-gray-400 text-xs">{program.instructor}</span>
                     </div>
                     {program.certification && (
-                      <div className="flex items-center space-x-2">
-                        <Award className="w-4 h-4 text-orange-400" />
-                        <span className="text-orange-400 text-sm font-medium">Certified</span>
+                      <div className="flex items-center space-x-1">
+                        <Award className="w-3 h-3 text-orange-400" />
+                        <span className="text-orange-400 text-xs font-medium">Certified</span>
                       </div>
                     )}
                   </div>
@@ -440,10 +480,10 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                       e.stopPropagation();
                       handleProgramSelect(program.id);
                     }}
-                    className="w-full mt-6 bg-gradient-to-r from-orange-600 to-orange-700 text-white py-3 px-6 rounded-xl font-semibold hover:from-orange-700 hover:to-orange-800 transition-all duration-300 hover:scale-105 hover:shadow-lg group-hover:shadow-orange-500/25 flex items-center justify-center"
+                    className="w-full mt-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white py-2 px-4 rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all duration-300 hover:scale-105 hover:shadow-lg group-hover:shadow-orange-500/25 flex items-center justify-center text-sm"
                   >
                     Enroll Now
-                    <ArrowRight className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+                    <ArrowRight className="ml-1 w-3 h-3 transform group-hover:translate-x-1 transition-transform duration-300" />
                   </button>
                 </div>
               );
@@ -726,13 +766,13 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Mail className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">info@aris.ai</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">arisinfo.in@gmail.com</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+1 (555) 123-4567</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91-(837)-(431)-(6403)</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">

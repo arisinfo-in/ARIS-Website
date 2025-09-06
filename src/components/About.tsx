@@ -158,27 +158,27 @@ const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavi
 
   const teamMembers: TeamMember[] = [
     {
-      name: "Dr. Sarah Chen",
-      role: "Chief AI Officer & Lead Instructor",
-      expertise: ["Machine Learning", "Neural Networks", "AI Ethics"],
+      name: "Syed Shabaz",
+      role: "CEO & Founder",
+      expertise: ["Strategic Leadership", "Business Development", "Operational Excellence"],
       avatar: "Brain"
     },
     {
-      name: "Marcus Rodriguez",
-      role: "Head of Data Science",
-      expertise: ["Data Analytics", "Statistical Modeling", "Big Data"],
+      name: "Syed Rahman Hussain",
+      role: "Lead AI Data Analyst",
+      expertise: ["Business Intelligence", "Statistical Modeling", "AI Analytics & Visualization"],
       avatar: "BarChart3"
     },
     {
-      name: "Dr. Emily Watson",
-      role: "AI Research Director",
-      expertise: ["Deep Learning", "Computer Vision", "NLP"],
+      name: "Mohammed Imtiyaz",
+      role: "AI Data Engineer",
+      expertise: ["Data Governance & Security", "Data Pipeline Development", "Big Data & Cloud Ecosystems"],
       avatar: "BookOpen"
     },
     {
-      name: "Alex Thompson",
+      name: "Adnan Syed",
       role: "Senior AI Engineer",
-      expertise: ["AI Architecture", "System Integration", "Cloud AI"],
+      expertise: ["MLOps & Deployment", "Research & Innovation", "Leadership & Mentorship"],
       avatar: "Zap"
     }
   ];
@@ -320,7 +320,7 @@ const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavi
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="text-center space-y-8">
             <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
                 ABOUT ARIS
               </h1>
               <div className="text-2xl md:text-3xl font-bold text-orange-500 mb-8 leading-tight">
@@ -797,13 +797,13 @@ const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavi
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Mail className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">info@aris.ai</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">arisinfo.in@gmail.com</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+1 (555) 123-4567</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91-(837)-(431)-(6403)</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
