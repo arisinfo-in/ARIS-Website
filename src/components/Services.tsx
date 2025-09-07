@@ -3,7 +3,7 @@ import {
   Brain, BarChart3, Users, CheckCircle, ArrowRight, Star, 
   Target, Lightbulb, Shield, Globe, ChevronDown, ChevronUp,
   TrendingUp, MapPin, Phone, Mail, MessageSquare, User,
-  Settings, Rocket, Eye,
+  Settings, Rocket, Eye, PieChart,
   Linkedin, Twitter, Instagram, Youtube, Menu, X
 } from 'lucide-react';
 import Logo from './Logo';

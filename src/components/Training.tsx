@@ -3,7 +3,7 @@ import {
   Brain, BarChart3, Zap, BookOpen, Users, Award, CheckCircle, 
   ArrowRight, Star, Target, Lightbulb, Shield, Globe,
   ChevronDown, ChevronUp, User, TrendingUp, Code, Database,
-  FileSpreadsheet, PieChart, MapPin, Phone, Mail,
+  FileSpreadsheet, PieChart, MapPin, Phone, Mail, Clock,
   Linkedin, Twitter, Instagram, Youtube, Calculator, Cpu,
   Menu, X
 } from 'lucide-react';
