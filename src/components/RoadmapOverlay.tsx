@@ -694,16 +694,16 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
         </div>
 
         {/* Sticky Header */}
-        <header className="sticky top-0 z-20 bg-gray-900/90 backdrop-blur-sm border-b border-gray-700 px-4 md:px-6 py-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+        <header className="sticky top-0 z-20 bg-gray-900/90 backdrop-blur-sm border-b border-gray-700 px-3 md:px-6 py-3 md:py-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
             <div className="flex-1">
-              <h1 id="roadmap-title" className="text-xl md:text-2xl font-bold text-white mb-1">
+              <h1 id="roadmap-title" className="text-lg md:text-2xl font-bold text-white mb-1">
                 {roadmapType === 'course' && 'Course Roadmap - Data Analytics & AI'}
                 {roadmapType === 'career' && 'Career Roadmap - Professional Growth'}
                 {roadmapType === 'project' && 'Project Roadmap - Real-World Applications'}
                 {roadmapType === 'domain' && 'Domain Roadmap - Industry Specialization'}
               </h1>
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-400 text-xs md:text-sm">
                 {roadmapType === 'course' && 'Your complete learning journey from beginner to AI data analyst'}
                 {roadmapType === 'career' && 'Strategic career progression and role advancement path'}
                 {roadmapType === 'project' && 'Hands-on projects to build your portfolio and expertise'}
@@ -720,7 +720,7 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
                   placeholder="Search stages, tools..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 text-sm md:text-base"
+                  className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 text-sm"
                 />
               </div>
             </div>
@@ -733,43 +733,80 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
                 className="p-2 hover:bg-gray-800 rounded-lg transition-colors duration-300 group"
                 aria-label="Close roadmap"
               >
-                <X className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors duration-300" />
+                <X className="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-white transition-colors duration-300" />
               </button>
             </div>
           </div>
 
-          {/* Mini Navigation - Two Row Layout */}
-          <nav className="mt-4 grid grid-cols-2 md:grid-cols-6 gap-2 pb-2 md:pb-0">
-            {roadmapStages.map((stage) => (
+          {/* Mini Navigation - Mobile Optimized */}
+          <nav className="mt-3 md:mt-4 grid grid-cols-1 md:grid-cols-6 gap-2 pb-2 md:pb-0">
+            {/* Mobile: Single column with horizontal scroll */}
+            <div className="md:hidden flex space-x-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+              {roadmapStages.map((stage) => (
+                <button
+                  key={stage.id}
+                  onClick={() => scrollToSection(stage.id)}
+                  className={`px-3 py-2 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 whitespace-nowrap text-center flex-shrink-0 ${
+                    activeSection === stage.id
+                      ? 'bg-orange-600 text-white shadow-lg'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  {stage.title}
+                </button>
+              ))}
+              {/* Start Journey Button */}
               <button
-                key={stage.id}
-                onClick={() => scrollToSection(stage.id)}
-                className={`px-3 py-2 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 whitespace-nowrap text-center ${
-                  activeSection === stage.id
-                    ? 'bg-orange-600 text-white shadow-lg'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
+                onClick={() => {
+                  const footerElement = document.querySelector('.roadmap-footer-cta');
+                  if (footerElement && contentRef.current) {
+                    const container = contentRef.current;
+                    const elementTop = (footerElement as HTMLElement).offsetTop - 180;
+                    container.scrollTo({
+                      top: Math.max(0, elementTop),
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+                className="px-3 py-2 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 whitespace-nowrap text-center bg-gradient-to-r from-orange-600 to-purple-600 text-white hover:from-orange-700 hover:to-purple-700 shadow-lg flex-shrink-0"
               >
-                {stage.title}
+                Start Journey
               </button>
-            ))}
-            {/* Start Journey Button */}
-            <button
-              onClick={() => {
-                const footerElement = document.querySelector('.roadmap-footer-cta');
-                if (footerElement && contentRef.current) {
-                  const container = contentRef.current;
-                  const elementTop = (footerElement as HTMLElement).offsetTop - 180; // Account for sticky header
-                  container.scrollTo({
-                    top: Math.max(0, elementTop),
-                    behavior: 'smooth'
-                  });
-                }
-              }}
-              className="px-3 py-2 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 whitespace-nowrap text-center bg-gradient-to-r from-orange-600 to-purple-600 text-white hover:from-orange-700 hover:to-purple-700 shadow-lg"
-            >
-              Start Journey
-            </button>
+            </div>
+            
+            {/* Desktop: Grid layout */}
+            <div className="hidden md:contents">
+              {roadmapStages.map((stage) => (
+                <button
+                  key={stage.id}
+                  onClick={() => scrollToSection(stage.id)}
+                  className={`px-3 py-2 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 whitespace-nowrap text-center ${
+                    activeSection === stage.id
+                      ? 'bg-orange-600 text-white shadow-lg'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
+                >
+                  {stage.title}
+                </button>
+              ))}
+              {/* Start Journey Button */}
+              <button
+                onClick={() => {
+                  const footerElement = document.querySelector('.roadmap-footer-cta');
+                  if (footerElement && contentRef.current) {
+                    const container = contentRef.current;
+                    const elementTop = (footerElement as HTMLElement).offsetTop - 180;
+                    container.scrollTo({
+                      top: Math.max(0, elementTop),
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+                className="px-3 py-2 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 whitespace-nowrap text-center bg-gradient-to-r from-orange-600 to-purple-600 text-white hover:from-orange-700 hover:to-purple-700 shadow-lg"
+              >
+                Start Journey
+              </button>
+            </div>
           </nav>
         </header>
 
@@ -779,7 +816,7 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
           className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
           style={{ height: 'calc(100vh - 180px)' }}
         >
-          <div className="px-4 md:px-6 py-6 md:py-8 space-y-6 md:space-y-8">
+          <div className="px-3 md:px-6 py-4 md:py-8 space-y-4 md:space-y-8">
             {/* Roadmap Stages */}
             {filteredStages.map((stage, index) => {
               const IconComponent = stage.icon;
@@ -792,75 +829,75 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
                     if (el) sectionRefs.current.set(stage.id, el);
                   }}
                   data-section-id={stage.id}
-                  className={`roadmap-stage group bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-4 md:p-8 transition-all duration-700 hover:shadow-xl hover:shadow-orange-500/10 hover:border-orange-500/30 ${
+                  className={`roadmap-stage group bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl md:rounded-2xl p-3 md:p-8 transition-all duration-700 hover:shadow-xl hover:shadow-orange-500/10 hover:border-orange-500/30 ${
                     isVisible ? 'fade-up opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div className="flex flex-col md:flex-row md:items-start space-y-4 md:space-y-0 md:space-x-6">
+                  <div className="flex flex-col md:flex-row md:items-start space-y-3 md:space-y-0 md:space-x-6">
                     {/* Stage Icon */}
                     <div className="flex-shrink-0 flex justify-center md:justify-start">
-                      <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                        <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                      <div className="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg md:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <IconComponent className="w-5 h-5 md:w-8 md:h-8 text-white" />
                       </div>
                     </div>
 
                     {/* Stage Content */}
-                    <div className="flex-1 space-y-4">
+                    <div className="flex-1 space-y-3 md:space-y-4">
                       {/* Header */}
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
                         <div>
-                          <h2 className="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-orange-400 transition-colors duration-300">
+                          <h2 className="text-lg md:text-2xl font-bold text-white mb-2 group-hover:text-orange-400 transition-colors duration-300">
                             {stage.title}
                           </h2>
-                          <div className="flex flex-wrap items-center gap-2 mb-2">
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getLevelColor(stage.level)} flex items-center space-x-1`}>
+                          <div className="flex flex-wrap items-center gap-1 md:gap-2 mb-2">
+                            <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium border ${getLevelColor(stage.level)} flex items-center space-x-1`}>
                               <span>{stage.level.charAt(0).toUpperCase() + stage.level.slice(1)}</span>
                             </span>
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(stage.difficulty)} flex items-center space-x-1`}>
+                            <span className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(stage.difficulty)} flex items-center space-x-1`}>
                               {getDifficultyIcon(stage.difficulty)}
                               <span>{stage.difficulty.charAt(0).toUpperCase() + stage.difficulty.slice(1)}</span>
                             </span>
-                            <span className="px-3 py-1 rounded-full text-xs font-medium border bg-gray-700/50 text-gray-300 border-gray-600 flex items-center space-x-1">
+                            <span className="px-2 md:px-3 py-1 rounded-full text-xs font-medium border bg-gray-700/50 text-gray-300 border-gray-600 flex items-center space-x-1">
                               <Clock className="w-3 h-3" />
                               <span>{stage.duration}</span>
                             </span>
-                            <span className="px-3 py-1 rounded-full text-xs font-medium border bg-gray-700/50 text-gray-300 border-gray-600 flex items-center space-x-1">
+                            <span className="px-2 md:px-3 py-1 rounded-full text-xs font-medium border bg-gray-700/50 text-gray-300 border-gray-600 flex items-center space-x-1">
                               <Target className="w-3 h-3" />
                               <span>{stage.estimatedHours}h</span>
                             </span>
                           </div>
                         </div>
                         {stage.cta && (
-                          <button className="px-4 py-2 bg-orange-600 text-white rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors duration-300 flex items-center space-x-2 w-fit">
+                          <button className="px-3 md:px-4 py-2 bg-orange-600 text-white rounded-lg text-xs md:text-sm font-medium hover:bg-orange-700 transition-colors duration-300 flex items-center space-x-2 w-fit">
                             <span>{stage.cta}</span>
-                            <ChevronRight className="w-4 h-4" />
+                            <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
                           </button>
                         )}
                       </div>
 
                       {/* Description */}
-                      <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+                      <p className="text-gray-300 text-sm md:text-lg leading-relaxed">
                         {stage.description}
                       </p>
 
-                      {/* Enhanced Information Grid */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                      {/* Enhanced Information Grid - Mobile Optimized */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                         {/* Tools */}
                         <div>
-                          <h3 className="text-sm font-semibold text-orange-400 mb-3 uppercase tracking-wide flex items-center space-x-2">
-                            <Layers className="w-4 h-4" />
+                          <h3 className="text-xs md:text-sm font-semibold text-orange-400 mb-2 md:mb-3 uppercase tracking-wide flex items-center space-x-1 md:space-x-2">
+                            <Layers className="w-3 h-3 md:w-4 md:h-4" />
                             <span>Key Tools</span>
                           </h3>
-                          <div className="space-y-2">
+                          <div className="space-y-1 md:space-y-2">
                             {stage.tools.map((tool, toolIndex) => (
                               <div 
                                 key={toolIndex}
                                 className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-300 group"
                                 style={{ transitionDelay: `${(index * 100) + (toolIndex * 50)}ms` }}
                               >
-                                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full group-hover:scale-150 transition-transform duration-300"></div>
-                                <span className="text-sm">{tool}</span>
+                                <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-orange-500 rounded-full group-hover:scale-150 transition-transform duration-300"></div>
+                                <span className="text-xs md:text-sm">{tool}</span>
                               </div>
                             ))}
                           </div>
@@ -868,19 +905,19 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
 
                         {/* Outcomes */}
                         <div>
-                          <h3 className="text-sm font-semibold text-green-400 mb-3 uppercase tracking-wide flex items-center space-x-2">
-                            <Award className="w-4 h-4" />
+                          <h3 className="text-xs md:text-sm font-semibold text-green-400 mb-2 md:mb-3 uppercase tracking-wide flex items-center space-x-1 md:space-x-2">
+                            <Award className="w-3 h-3 md:w-4 md:h-4" />
                             <span>Learning Outcomes</span>
                           </h3>
-                          <div className="space-y-2">
+                          <div className="space-y-1 md:space-y-2">
                             {stage.outcomes.map((outcome, outcomeIndex) => (
                               <div 
                                 key={outcomeIndex}
                                 className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-300 group"
                                 style={{ transitionDelay: `${(index * 100) + (outcomeIndex * 50)}ms` }}
                               >
-                                <Star className="w-3 h-3 text-green-500 group-hover:scale-110 transition-transform duration-300" />
-                                <span className="text-sm">{outcome}</span>
+                                <Star className="w-2.5 h-2.5 md:w-3 md:h-3 text-green-500 group-hover:scale-110 transition-transform duration-300" />
+                                <span className="text-xs md:text-sm">{outcome}</span>
                               </div>
                             ))}
                           </div>
@@ -888,19 +925,19 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
 
                         {/* Projects */}
                         <div>
-                          <h3 className="text-sm font-semibold text-blue-400 mb-3 uppercase tracking-wide flex items-center space-x-2">
-                            <Rocket className="w-4 h-4" />
+                          <h3 className="text-xs md:text-sm font-semibold text-blue-400 mb-2 md:mb-3 uppercase tracking-wide flex items-center space-x-1 md:space-x-2">
+                            <Rocket className="w-3 h-3 md:w-4 md:h-4" />
                             <span>Projects</span>
                           </h3>
-                          <div className="space-y-2">
+                          <div className="space-y-1 md:space-y-2">
                             {stage.projects?.map((project, projectIndex) => (
                               <div 
                                 key={projectIndex}
                                 className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-300 group"
                                 style={{ transitionDelay: `${(index * 100) + (projectIndex * 50)}ms` }}
                               >
-                                <FileText className="w-3 h-3 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
-                                <span className="text-sm">{project}</span>
+                                <FileText className="w-2.5 h-2.5 md:w-3 md:h-3 text-blue-500 group-hover:scale-110 transition-transform duration-300" />
+                                <span className="text-xs md:text-sm">{project}</span>
                               </div>
                             ))}
                           </div>
@@ -909,16 +946,16 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
 
                       {/* Prerequisites */}
                       {stage.prerequisites && stage.prerequisites.length > 0 && (
-                        <div className="mt-4">
-                          <h3 className="text-sm font-semibold text-purple-400 mb-3 uppercase tracking-wide flex items-center space-x-2">
-                            <ArrowUp className="w-4 h-4" />
+                        <div className="mt-3 md:mt-4">
+                          <h3 className="text-xs md:text-sm font-semibold text-purple-400 mb-2 md:mb-3 uppercase tracking-wide flex items-center space-x-1 md:space-x-2">
+                            <ArrowUp className="w-3 h-3 md:w-4 md:h-4" />
                             <span>Prerequisites</span>
                           </h3>
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-1 md:gap-2">
                             {stage.prerequisites.map((prereq, prereqIndex) => (
                               <span 
                                 key={prereqIndex}
-                                className="px-3 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded-full text-xs font-medium hover:bg-purple-500/30 transition-colors duration-300"
+                                className="px-2 md:px-3 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded-full text-xs font-medium hover:bg-purple-500/30 transition-colors duration-300"
                               >
                                 {prereq}
                               </span>
@@ -933,10 +970,10 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
             })}
 
             {/* Footer CTA */}
-            <div className="text-center py-8 md:py-12 roadmap-footer-cta">
-              <div className="bg-gradient-to-r from-orange-600 to-purple-600 rounded-2xl p-6 md:p-8 text-white">
-                <h3 className="text-xl md:text-2xl font-bold mb-4">Ready to Start Your Journey?</h3>
-                <p className="text-base md:text-lg mb-6 opacity-90">
+            <div className="text-center py-6 md:py-12 roadmap-footer-cta">
+              <div className="bg-gradient-to-r from-orange-600 to-purple-600 rounded-xl md:rounded-2xl p-4 md:p-8 text-white">
+                <h3 className="text-lg md:text-2xl font-bold mb-3 md:mb-4">Ready to Start Your Journey?</h3>
+                <p className="text-sm md:text-lg mb-4 md:mb-6 opacity-90">
                   Join thousands of professionals who have transformed their careers with our AI data analytics training.
                 </p>
                 <button 
@@ -945,10 +982,10 @@ const RoadmapOverlay: React.FC<RoadmapOverlayProps> = ({ isOpen, onClose, roadma
                       onNavigateContact();
                     }
                   }}
-                  className="px-6 md:px-8 py-3 md:py-4 bg-white text-orange-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300 flex items-center space-x-2 mx-auto"
+                  className="px-4 md:px-8 py-2 md:py-4 bg-white text-orange-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300 flex items-center space-x-2 mx-auto text-sm md:text-base"
                 >
                   <span>Get Started Today</span>
-                  <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+                  <ChevronRight className="w-3 h-3 md:w-5 md:h-5" />
                 </button>
               </div>
             </div>

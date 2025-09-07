@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Brain, BarChart3, Zap, Users, CheckCircle, ArrowRight, Star, 
-  Clock, Target, Lightbulb, Shield, Globe, ChevronDown, ChevronUp,
-  TrendingUp, Code, Database, FileSpreadsheet, PieChart, Calendar,
-  MapPin, Phone, Mail, MessageSquare, Award, BookOpen, User,
-  Settings, Cpu, Network, BarChart, LineChart, ScatterChart,
-  Activity, Gauge, Target as TargetIcon, Rocket, Eye, Lock,
-  RefreshCw, Layers, GitBranch, Workflow, Zap as ZapIcon,
+  Brain, BarChart3, Users, CheckCircle, ArrowRight, Star, 
+  Target, Lightbulb, Shield, Globe, ChevronDown, ChevronUp,
+  TrendingUp, MapPin, Phone, Mail, MessageSquare, User,
+  Settings, Rocket, Eye,
   Linkedin, Twitter, Instagram, Youtube, Menu, X
 } from 'lucide-react';
 import Logo from './Logo';
@@ -22,7 +19,7 @@ interface ServiceItem {
   id: string;
   title: string;
   description: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   features: string[];
   benefits: string[];
   duration: string;
@@ -420,7 +417,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
                 return (
                   <button
                     key={category.id}
-                    onClick={() => setActiveCategory(category.id as any)}
+                    onClick={() => setActiveCategory(category.id as 'consulting' | 'analytics' | 'ai-solutions' | 'training')}
                     className={`flex items-center space-x-2 px-6 py-3 rounded-full transition-all duration-300 ${
                       activeCategory === category.id
                         ? 'bg-orange-600 text-white shadow-lg shadow-orange-500/25'
@@ -460,7 +457,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
             {(activeCategory === 'consulting' ? consultingServices :
               activeCategory === 'analytics' ? analyticsServices :
               activeCategory === 'ai-solutions' ? aiSolutions :
-              trainingServices).map((service, index) => {
+              trainingServices).map((service) => {
               const IconComponent = service.icon;
               return (
                 <div 

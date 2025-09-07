@@ -209,23 +209,23 @@ const RoadmapSelectionModal: React.FC<RoadmapSelectionModalProps> = ({
 
       {/* Main Modal Content */}
       <div 
-        className="relative w-full max-w-6xl mx-2 sm:mx-4 bg-gray-900/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-gray-700 shadow-2xl overflow-hidden"
+        className="relative w-full max-w-6xl mx-1 sm:mx-4 bg-gray-900/95 backdrop-blur-xl rounded-xl sm:rounded-3xl border border-gray-700 shadow-2xl overflow-hidden max-h-[90vh] sm:max-h-none"
         role="dialog"
         aria-modal="true"
         aria-labelledby="roadmap-selection-title"
       >
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-gray-800 to-gray-900 px-3 sm:px-4 py-3 sm:py-4 border-b border-gray-700">
+        <div className="relative bg-gradient-to-r from-gray-800 to-gray-900 px-2 sm:px-4 py-2 sm:py-4 border-b border-gray-700">
           <button
             onClick={onClose}
-            className="absolute top-2 right-2 p-2 hover:bg-gray-800 rounded-lg transition-colors duration-300 group"
+            className="absolute top-1 right-1 sm:top-2 sm:right-2 p-1.5 sm:p-2 hover:bg-gray-800 rounded-lg transition-colors duration-300 group"
             aria-label="Close roadmap selection"
           >
             <X className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-300" />
           </button>
           
-          <div className="text-center">
-            <h1 id="roadmap-selection-title" className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1">
+          <div className="text-center pr-8 sm:pr-0">
+            <h1 id="roadmap-selection-title" className="text-base sm:text-xl md:text-2xl font-bold text-white mb-1">
               Choose Your AI Data Analyst Journey
             </h1>
             <p className="text-gray-300 text-xs sm:text-sm max-w-2xl mx-auto">
@@ -235,8 +235,8 @@ const RoadmapSelectionModal: React.FC<RoadmapSelectionModalProps> = ({
         </div>
 
         {/* Roadmap Cards Grid */}
-        <div className="p-3 sm:p-4 md:p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="p-1 sm:p-4 md:p-6 overflow-y-auto max-h-[calc(90vh-120px)] sm:max-h-none">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-1.5 sm:gap-4">
             {roadmapTypes.map((roadmap, index) => {
               const IconComponent = roadmap.icon;
               const isHovered = hoveredCard === roadmap.id;
@@ -247,7 +247,7 @@ const RoadmapSelectionModal: React.FC<RoadmapSelectionModalProps> = ({
                   onMouseEnter={() => setHoveredCard(roadmap.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                   onClick={() => onSelectRoadmap(roadmap.id)}
-                  className={`group relative bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg sm:rounded-xl p-3 sm:p-4 cursor-pointer transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:border-${roadmap.color}-500/50 ${
+                  className={`group relative bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg sm:rounded-xl p-1.5 sm:p-4 cursor-pointer transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:border-${roadmap.color}-500/50 ${
                     isHovered ? `shadow-${roadmap.color}-500/20` : ''
                   }`}
                   style={{ 
@@ -256,41 +256,41 @@ const RoadmapSelectionModal: React.FC<RoadmapSelectionModalProps> = ({
                   }}
                 >
                   {/* Card Header */}
-                  <div className="flex items-center justify-start mb-2 sm:mb-3">
-                    <div className={`w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br ${roadmap.gradient} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                      <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  <div className="flex items-center justify-start mb-1 sm:mb-3">
+                    <div className={`w-6 h-6 sm:w-10 sm:h-10 bg-gradient-to-br ${roadmap.gradient} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                      <IconComponent className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
                     </div>
                   </div>
 
                   {/* Card Content */}
-                  <div className="space-y-2 sm:space-y-3">
-                    <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-orange-400 transition-colors duration-300">
+                  <div className="space-y-1 sm:space-y-3">
+                    <h3 className="text-xs sm:text-lg font-bold text-white group-hover:text-orange-400 transition-colors duration-300">
                       {roadmap.title}
                     </h3>
-                    <p className="text-gray-300 text-xs sm:text-sm leading-relaxed line-clamp-2">
+                    <p className="text-gray-300 text-xs sm:text-sm leading-tight line-clamp-2">
                       {roadmap.description}
                     </p>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-3 gap-1 sm:gap-2 py-2">
+                    <div className="grid grid-cols-3 gap-0.5 sm:gap-2 py-0.5 sm:py-2">
                       <div className="text-center">
-                        <div className="text-sm sm:text-lg font-bold text-orange-400">{roadmap.stats.stages}</div>
+                        <div className="text-xs sm:text-lg font-bold text-orange-400">{roadmap.stats.stages}</div>
                         <div className="text-xs text-gray-400">Stages</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-sm sm:text-lg font-bold text-blue-400">{roadmap.stats.hours}+</div>
+                        <div className="text-xs sm:text-lg font-bold text-blue-400">{roadmap.stats.hours}+</div>
                         <div className="text-xs text-gray-400">Hours</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-sm sm:text-lg font-bold text-green-400">{roadmap.stats.projects}+</div>
+                        <div className="text-xs sm:text-lg font-bold text-green-400">{roadmap.stats.projects}+</div>
                         <div className="text-xs text-gray-400">Projects</div>
                       </div>
                     </div>
 
                     {/* Features - Only show 1 feature */}
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       <div className="flex items-center space-x-1 text-xs text-gray-400">
-                        <CheckCircle className="w-3 h-3 text-green-500" />
+                        <CheckCircle className="w-2 h-2 sm:w-3 sm:h-3 text-green-500" />
                         <span className="truncate">{roadmap.features[0]}</span>
                       </div>
                       {roadmap.features.length > 1 && (
@@ -301,9 +301,9 @@ const RoadmapSelectionModal: React.FC<RoadmapSelectionModalProps> = ({
                     </div>
 
                     {/* CTA Button */}
-                    <button className="w-full mt-2 px-2 sm:px-3 py-2 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all duration-300 flex items-center justify-center space-x-1 group-hover:shadow-lg text-xs sm:text-sm">
+                    <button className="w-full mt-0.5 sm:mt-2 px-1.5 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all duration-300 flex items-center justify-center space-x-1 group-hover:shadow-lg text-xs sm:text-sm">
                       <span>Explore</span>
-                      <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
+                      <ArrowRight className="w-2 h-2 sm:w-3 sm:h-3 group-hover:translate-x-1 transition-transform duration-300" />
                     </button>
                   </div>
 

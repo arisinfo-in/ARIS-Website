@@ -49,7 +49,6 @@ export default defineConfig({
       'framer-motion',
       'axios',
     ],
-    exclude: ['lucide-react'],
   },
   
   // Server configuration for development

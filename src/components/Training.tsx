@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Brain, BarChart3, Zap, BookOpen, Users, Award, CheckCircle, 
-  ArrowRight, Star, Clock, Target, Lightbulb, Shield, Globe,
+  ArrowRight, Star, Target, Lightbulb, Shield, Globe,
   ChevronDown, ChevronUp, User, TrendingUp, Code, Database,
-  FileSpreadsheet, PieChart, Calendar, MapPin, Phone, Mail,
+  FileSpreadsheet, PieChart, MapPin, Phone, Mail,
   Linkedin, Twitter, Instagram, Youtube, Calculator, Cpu,
   Menu, X
 } from 'lucide-react';
@@ -23,7 +23,7 @@ interface TrainingProgram {
   duration: string;
   level: string;
   price: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   features: string[];
   highlights: string[];
   schedule: string;
@@ -237,18 +237,18 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
   };
 
   // Smooth scroll to section function
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const headerHeight = 100; // Approximate height of the fixed header
-      const elementPosition = element.offsetTop - headerHeight;
+  // const scrollToSection = (sectionId: string) => {
+  //   const element = document.getElementById(sectionId);
+  //   if (element) {
+  //     const headerHeight = 100; // Approximate height of the fixed header
+  //     const elementPosition = element.offsetTop - headerHeight;
       
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
+  //     window.scrollTo({
+  //       top: elementPosition,
+  //       behavior: 'smooth'
+  //     });
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gray-900 overflow-x-hidden">
@@ -438,7 +438,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {(activeCategory === 'main' ? mainPrograms : additionalPrograms).map((program, index) => {
+            {(activeCategory === 'main' ? mainPrograms : additionalPrograms).map((program) => {
               const IconComponent = program.icon;
               return (
                 <div 

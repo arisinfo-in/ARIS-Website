@@ -92,7 +92,7 @@ export const usePerformance = () => {
 };
 
 // Preload critical resources
-export const preloadCriticalResources = () => {
+export const usePreloadCriticalResources = () => {
   useEffect(() => {
     // Preload critical fonts
     const fontLink = document.createElement('link');
