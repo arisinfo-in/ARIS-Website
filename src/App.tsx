@@ -1,6 +1,6 @@
 import React, { useState, Suspense } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
-import { usePerformance, preloadCriticalResources } from './hooks/usePerformance';
+import { usePerformance, usePreloadCriticalResources } from './hooks/usePerformance';
 import SEO from './components/SEO';
 import GoogleAnalytics from './components/GoogleAnalytics';
 import PerformanceMonitor from './components/PerformanceMonitor';
@@ -19,7 +19,7 @@ function App() {
   
   // Performance monitoring
   usePerformance();
-  preloadCriticalResources();
+  usePreloadCriticalResources();
 
   const navigateToHome = () => {
     setCurrentPage('home');

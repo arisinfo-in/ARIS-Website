@@ -241,18 +241,18 @@ const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavi
   };
 
   // Smooth scroll to section function
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const headerHeight = 100; // Approximate height of the fixed header
-      const elementPosition = element.offsetTop - headerHeight;
+  // const scrollToSection = (sectionId: string) => {
+  //   const element = document.getElementById(sectionId);
+  //   if (element) {
+  //     const headerHeight = 100; // Approximate height of the fixed header
+  //     const elementPosition = element.offsetTop - headerHeight;
       
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
+  //     window.scrollTo({
+  //       top: elementPosition,
+  //       behavior: 'smooth'
+  //     });
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gray-900 overflow-x-hidden">
