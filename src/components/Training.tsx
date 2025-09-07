@@ -4,7 +4,8 @@ import {
   ArrowRight, Star, Clock, Target, Lightbulb, Shield, Globe,
   ChevronDown, ChevronUp, User, TrendingUp, Code, Database,
   FileSpreadsheet, PieChart, Calendar, MapPin, Phone, Mail,
-  Linkedin, Twitter, Instagram, Youtube, Calculator, Cpu
+  Linkedin, Twitter, Instagram, Youtube, Calculator, Cpu,
+  Menu, X
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -42,6 +43,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<'main' | 'additional'>('main');
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -282,8 +284,65 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
               </button>
             </div>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-gray-300 hover:text-orange-400 transition-colors duration-300"
+            aria-label="Toggle mobile menu"
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
         </div>
       </header>
+
+      {/* Mobile Navigation Menu */}
+      <div className={`md:hidden fixed top-20 left-4 right-4 z-40 transition-all duration-300 ${
+        isMobileMenuOpen 
+          ? 'opacity-100 translate-y-0 pointer-events-auto' 
+          : 'opacity-0 -translate-y-4 pointer-events-none'
+      }`}>
+        <div className="bg-gray-800/95 backdrop-blur-sm rounded-2xl border border-gray-700 shadow-xl p-6">
+          <nav className="flex flex-col space-y-4">
+            <button 
+              onClick={() => { onNavigateHome(); setIsMobileMenuOpen(false); }}
+              className="text-gray-300 hover:text-orange-400 transition-all duration-300 hover:scale-105 relative group px-4 py-3 rounded-full hover:bg-gray-700/50 text-left"
+            >
+              Home
+              <span className="absolute bottom-2 left-4 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
+            </button>
+            <button 
+              onClick={() => { onNavigateServices(); setIsMobileMenuOpen(false); }}
+              className="text-gray-300 hover:text-orange-400 transition-all duration-300 hover:scale-105 relative group px-4 py-3 rounded-full hover:bg-gray-700/50 text-left"
+            >
+              Services
+              <span className="absolute bottom-2 left-4 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
+            </button>
+            <button className="text-orange-400 relative group px-4 py-3 rounded-full bg-gray-700/50 text-left">
+              Training
+              <span className="absolute bottom-2 left-4 w-6 h-0.5 bg-orange-500"></span>
+            </button>
+            <button 
+              onClick={() => { onNavigateAbout(); setIsMobileMenuOpen(false); }}
+              className="text-gray-300 hover:text-orange-400 transition-all duration-300 hover:scale-105 relative group px-4 py-3 rounded-full hover:bg-gray-700/50 text-left"
+            >
+              About
+              <span className="absolute bottom-2 left-4 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
+            </button>
+            <button 
+              onClick={() => { onNavigateContact(); setIsMobileMenuOpen(false); }}
+              className="text-gray-300 hover:text-orange-400 transition-all duration-300 hover:scale-105 relative group px-4 py-3 rounded-full hover:bg-gray-700/50 text-left"
+            >
+              Contact
+              <span className="absolute bottom-2 left-4 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
+            </button>
+          </nav>
+        </div>
+      </div>
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-black py-32 mt-20 relative overflow-hidden">
