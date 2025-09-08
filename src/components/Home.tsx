@@ -4,6 +4,8 @@ import Logo from './Logo';
 import GoogleAnalytics from './GoogleAnalytics';
 import RoadmapOverlay from './RoadmapOverlay';
 import RoadmapSelectionModal from './RoadmapSelectionModal';
+import ArticleOverlay from './ArticleOverlay';
+import ArticleSelectionModal from './ArticleSelectionModal';
 
 interface HomeProps {
   onNavigateAbout: () => void;
@@ -31,6 +33,9 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
   const [isRoadmapSelectionOpen, setIsRoadmapSelectionOpen] = useState(false);
   const [isRoadmapOpen, setIsRoadmapOpen] = useState(false);
   const [selectedRoadmapType, setSelectedRoadmapType] = useState<string>('course');
+  const [isArticleSelectionOpen, setIsArticleSelectionOpen] = useState(false);
+  const [isArticleOpen, setIsArticleOpen] = useState(false);
+  const [selectedArticleType, setSelectedArticleType] = useState<string>('ai-analytics-future');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -807,6 +812,179 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         </div>
       </section>
 
+      {/* Blog Section */}
+      <section id="blog" className="py-16 sm:py-20 bg-gradient-to-br from-gray-900 to-black relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              linear-gradient(rgba(249, 115, 22, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(249, 115, 22, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px'
+          }}></div>
+        </div>
+        
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <div className="text-center mb-12 sm:mb-16">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">Latest Insights</h3>
+            <p className="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg">
+              Stay updated with the latest trends and insights in AI Data Analytics
+            </p>
+          </div>
+
+          <div className="space-y-8 sm:space-y-12">
+            {/* Featured Article */}
+            <div className="group">
+              <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gray-700/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+                {/* Deep Orange Blur Behind Card */}
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-orange-600/15 to-orange-700/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 scale-110"></div>
+                
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                    <Brain className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <span className="text-orange-400 text-sm font-medium">Featured Article</span>
+                    <div className="text-gray-400 text-xs">December 2024</div>
+                  </div>
+                </div>
+                
+                <h4 className="text-xl sm:text-2xl font-bold text-white mb-4 group-hover:text-orange-400 transition-colors duration-300">
+                  The Future of AI Data Analytics: Transforming Business Intelligence
+                </h4>
+                
+                <p className="text-gray-300 mb-6 leading-relaxed text-sm sm:text-base">
+                  Discover how AI-powered data analytics is revolutionizing the way businesses make decisions. 
+                  From predictive modeling to real-time insights, explore the cutting-edge technologies that are 
+                  shaping the future of business intelligence and data-driven decision making.
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-orange-500" />
+                    </div>
+                    <span className="text-gray-400 text-sm">Syed Rahman Hussain</span>
+                  </div>
+                  <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    <span className="flex items-center">
+                      <TrendingUp className="w-4 h-4 mr-1" />
+                      5 min read
+                    </span>
+                    <span className="flex items-center">
+                      <Star className="w-4 h-4 mr-1" />
+                      4.9
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t border-gray-700/50">
+                  <div className="flex flex-wrap gap-2">
+                    {['AI Analytics', 'Business Intelligence', 'Data Science', 'Machine Learning'].map((tag, index) => (
+                      <span key={index} className="px-3 py-1 bg-orange-600/20 text-orange-400 text-xs rounded-full border border-orange-500/30">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Articles */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              <div className="group">
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/8 to-orange-700/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 scale-110"></div>
+                  
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                      <BarChart3 className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-orange-400 text-xs font-medium">Analytics</span>
+                  </div>
+                  
+                  <h5 className="text-lg font-bold text-white mb-3 group-hover:text-orange-400 transition-colors duration-300">
+                    Mastering Data Visualization with Genrative AI.
+                  </h5>
+                  
+                  <p className="text-gray-400 mb-4 text-sm leading-relaxed">
+                    Learn how to create compelling data visualizations that tell a story and drive actionable insights.
+                  </p>
+                  
+                  <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span>3 min read</span>
+                    <span>Dec 15, 2024</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group">
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/8 to-orange-700/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 scale-110"></div>
+                  
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                      <Zap className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-orange-400 text-xs font-medium">AI Tools</span>
+                  </div>
+                  
+                  <h5 className="text-lg font-bold text-white mb-3 group-hover:text-orange-400 transition-colors duration-300">
+                    Prompt Engineering for Data Analysis.
+                  </h5>
+                  
+                  <p className="text-gray-400 mb-4 text-sm leading-relaxed">
+                    Discover advanced prompting techniques to get better results from AI tools in your data analysis workflow.
+                  </p>
+                  
+                  <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span>4 min read</span>
+                    <span>Dec 12, 2024</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group">
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/8 to-orange-700/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 scale-110"></div>
+                  
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                      <Users className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-orange-400 text-xs font-medium">Career</span>
+                  </div>
+                  
+                  <h5 className="text-lg font-bold text-white mb-3 group-hover:text-orange-400 transition-colors duration-300">
+                    Building a Career in AI Data Analytics.
+                  </h5>
+                  
+                  <p className="text-gray-400 mb-4 text-sm leading-relaxed">
+                    Discover the essential skills and career paths for aspiring Genrative AI data analysts in 2025 and beyond.
+                  </p>
+                  
+                  <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span>6 min read</span>
+                    <span>Dec 10, 2024</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* View All Articles Button */}
+          <div className="text-center mt-12 sm:mt-16">
+            <button 
+              onClick={() => setIsArticleSelectionOpen(true)}
+              className="group bg-gradient-to-r from-orange-600 to-orange-700 text-white px-8 py-4 rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center justify-center mx-auto"
+            >
+              View All Articles
+              <ArrowRight className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* About Section */}
       <section id="about" className="py-16 sm:py-20 bg-gray-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-900/20 to-transparent"></div>
@@ -1296,9 +1474,37 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
       {/* Roadmap Overlay */}
       <RoadmapOverlay 
         isOpen={isRoadmapOpen} 
-        onClose={() => setIsRoadmapOpen(false)}
+        onClose={() => {
+          setIsRoadmapOpen(false);
+          setIsRoadmapSelectionOpen(true);
+        }}
         roadmapType={selectedRoadmapType}
         onNavigateContact={onNavigateContact}
+      />
+
+      {/* Article Selection Modal */}
+      <ArticleSelectionModal 
+        isOpen={isArticleSelectionOpen} 
+        onClose={() => setIsArticleSelectionOpen(false)}
+        onSelectArticle={(articleType) => {
+          setSelectedArticleType(articleType);
+          setIsArticleSelectionOpen(false);
+          setIsArticleOpen(true);
+        }}
+      />
+      
+      {/* Article Overlay */}
+      <ArticleOverlay 
+        isOpen={isArticleOpen} 
+        onClose={() => {
+          setIsArticleOpen(false);
+          setIsArticleSelectionOpen(true);
+        }}
+        articleType={selectedArticleType}
+        onNavigateContact={onNavigateContact}
+        onNavigateToArticle={(articleId) => {
+          setSelectedArticleType(articleId);
+        }}
       />
     </div>
   );
