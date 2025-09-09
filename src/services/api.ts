@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// API base URL - change this to your backend URL in production
+// API base URL - using Vercel API routes
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-backend-domain.com' 
+  ? '' // Use relative URLs for Vercel API routes
   : 'http://localhost:5001';
 
 // Create axios instance with default config
@@ -17,11 +17,12 @@ const api = axios.create({
 // Request interceptor for logging
 api.interceptors.request.use(
   (config) => {
-    console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
+    console.log('📤 Request data:', JSON.stringify(config.data, null, 2));
     return config;
   },
   (error) => {
-    console.error('API Request Error:', error);
+    console.error('❌ API Request Error:', error);
     return Promise.reject(error);
   }
 );
@@ -29,10 +30,18 @@ api.interceptors.request.use(
 // Response interceptor for error handling
 api.interceptors.response.use(
   (response) => {
+    console.log(`✅ API Response: ${response.status} ${response.config.url}`);
+    console.log('📥 Response data:', response.data);
     return response;
   },
   (error) => {
-    console.error('API Response Error:', error.response?.data || error.message);
+    console.error('❌ API Response Error:', error.response?.data || error.message);
+    console.error('🔍 Error details:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      url: error.config?.url,
+      method: error.config?.method
+    });
     
     // Handle different error types
     if (error.response?.status === 429) {
@@ -114,7 +123,7 @@ export const apiService = {
 
   // Submit roadmap selection
   async submitRoadmapSelection(data: RoadmapData): Promise<ApiResponse> {
-    const response = await api.post('/api/roadmap/selection', data);
+    const response = await api.post('/api/roadmap', data);
     return response.data;
   },
 };

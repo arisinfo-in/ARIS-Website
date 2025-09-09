@@ -128,6 +128,8 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🚀 Home contact form submission started');
+    console.log('📝 Form data:', JSON.stringify(formData, null, 2));
     setFormStatus('submitting');
     
     // Basic validation
@@ -137,12 +139,14 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     if (!formData.message.trim()) errors.message = 'Message is required';
     
     if (Object.keys(errors).length > 0) {
+      console.log('❌ Validation errors:', errors);
       setFormErrors(errors);
       setFormStatus('idle');
       return;
     }
     
     try {
+      console.log('📤 Submitting home contact form to API...');
       // Import API service dynamically to avoid circular imports
       const { apiService } = await import('../services/api');
       
@@ -150,6 +154,8 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         ...formData,
         source: 'home'
       });
+      
+      console.log('✅ API response:', response);
       
       if (response.success) {
         setFormStatus('success');
@@ -162,18 +168,27 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         throw new Error(response.message || 'Form submission failed');
       }
     } catch (error) {
+      console.error('❌ Home contact form submission error:', error);
+      console.error('❌ Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        error: error
+      });
       setFormStatus('error');
-      console.error('Form submission error:', error);
     }
   };
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🚀 Newsletter subscription started');
+    console.log('📧 Email:', newsletterEmail);
+    
     if (!newsletterEmail.trim()) return;
     
     setNewsletterStatus('submitting');
     
     try {
+      console.log('📤 Submitting newsletter subscription to API...');
       // Import API service dynamically to avoid circular imports
       const { apiService } = await import('../services/api');
       
@@ -181,6 +196,8 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         email: newsletterEmail,
         source: 'home'
       });
+      
+      console.log('✅ Newsletter API response:', response);
       
       if (response.success) {
         setNewsletterStatus('success');
@@ -192,8 +209,13 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         throw new Error(response.message || 'Newsletter subscription failed');
       }
     } catch (error) {
+      console.error('❌ Newsletter subscription error:', error);
+      console.error('❌ Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        error: error
+      });
       setNewsletterStatus('error');
-      console.error('Newsletter subscription error:', error);
     }
   };
 
@@ -1075,7 +1097,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                     </div>
                     <div>
                       <div className="font-medium text-white text-sm sm:text-base">Phone</div>
-                      <div className="text-gray-400 text-xs sm:text-sm">+91-(837)-(431)-(6403)</div>
+                      <div className="text-gray-400 text-xs sm:text-sm">+91 8374316403</div>
                     </div>
                   </div>
                   <div className="flex items-center group hover:bg-gray-700 hover:shadow-md rounded-lg p-3 sm:p-4 transition-all duration-300 cursor-pointer">
@@ -1084,7 +1106,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                     </div>
                     <div>
                       <div className="font-medium text-white text-sm sm:text-base">Location</div>
-                      <div className="text-gray-400 text-xs sm:text-sm">San Francisco, CA</div>
+                      <div className="text-gray-400 text-xs sm:text-sm">Hyderabad, INDIA</div>
                     </div>
                   </div>
                 </div>
@@ -1095,7 +1117,12 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                 {/* Status Messages */}
                 {formStatus === 'success' && (
                   <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-green-600/20 border border-green-500/50 rounded-lg">
-                    <p className="text-green-400 text-center text-sm sm:text-base">Thank you! Your message has been sent successfully.</p>
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="animate-pulse">
+                        <Logo size="sm" />
+                      </div>
+                      <p className="text-green-400 text-center text-sm sm:text-base">Thank you! Your message has been sent successfully.</p>
+                    </div>
                   </div>
                 )}
                 
@@ -1191,8 +1218,10 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   >
                     {formStatus === 'submitting' ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Sending...
+                        <div className="animate-spin mr-2">
+                          <Logo size="sm" />
+                        </div>
+                        <span>Processing your message...</span>
                       </>
                     ) : (
                       <>
@@ -1244,7 +1273,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-xs sm:text-sm">+91-(837)-(431)-(6403)</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-xs sm:text-sm">+91 8374316403</span>
                 </div>
                 <div className="flex items-center space-x-2 sm:space-x-3 group cursor-pointer">
                   <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
@@ -1344,8 +1373,10 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   >
                     {newsletterStatus === 'submitting' ? (
                       <>
-                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
-                        Subscribing...
+                        <div className="animate-spin mr-2">
+                          <Logo size="sm" />
+                        </div>
+                        <span>Subscribing you...</span>
                       </>
                     ) : (
                       <>
@@ -1358,7 +1389,12 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   {/* Newsletter Status Messages */}
                   {newsletterStatus === 'success' && (
                     <div className="p-2 bg-green-600/20 border border-green-500/50 rounded-lg">
-                      <p className="text-green-400 text-center text-xs sm:text-sm">Successfully subscribed!</p>
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="animate-pulse">
+                          <Logo size="sm" />
+                        </div>
+                        <p className="text-green-400 text-center text-xs sm:text-sm">Successfully subscribed!</p>
+                      </div>
                     </div>
                   )}
                   

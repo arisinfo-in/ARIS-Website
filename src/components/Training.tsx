@@ -44,6 +44,18 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
   const [activeCategory, setActiveCategory] = useState<'main' | 'additional'>('main');
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    phone: '',
+    course: '',
+    message: ''
+  });
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setIsVisible(true);
@@ -234,6 +246,71 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
     setTimeout(() => {
       document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    
+    if (formErrors[e.target.name]) {
+      setFormErrors({
+        ...formErrors,
+        [e.target.name]: ''
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('🚀 Training form submission started');
+    console.log('📝 Form data:', JSON.stringify(formData, null, 2));
+    setFormStatus('submitting');
+    
+    const errors: Record<string, string> = {};
+    if (!formData.name.trim()) errors.name = 'Name is required';
+    if (!formData.email.trim()) errors.email = 'Email is required';
+    if (!formData.message.trim()) errors.message = 'Message is required';
+    
+    if (Object.keys(errors).length > 0) {
+      console.log('❌ Validation errors:', errors);
+      setFormErrors(errors);
+      setFormStatus('idle');
+      return;
+    }
+    
+    try {
+      console.log('📤 Submitting training form to API...');
+      // Import API service dynamically to avoid circular imports
+      const { apiService } = await import('../services/api');
+      
+      const response = await apiService.submitContactForm({
+        ...formData,
+        source: 'training'
+      });
+      
+      console.log('✅ API response:', response);
+      
+      if (response.success) {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', company: '', phone: '', course: '', message: '' });
+        setFormErrors({});
+        
+        // Reset success message after 5 seconds
+        setTimeout(() => setFormStatus('idle'), 5000);
+      } else {
+        throw new Error(response.message || 'Form submission failed');
+      }
+    } catch (error) {
+      console.error('❌ Training form submission error:', error);
+      console.error('❌ Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        error: error
+      });
+      setFormStatus('error');
+    }
   };
 
   // Smooth scroll to section function
@@ -703,7 +780,25 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
           </div>
 
           <div className="bg-gray-700/50 backdrop-blur-sm rounded-3xl p-8 border border-gray-600/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl">
-            <form className="space-y-6">
+            {/* Status Messages */}
+            {formStatus === 'success' && (
+              <div className="mb-6 p-4 bg-green-600/20 border border-green-500/50 rounded-lg">
+                <div className="flex items-center justify-center space-x-3">
+                  <div className="animate-pulse">
+                    <Logo size="sm" />
+                  </div>
+                  <p className="text-green-400 text-center">Thank you! Your application has been submitted successfully.</p>
+                </div>
+              </div>
+            )}
+            
+            {formStatus === 'error' && (
+              <div className="mb-6 p-4 bg-red-600/20 border border-red-500/50 rounded-lg">
+                <p className="text-red-400 text-center">Something went wrong. Please try again.</p>
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="group">
                   <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-3 group-focus-within:text-orange-500 transition-colors duration-300">
@@ -713,10 +808,17 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                     type="text"
                     id="name"
                     name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                     required
-                    className="w-full px-6 py-4 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 hover:border-orange-400 bg-gray-700/50 backdrop-blur-sm text-white placeholder-gray-400"
+                    className={`w-full px-6 py-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 hover:border-orange-400 bg-gray-700/50 backdrop-blur-sm text-white placeholder-gray-400 ${
+                      formErrors.name ? 'border-red-500' : 'border-gray-600'
+                    }`}
                     placeholder="Enter your full name"
                   />
+                  {formErrors.name && (
+                    <p className="mt-1 text-sm text-red-400">{formErrors.name}</p>
+                  )}
                 </div>
                 
                 <div className="group">
@@ -727,10 +829,17 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                     type="email"
                     id="email"
                     name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     required
-                    className="w-full px-6 py-4 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 hover:border-orange-400 bg-gray-700/50 backdrop-blur-sm text-white placeholder-gray-400"
+                    className={`w-full px-6 py-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 hover:border-orange-400 bg-gray-700/50 backdrop-blur-sm text-white placeholder-gray-400 ${
+                      formErrors.email ? 'border-red-500' : 'border-gray-600'
+                    }`}
                     placeholder="Enter your email address"
                   />
+                  {formErrors.email && (
+                    <p className="mt-1 text-sm text-red-400">{formErrors.email}</p>
+                  )}
                 </div>
               </div>
 
@@ -743,6 +852,8 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                     type="tel"
                     id="phone"
                     name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
                     className="w-full px-6 py-4 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 hover:border-orange-400 bg-gray-700/50 backdrop-blur-sm text-white placeholder-gray-400"
                     placeholder="Your phone number"
                   />
@@ -753,11 +864,11 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                     Program of Interest *
                   </label>
                   <select
-                    id="program"
-                    name="program"
+                    id="course"
+                    name="course"
                     required
-                    value={selectedProgram || ''}
-                    onChange={(e) => setSelectedProgram(e.target.value)}
+                    value={formData.course}
+                    onChange={handleInputChange}
                     className="w-full px-6 py-4 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 hover:border-orange-400 bg-gray-700/50 backdrop-blur-sm text-white"
                   >
                     <option value="">Select a program</option>
@@ -777,18 +888,42 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                 <textarea
                   id="message"
                   name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
                   rows={4}
-                  className="w-full px-6 py-4 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 hover:border-orange-400 resize-none bg-gray-700/50 backdrop-blur-sm text-white placeholder-gray-400"
+                  required
+                  className={`w-full px-6 py-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 hover:border-orange-400 resize-none bg-gray-700/50 backdrop-blur-sm text-white placeholder-gray-400 ${
+                    formErrors.message ? 'border-red-500' : 'border-gray-600'
+                  }`}
                   placeholder="Tell us about your goals, experience level, or any questions you have..."
                 ></textarea>
+                {formErrors.message && (
+                  <p className="mt-1 text-sm text-red-400">{formErrors.message}</p>
+                )}
               </div>
               
               <button
                 type="submit"
-                className="w-full py-4 px-8 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg group flex items-center justify-center text-lg bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 shadow-lg hover:shadow-orange-500/25"
+                disabled={formStatus === 'submitting'}
+                className={`w-full py-4 px-8 rounded-xl font-semibold transition-all duration-300 group flex items-center justify-center text-lg ${
+                  formStatus === 'submitting' 
+                    ? 'bg-gray-600 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 shadow-lg hover:shadow-orange-500/25 hover:scale-105 hover:shadow-lg'
+                }`}
               >
-                Submit Application
-                <ArrowRight className="ml-3 w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" />
+                {formStatus === 'submitting' ? (
+                  <>
+                    <div className="animate-spin mr-3">
+                      <Logo size="sm" />
+                    </div>
+                    <span>Processing your application...</span>
+                  </>
+                ) : (
+                  <>
+                    Submit Application
+                    <ArrowRight className="ml-3 w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" />
+                  </>
+                )}
               </button>
             </form>
           </div>
@@ -831,7 +966,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91-(837)-(431)-(6403)</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91 8374316403</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">

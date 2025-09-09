@@ -5,6 +5,10 @@ class EmailService {
   private transporter: nodemailer.Transporter;
 
   constructor() {
+    console.log('🔧 Initializing email service...');
+    console.log('📧 Email service:', process.env.EMAIL_SERVICE);
+    console.log('📧 Email user:', process.env.EMAIL_USER);
+    console.log('📧 Contact email:', process.env.CONTACT_EMAIL);
     this.transporter = this.createTransporter();
   }
 
@@ -13,9 +17,15 @@ class EmailService {
     if (process.env.EMAIL_SERVICE === 'gmail') {
       return nodemailer.createTransport({
         service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS
+        },
+        tls: {
+          rejectUnauthorized: false
         }
       });
     }
@@ -128,7 +138,14 @@ class EmailService {
       text: emailData.text
     };
 
+    console.log('📧 Sending email:', {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject
+    });
+
     await this.transporter.sendMail(mailOptions);
+    console.log('✅ Email sent successfully');
   }
 
   private generateContactFormHTML(data: ContactFormData): string {

@@ -86,6 +86,8 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🚀 Contact form submission started');
+    console.log('📝 Form data:', JSON.stringify(formData, null, 2));
     setFormStatus('submitting');
     
     const errors: Record<string, string> = {};
@@ -94,23 +96,42 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
     if (!formData.message.trim()) errors.message = 'Message is required';
     
     if (Object.keys(errors).length > 0) {
+      console.log('❌ Validation errors:', errors);
       setFormErrors(errors);
       setFormStatus('idle');
       return;
     }
     
     try {
-      console.log('Form submitted:', formData);
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      console.log('📤 Submitting contact form to API...');
+      // Import API service dynamically to avoid circular imports
+      const { apiService } = await import('../services/api');
       
-      setFormStatus('success');
-      setFormData({ name: '', email: '', company: '', phone: '', service: '', message: '' });
-      setFormErrors({});
+      const response = await apiService.submitContactForm({
+        ...formData,
+        source: 'contact'
+      });
       
-      setTimeout(() => setFormStatus('idle'), 5000);
+      console.log('✅ API response:', response);
+      
+      if (response.success) {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', company: '', phone: '', service: '', message: '' });
+        setFormErrors({});
+        
+        // Reset success message after 5 seconds
+        setTimeout(() => setFormStatus('idle'), 5000);
+      } else {
+        throw new Error(response.message || 'Form submission failed');
+      }
     } catch (error) {
+      console.error('❌ Contact form submission error:', error);
+      console.error('❌ Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        error: error
+      });
       setFormStatus('error');
-      console.error('Form submission error:', error);
     }
   };
 
@@ -169,7 +190,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
       icon: Phone,
       title: "Call Us Anytime",
       subtitle: "we're here whenever you need us.",
-      info: "+91-(837)-(431)-(6403)",
+      info: "+91 8374316403",
       color: "from-orange-500 to-orange-600"
     },
     {
@@ -410,7 +431,9 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
               {formStatus === 'success' && (
                 <div className="p-6 bg-green-600/20 border border-green-500/50 rounded-2xl backdrop-blur-sm">
                   <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-6 h-6 text-green-400" />
+                    <div className="animate-pulse">
+                      <Logo size="sm" />
+                    </div>
                     <div>
                       <p className="text-green-400 font-medium">Thank you! Your submission has been received!</p>
                       <p className="text-green-300 text-sm mt-1">We'll get back to you within 24 hours.</p>
@@ -565,8 +588,10 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                   >
                     {formStatus === 'submitting' ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                        Sending Message...
+                        <div className="animate-spin mr-3">
+                          <Logo size="sm" />
+                        </div>
+                        <span>Processing your message...</span>
                       </>
                     ) : (
                       <>
@@ -606,7 +631,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                     </div>
                     <div>
                       <div className="font-medium text-white mb-1">Phone Number</div>
-                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">+91-(837)-(431)-(6403)</div>
+                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">+91 8374316403</div>
                       <div className="text-orange-500 text-sm mt-1">Available 9 AM - 6 PM PST</div>
                     </div>
                   </div>
@@ -754,7 +779,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91-(837)-(431)-(6403)</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91 8374316403</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
