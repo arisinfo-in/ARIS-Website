@@ -951,12 +951,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
                 }`}
               >
                 {formStatus === 'submitting' ? (
-                  <>
-                    <div className="animate-spin mr-3">
-                      <Logo size="sm" />
-                    </div>
-                    <span>Processing your request...</span>
-                  </>
+                  'Submitting...'
                 ) : (
                   <>
                     Submit Request

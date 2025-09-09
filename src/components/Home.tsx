@@ -1217,12 +1217,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                     }`}
                   >
                     {formStatus === 'submitting' ? (
-                      <>
-                        <div className="animate-spin mr-2">
-                          <Logo size="sm" />
-                        </div>
-                        <span>Processing your message...</span>
-                      </>
+                      'Sending...'
                     ) : (
                       <>
                         Send Message
@@ -1372,12 +1367,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                     }`}
                   >
                     {newsletterStatus === 'submitting' ? (
-                      <>
-                        <div className="animate-spin mr-2">
-                          <Logo size="sm" />
-                        </div>
-                        <span>Subscribing you...</span>
-                      </>
+                      'Subscribing...'
                     ) : (
                       <>
                         Subscribe

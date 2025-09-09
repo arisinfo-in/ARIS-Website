@@ -912,12 +912,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                 }`}
               >
                 {formStatus === 'submitting' ? (
-                  <>
-                    <div className="animate-spin mr-3">
-                      <Logo size="sm" />
-                    </div>
-                    <span>Processing your application...</span>
-                  </>
+                  'Submitting...'
                 ) : (
                   <>
                     Submit Application

@@ -587,12 +587,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                     }`}
                   >
                     {formStatus === 'submitting' ? (
-                      <>
-                        <div className="animate-spin mr-3">
-                          <Logo size="sm" />
-                        </div>
-                        <span>Processing your message...</span>
-                      </>
+                      'Sending...'
                     ) : (
                       <>
                         Send Message
