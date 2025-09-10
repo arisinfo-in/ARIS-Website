@@ -283,15 +283,21 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
     }
     
     try {
-      // Import API service dynamically to avoid circular imports
-      const { apiService } = await import('../services/api');
-      
-      const response = await apiService.submitContactForm({
-        ...formData,
-        source: 'training'
+      // Direct API call instead of dynamic import
+      const response = await fetch('http://localhost:5001/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          source: 'training'
+        })
       });
       
-      if (response.success) {
+      const data = await response.json();
+      
+      if (data.success) {
         setFormStatus('success');
         setFormData({ name: '', email: '', company: '', phone: '', course: '', message: '' });
         setFormErrors({});
@@ -299,7 +305,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
         // Reset success message after 5 seconds
         setTimeout(() => setFormStatus('idle'), 5000);
       } else {
-        throw new Error(response.message || 'Form submission failed');
+        throw new Error(data.message || 'Form submission failed');
       }
     } catch (error) {
       setFormStatus('error');

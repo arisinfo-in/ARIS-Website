@@ -151,17 +151,23 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     
     try {
       console.log('📤 Submitting form data:', formData);
-      // Import API service dynamically to avoid circular imports
-      const { apiService } = await import('../services/api');
       
-      const response = await apiService.submitContactForm({
-        ...formData,
-        source: 'home'
+      // Direct API call instead of dynamic import
+      const response = await fetch('http://localhost:5001/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          source: 'home'
+        })
       });
       
-      console.log('✅ API response:', response);
+      const data = await response.json();
+      console.log('✅ API response:', data);
       
-      if (response.success) {
+      if (data.success) {
         setFormStatus('success');
         setFormData({ name: '', email: '', company: '', message: '' });
         setFormErrors({});
@@ -169,7 +175,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         // Reset success message after 5 seconds
         setTimeout(() => setFormStatus('idle'), 5000);
       } else {
-        throw new Error(response.message || 'Form submission failed');
+        throw new Error(data.message || 'Form submission failed');
       }
     } catch (error) {
       console.error('❌ Form submission error:', error);
@@ -184,22 +190,28 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     setNewsletterStatus('submitting');
     
     try {
-      // Import API service dynamically to avoid circular imports
-      const { apiService } = await import('../services/api');
-      
-      const response = await apiService.subscribeNewsletter({
-        email: newsletterEmail,
-        source: 'home'
+      // Direct API call instead of dynamic import
+      const response = await fetch('http://localhost:5001/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: newsletterEmail,
+          source: 'home'
+        })
       });
       
-      if (response.success) {
+      const data = await response.json();
+      
+      if (data.success) {
         setNewsletterStatus('success');
         setNewsletterEmail('');
         
         // Reset success message after 5 seconds
         setTimeout(() => setNewsletterStatus('idle'), 5000);
       } else {
-        throw new Error(response.message || 'Newsletter subscription failed');
+        throw new Error(data.message || 'Newsletter subscription failed');
       }
     } catch (error) {
       setNewsletterStatus('error');

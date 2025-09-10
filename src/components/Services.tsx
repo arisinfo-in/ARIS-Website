@@ -307,17 +307,23 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
     
     try {
       console.log('📤 Submitting form to API...');
-      // Import API service dynamically to avoid circular imports
-      const { apiService } = await import('../services/api');
       
-      const response = await apiService.submitContactForm({
-        ...formData,
-        source: 'services'
+      // Direct API call instead of dynamic import
+      const response = await fetch('http://localhost:5001/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          source: 'services'
+        })
       });
       
-      console.log('✅ API response:', response);
+      const data = await response.json();
+      console.log('✅ API response:', data);
       
-      if (response.success) {
+      if (data.success) {
         setFormStatus('success');
         setFormData({ name: '', email: '', company: '', phone: '', service: '', message: '' });
         setFormErrors({});
@@ -325,7 +331,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
         // Reset success message after 5 seconds
         setTimeout(() => setFormStatus('idle'), 5000);
       } else {
-        throw new Error(response.message || 'Form submission failed');
+        throw new Error(data.message || 'Form submission failed');
       }
     } catch (error) {
       console.error('❌ Form submission error:', error);
