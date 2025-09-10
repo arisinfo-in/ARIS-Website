@@ -290,8 +290,13 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
     
     const errors: Record<string, string> = {};
     if (!formData.name.trim()) errors.name = 'Name is required';
+    if (formData.name.trim().length < 2) errors.name = 'Name must be at least 2 characters long';
     if (!formData.email.trim()) errors.email = 'Email is required';
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errors.email = 'Please provide a valid email address';
+    }
     if (!formData.message.trim()) errors.message = 'Message is required';
+    if (formData.message.trim().length < 10) errors.message = 'Message must be at least 10 characters long';
     
     if (Object.keys(errors).length > 0) {
       console.log('❌ Validation errors:', errors);
@@ -822,12 +827,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
             {/* Status Messages */}
             {formStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-600/20 border border-green-500/50 rounded-lg">
-                <div className="flex items-center justify-center space-x-3">
-                  <div className="animate-pulse">
-                    <Logo size="sm" />
-                  </div>
-                  <p className="text-green-400 text-center">Thank you! Your message has been sent successfully.</p>
-                </div>
+                <p className="text-green-400 text-center">Thank you! Your message has been sent successfully.</p>
               </div>
             )}
             
@@ -951,7 +951,10 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
                 }`}
               >
                 {formStatus === 'submitting' ? (
-                  'Submitting...'
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                    Submitting...
+                  </>
                 ) : (
                   <>
                     Submit Request

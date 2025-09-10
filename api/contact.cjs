@@ -1,4 +1,4 @@
-module.exports = async function handler(req, res) {
+module.exports = function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -17,38 +17,40 @@ module.exports = async function handler(req, res) {
   }
   
   try {
-    console.log('🔍 Newsletter subscription data received:', req.body);
+    console.log('🔍 Contact form data received:', req.body);
     
     // Simple validation
-    const { email } = req.body;
+    const { name, email, message } = req.body;
     
-    if (!email) {
+    if (!name || !email || !message) {
       return res.status(400).json({
         success: false,
-        message: 'Email is required'
+        message: 'Name, email, and message are required'
       });
     }
     
-    // For now, just log the data (email will be added later)
-    console.log('✅ Newsletter subscription:', {
+    // Log the submission
+    console.log('✅ Contact form submission:', {
+      name,
       email,
+      message,
       timestamp: new Date().toISOString()
     });
     
     res.status(200).json({
       success: true,
-      message: 'Successfully subscribed to our newsletter!',
+      message: "Thank you for your message! We'll get back to you within 24 hours.",
       data: {
-        subscribedAt: new Date().toISOString(),
-        email: email
+        submittedAt: new Date().toISOString(),
+        source: req.body.source || 'contact'
       }
     });
     
   } catch (error) {
-    console.error('❌ Newsletter subscription error:', error);
+    console.error('❌ Contact form error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to process newsletter subscription. Please try again later.'
+      message: 'Something went wrong. Please try again later.'
     });
   }
 }

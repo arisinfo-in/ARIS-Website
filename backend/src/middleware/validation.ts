@@ -44,7 +44,7 @@ export const validateContactForm = (req: Request, res: Response, next: NextFunct
   }
 
   // Source validation
-  if (!source || !['home', 'services', 'training'].includes(source)) {
+  if (!source || !['home', 'services', 'training', 'contact'].includes(source)) {
     errors.push({ field: 'source', message: 'Invalid source specified' });
   }
 

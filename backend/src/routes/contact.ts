@@ -19,15 +19,18 @@ router.post('/', validateContactForm, async (req: express.Request, res: express.
       source: req.body.source
     };
 
-    // Send email notification
-    const emailSent = await emailService.sendContactFormEmail(formData);
-
-    if (!emailSent) {
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to send email notification. Please try again later.',
-        error: 'Email service unavailable'
-      } as ApiResponse);
+    // Send email notification (optional - don't fail if email fails)
+    let emailSent = false;
+    try {
+      emailSent = await emailService.sendContactFormEmail(formData);
+      if (emailSent) {
+        console.log('✅ Email notification sent successfully');
+      } else {
+        console.warn('⚠️ Email notification failed, but continuing with form submission');
+      }
+    } catch (emailError) {
+      console.error('❌ Email service error:', emailError);
+      console.warn('⚠️ Email notification failed, but continuing with form submission');
     }
 
     // Log the submission (in production, you might want to log to a file or service)
@@ -42,7 +45,8 @@ router.post('/', validateContactForm, async (req: express.Request, res: express.
       message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
       data: {
         submittedAt: new Date().toISOString(),
-        source: formData.source
+        source: formData.source,
+        emailNotificationSent: emailSent
       }
     } as ApiResponse);
 

@@ -128,15 +128,19 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('🚀 Home contact form submission started');
-    console.log('📝 Form data:', JSON.stringify(formData, null, 2));
+    console.log('🚀 Contact form submission started');
     setFormStatus('submitting');
     
     // Basic validation
     const errors: Record<string, string> = {};
     if (!formData.name.trim()) errors.name = 'Name is required';
+    if (formData.name.trim().length < 2) errors.name = 'Name must be at least 2 characters long';
     if (!formData.email.trim()) errors.email = 'Email is required';
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errors.email = 'Please provide a valid email address';
+    }
     if (!formData.message.trim()) errors.message = 'Message is required';
+    if (formData.message.trim().length < 10) errors.message = 'Message must be at least 10 characters long';
     
     if (Object.keys(errors).length > 0) {
       console.log('❌ Validation errors:', errors);
@@ -146,7 +150,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     }
     
     try {
-      console.log('📤 Submitting home contact form to API...');
+      console.log('📤 Submitting form data:', formData);
       // Import API service dynamically to avoid circular imports
       const { apiService } = await import('../services/api');
       
@@ -168,27 +172,18 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         throw new Error(response.message || 'Form submission failed');
       }
     } catch (error) {
-      console.error('❌ Home contact form submission error:', error);
-      console.error('❌ Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined,
-        error: error
-      });
+      console.error('❌ Form submission error:', error);
       setFormStatus('error');
     }
   };
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('🚀 Newsletter subscription started');
-    console.log('📧 Email:', newsletterEmail);
-    
     if (!newsletterEmail.trim()) return;
     
     setNewsletterStatus('submitting');
     
     try {
-      console.log('📤 Submitting newsletter subscription to API...');
       // Import API service dynamically to avoid circular imports
       const { apiService } = await import('../services/api');
       
@@ -196,8 +191,6 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         email: newsletterEmail,
         source: 'home'
       });
-      
-      console.log('✅ Newsletter API response:', response);
       
       if (response.success) {
         setNewsletterStatus('success');
@@ -209,13 +202,8 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         throw new Error(response.message || 'Newsletter subscription failed');
       }
     } catch (error) {
-      console.error('❌ Newsletter subscription error:', error);
-      console.error('❌ Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined,
-        error: error
-      });
       setNewsletterStatus('error');
+      console.error('Newsletter subscription error:', error);
     }
   };
 
@@ -1117,12 +1105,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                 {/* Status Messages */}
                 {formStatus === 'success' && (
                   <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-green-600/20 border border-green-500/50 rounded-lg">
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="animate-pulse">
-                        <Logo size="sm" />
-                      </div>
-                      <p className="text-green-400 text-center text-sm sm:text-base">Thank you! Your message has been sent successfully.</p>
-                    </div>
+                    <p className="text-green-400 text-center text-sm sm:text-base">Thank you! Your message has been sent successfully.</p>
                   </div>
                 )}
                 
@@ -1217,7 +1200,10 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                     }`}
                   >
                     {formStatus === 'submitting' ? (
-                      'Sending...'
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Sending...
+                      </>
                     ) : (
                       <>
                         Send Message
@@ -1367,7 +1353,10 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                     }`}
                   >
                     {newsletterStatus === 'submitting' ? (
-                      'Subscribing...'
+                      <>
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                        Subscribing...
+                      </>
                     ) : (
                       <>
                         Subscribe
@@ -1379,12 +1368,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   {/* Newsletter Status Messages */}
                   {newsletterStatus === 'success' && (
                     <div className="p-2 bg-green-600/20 border border-green-500/50 rounded-lg">
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="animate-pulse">
-                          <Logo size="sm" />
-                        </div>
-                        <p className="text-green-400 text-center text-xs sm:text-sm">Successfully subscribed!</p>
-                      </div>
+                      <p className="text-green-400 text-center text-xs sm:text-sm">Successfully subscribed!</p>
                     </div>
                   )}
                   

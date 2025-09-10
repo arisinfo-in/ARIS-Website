@@ -86,33 +86,32 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('🚀 Contact form submission started');
-    console.log('📝 Form data:', JSON.stringify(formData, null, 2));
     setFormStatus('submitting');
     
     const errors: Record<string, string> = {};
     if (!formData.name.trim()) errors.name = 'Name is required';
+    if (formData.name.trim().length < 2) errors.name = 'Name must be at least 2 characters long';
     if (!formData.email.trim()) errors.email = 'Email is required';
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errors.email = 'Please provide a valid email address';
+    }
     if (!formData.message.trim()) errors.message = 'Message is required';
+    if (formData.message.trim().length < 10) errors.message = 'Message must be at least 10 characters long';
     
     if (Object.keys(errors).length > 0) {
-      console.log('❌ Validation errors:', errors);
       setFormErrors(errors);
       setFormStatus('idle');
       return;
     }
     
     try {
-      console.log('📤 Submitting contact form to API...');
       // Import API service dynamically to avoid circular imports
       const { apiService } = await import('../services/api');
       
       const response = await apiService.submitContactForm({
         ...formData,
-        source: 'contact'
+        source: 'home'
       });
-      
-      console.log('✅ API response:', response);
       
       if (response.success) {
         setFormStatus('success');
@@ -125,13 +124,8 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
         throw new Error(response.message || 'Form submission failed');
       }
     } catch (error) {
-      console.error('❌ Contact form submission error:', error);
-      console.error('❌ Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined,
-        error: error
-      });
       setFormStatus('error');
+      console.error('Form submission error:', error);
     }
   };
 
@@ -431,9 +425,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
               {formStatus === 'success' && (
                 <div className="p-6 bg-green-600/20 border border-green-500/50 rounded-2xl backdrop-blur-sm">
                   <div className="flex items-center space-x-3">
-                    <div className="animate-pulse">
-                      <Logo size="sm" />
-                    </div>
+                    <CheckCircle className="w-6 h-6 text-green-400" />
                     <div>
                       <p className="text-green-400 font-medium">Thank you! Your submission has been received!</p>
                       <p className="text-green-300 text-sm mt-1">We'll get back to you within 24 hours.</p>
@@ -587,7 +579,10 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                     }`}
                   >
                     {formStatus === 'submitting' ? (
-                      'Sending...'
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                        Sending Message...
+                      </>
                     ) : (
                       <>
                         Send Message

@@ -264,24 +264,25 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('🚀 Training form submission started');
-    console.log('📝 Form data:', JSON.stringify(formData, null, 2));
     setFormStatus('submitting');
     
     const errors: Record<string, string> = {};
     if (!formData.name.trim()) errors.name = 'Name is required';
+    if (formData.name.trim().length < 2) errors.name = 'Name must be at least 2 characters long';
     if (!formData.email.trim()) errors.email = 'Email is required';
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errors.email = 'Please provide a valid email address';
+    }
     if (!formData.message.trim()) errors.message = 'Message is required';
+    if (formData.message.trim().length < 10) errors.message = 'Message must be at least 10 characters long';
     
     if (Object.keys(errors).length > 0) {
-      console.log('❌ Validation errors:', errors);
       setFormErrors(errors);
       setFormStatus('idle');
       return;
     }
     
     try {
-      console.log('📤 Submitting training form to API...');
       // Import API service dynamically to avoid circular imports
       const { apiService } = await import('../services/api');
       
@@ -289,8 +290,6 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
         ...formData,
         source: 'training'
       });
-      
-      console.log('✅ API response:', response);
       
       if (response.success) {
         setFormStatus('success');
@@ -303,13 +302,8 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
         throw new Error(response.message || 'Form submission failed');
       }
     } catch (error) {
-      console.error('❌ Training form submission error:', error);
-      console.error('❌ Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined,
-        error: error
-      });
       setFormStatus('error');
+      console.error('Form submission error:', error);
     }
   };
 
@@ -783,12 +777,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
             {/* Status Messages */}
             {formStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-600/20 border border-green-500/50 rounded-lg">
-                <div className="flex items-center justify-center space-x-3">
-                  <div className="animate-pulse">
-                    <Logo size="sm" />
-                  </div>
-                  <p className="text-green-400 text-center">Thank you! Your application has been submitted successfully.</p>
-                </div>
+                <p className="text-green-400 text-center">Thank you! Your message has been sent successfully.</p>
               </div>
             )}
             
@@ -912,7 +901,10 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                 }`}
               >
                 {formStatus === 'submitting' ? (
-                  'Submitting...'
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                    Submitting...
+                  </>
                 ) : (
                   <>
                     Submit Application
