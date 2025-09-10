@@ -19,19 +19,34 @@ module.exports = function handler(req, res) {
   try {
     console.log('🔍 Newsletter subscription data received:', req.body);
     
-    // Simple validation
-    const { email } = req.body;
+    // Enhanced validation
+    const { email, source } = req.body;
+    const errors = [];
     
-    if (!email) {
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || typeof email !== 'string' || !emailRegex.test(email.trim())) {
+      errors.push({ field: 'email', message: 'Please provide a valid email address' });
+    }
+    
+    // Source validation (optional)
+    if (source && typeof source === 'string' && source.trim().length > 50) {
+      errors.push({ field: 'source', message: 'Source must be less than 50 characters' });
+    }
+    
+    if (errors.length > 0) {
+      console.log('❌ Newsletter validation errors:', errors);
       return res.status(400).json({
         success: false,
-        message: 'Email is required'
+        message: 'Validation failed',
+        errors: errors
       });
     }
     
     // Log the subscription
     console.log('✅ Newsletter subscription:', {
       email,
+      source: source || 'unknown',
       timestamp: new Date().toISOString()
     });
     
@@ -40,7 +55,8 @@ module.exports = function handler(req, res) {
       message: 'Successfully subscribed to our newsletter!',
       data: {
         subscribedAt: new Date().toISOString(),
-        email: email
+        email: email,
+        source: source || 'unknown'
       }
     });
     

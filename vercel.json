@@ -17,5 +17,16 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
+  ],
+  "functions": {
+    "api/**/*.cjs": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    }
   ]
 }

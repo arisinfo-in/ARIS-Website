@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// API base URL - using Vercel API routes
+// API base URL - change this to your backend URL in production
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? '' // Use relative URLs for Vercel API routes
+  ? '' // Use same domain as frontend (Vercel will handle routing)
   : 'http://localhost:5001';
 
 // Create axios instance with default config
@@ -123,7 +123,7 @@ export const apiService = {
 
   // Submit roadmap selection
   async submitRoadmapSelection(data: RoadmapData): Promise<ApiResponse> {
-    const response = await api.post('/api/roadmap', data);
+    const response = await api.post('/api/roadmap/selection', data);
     return response.data;
   },
 };
