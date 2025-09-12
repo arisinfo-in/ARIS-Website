@@ -1,4 +1,6 @@
-export default function handler(req, res) {
+import nodemailer from 'nodemailer';
+
+export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -50,13 +52,32 @@ export default function handler(req, res) {
       timestamp: new Date().toISOString()
     });
     
+    // Send email notification
+    let emailSent = false;
+    try {
+      emailSent = await sendNewsletterEmail({
+        email,
+        source: source || 'unknown'
+      });
+      
+      if (emailSent) {
+        console.log('✅ Newsletter email notification sent successfully');
+      } else {
+        console.warn('⚠️ Newsletter email notification failed, but continuing with subscription');
+      }
+    } catch (emailError) {
+      console.error('❌ Newsletter email sending error:', emailError);
+      // Don't fail the subscription if email fails
+    }
+    
     res.status(200).json({
       success: true,
       message: 'Successfully subscribed to our newsletter!',
       data: {
         subscribedAt: new Date().toISOString(),
         email: email,
-        source: source || 'unknown'
+        source: source || 'unknown',
+        emailNotificationSent: emailSent
       }
     });
     
@@ -66,5 +87,112 @@ export default function handler(req, res) {
       success: false,
       message: 'Failed to process newsletter subscription. Please try again later.'
     });
+  }
+}
+
+// Email sending function for newsletter
+async function sendNewsletterEmail(subscriptionData) {
+  try {
+    // Create transporter based on environment variables
+    const transporter = createEmailTransporter();
+    
+    if (!transporter) {
+      console.warn('⚠️ No email service configured');
+      return false;
+    }
+    
+    // Email content
+    const subject = `New Newsletter Subscription - ${subscriptionData.email}`;
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #f97316;">New Newsletter Subscription</h2>
+        <p><strong>Email:</strong> ${subscriptionData.email}</p>
+        <p><strong>Source:</strong> ${subscriptionData.source}</p>
+        <p><strong>Subscribed on:</strong> ${new Date().toLocaleString()}</p>
+        <p style="color: #666; font-size: 12px; margin-top: 20px;">
+          This is an automated notification from your ARIS AI Data Analyst website.
+        </p>
+      </div>
+    `;
+    
+    const textContent = `
+New Newsletter Subscription
+Email: ${subscriptionData.email}
+Source: ${subscriptionData.source}
+Subscribed on: ${new Date().toLocaleString()}
+
+This is an automated notification from your ARIS AI Data Analyst website.
+    `;
+    
+    // Send email
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_FROM || process.env.EMAIL_USER || 'noreply@arisinfo.in',
+      to: process.env.CONTACT_EMAIL || 'contact@arisinfo.in',
+      subject: subject,
+      text: textContent,
+      html: htmlContent
+    });
+    
+    console.log('📧 Newsletter email sent successfully:', info.messageId);
+    return true;
+    
+  } catch (error) {
+    console.error('❌ Newsletter email sending failed:', error);
+    return false;
+  }
+}
+
+// Create email transporter based on environment variables
+function createEmailTransporter() {
+  try {
+    // Gmail SMTP configuration
+    if (process.env.EMAIL_SERVICE === 'gmail' && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      return nodemailer.createTransporter({
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        },
+        tls: {
+          rejectUnauthorized: false
+        }
+      });
+    }
+    
+    // SendGrid configuration
+    if (process.env.SENDGRID_API_KEY) {
+      return nodemailer.createTransporter({
+        host: 'smtp.sendgrid.net',
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'apikey',
+          pass: process.env.SENDGRID_API_KEY
+        }
+      });
+    }
+    
+    // Mailgun configuration
+    if (process.env.MAILGUN_API_KEY && process.env.MAILGUN_DOMAIN) {
+      return nodemailer.createTransporter({
+        host: `smtp.mailgun.org`,
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.MAILGUN_API_KEY,
+          pass: process.env.MAILGUN_DOMAIN
+        }
+      });
+    }
+    
+    console.warn('⚠️ No email service configured. Please set up EMAIL_SERVICE, SENDGRID_API_KEY, or MAILGUN_API_KEY');
+    return null;
+    
+  } catch (error) {
+    console.error('❌ Error creating email transporter:', error);
+    return null;
   }
 }
