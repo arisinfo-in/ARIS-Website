@@ -176,8 +176,8 @@ Submitted on: ${new Date().toLocaleString()}
     
     // Send email
     const info = await transporter.sendMail({
-      from: process.env.EMAIL_FROM || process.env.EMAIL_USER || 'noreply@arisinfo.in',
-      to: process.env.CONTACT_EMAIL || 'contact@arisinfo.in',
+      from: 'arisinfo.in@gmail.com',
+      to: 'arisinfo.in@gmail.com',
       subject: subject,
       text: textContent,
       html: htmlContent,
@@ -196,51 +196,20 @@ Submitted on: ${new Date().toLocaleString()}
 // Create email transporter based on environment variables
 function createEmailTransporter() {
   try {
-    // Gmail SMTP configuration
-    if (process.env.EMAIL_SERVICE === 'gmail' && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      return nodemailer.createTransporter({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-      });
-    }
-    
-    // SendGrid configuration
-    if (process.env.SENDGRID_API_KEY) {
-      return nodemailer.createTransporter({
-        host: 'smtp.sendgrid.net',
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'apikey',
-          pass: process.env.SENDGRID_API_KEY
-        }
-      });
-    }
-    
-    // Mailgun configuration
-    if (process.env.MAILGUN_API_KEY && process.env.MAILGUN_DOMAIN) {
-      return nodemailer.createTransporter({
-        host: `smtp.mailgun.org`,
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.MAILGUN_API_KEY,
-          pass: process.env.MAILGUN_DOMAIN
-        }
-      });
-    }
-    
-    console.warn('⚠️ No email service configured. Please set up EMAIL_SERVICE, SENDGRID_API_KEY, or MAILGUN_API_KEY');
-    return null;
+    // Gmail SMTP configuration with hardcoded credentials
+    return nodemailer.createTransporter({
+      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'arisinfo.in@gmail.com',
+        pass: 'jfqbfbqhcohnlauh' // Hardcoded Gmail app password (without spaces)
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
     
   } catch (error) {
     console.error('❌ Error creating email transporter:', error);
