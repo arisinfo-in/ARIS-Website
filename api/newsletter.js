@@ -149,18 +149,15 @@ function createEmailTransporter() {
     return nodemailer.createTransporter({
       service: 'gmail',
       host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
+      port: 465,
+      secure: true,
       auth: {
         user: 'arisinfo.in@gmail.com',
-        pass: 'yqhs zvme mbfy geos' // Hardcoded Gmail app password (with spaces as provided)
+        pass: 'yqhszvmembfygeos' // Hardcoded Gmail app password (without spaces)
       },
       tls: {
         rejectUnauthorized: false
-      },
-      connectionTimeout: 60000, // 60 seconds
-      greetingTimeout: 30000, // 30 seconds
-      socketTimeout: 60000 // 60 seconds
+      }
     });
     
   } catch (error) {
