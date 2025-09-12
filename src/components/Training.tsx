@@ -8,6 +8,7 @@ import {
   Menu, X
 } from 'lucide-react';
 import Logo from './Logo';
+import { apiService } from '../services/api';
 
 interface TrainingProps {
   onNavigateHome: () => void;
@@ -283,19 +284,11 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
     }
     
     try {
-      // Direct API call instead of dynamic import
-      const response = await fetch('http://localhost:5001/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          source: 'training'
-        })
+      // Use the API service which handles environment-based URLs
+      const data = await apiService.submitContactForm({
+        ...formData,
+        source: 'training'
       });
-      
-      const data = await response.json();
       
       if (data.success) {
         setFormStatus('success');

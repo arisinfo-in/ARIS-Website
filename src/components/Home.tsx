@@ -6,6 +6,7 @@ import RoadmapOverlay from './RoadmapOverlay';
 import RoadmapSelectionModal from './RoadmapSelectionModal';
 import ArticleOverlay from './ArticleOverlay';
 import ArticleSelectionModal from './ArticleSelectionModal';
+import { apiService } from '../services/api';
 
 interface HomeProps {
   onNavigateAbout: () => void;
@@ -152,19 +153,12 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     try {
       console.log('📤 Submitting form data:', formData);
       
-      // Direct API call instead of dynamic import
-      const response = await fetch('http://localhost:5001/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          source: 'home'
-        })
+      // Use the API service which handles environment-based URLs
+      const data = await apiService.submitContactForm({
+        ...formData,
+        source: 'home'
       });
       
-      const data = await response.json();
       console.log('✅ API response:', data);
       
       if (data.success) {
@@ -190,19 +184,11 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     setNewsletterStatus('submitting');
     
     try {
-      // Direct API call instead of dynamic import
-      const response = await fetch('http://localhost:5001/api/newsletter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: newsletterEmail,
-          source: 'home'
-        })
+      // Use the API service which handles environment-based URLs
+      const data = await apiService.subscribeNewsletter({
+        email: newsletterEmail,
+        source: 'home'
       });
-      
-      const data = await response.json();
       
       if (data.success) {
         setNewsletterStatus('success');

@@ -22,6 +22,7 @@ import {
   X
 } from 'lucide-react';
 import Logo from './Logo';
+import { apiService } from '../services/api';
 
 interface ContactProps {
   onNavigateHome: () => void;
@@ -105,19 +106,11 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
     }
     
     try {
-      // Direct API call instead of dynamic import
-      const response = await fetch('http://localhost:5001/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          source: 'home'
-        })
+      // Use the API service which handles environment-based URLs
+      const data = await apiService.submitContactForm({
+        ...formData,
+        source: 'home'
       });
-      
-      const data = await response.json();
       
       if (data.success) {
         setFormStatus('success');

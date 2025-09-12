@@ -7,6 +7,7 @@ import {
   Linkedin, Twitter, Instagram, Youtube, Menu, X
 } from 'lucide-react';
 import Logo from './Logo';
+import { apiService } from '../services/api';
 
 interface ServicesProps {
   onNavigateHome: () => void;
@@ -308,19 +309,12 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
     try {
       console.log('📤 Submitting form to API...');
       
-      // Direct API call instead of dynamic import
-      const response = await fetch('http://localhost:5001/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          source: 'services'
-        })
+      // Use the API service which handles environment-based URLs
+      const data = await apiService.submitContactForm({
+        ...formData,
+        source: 'services'
       });
       
-      const data = await response.json();
       console.log('✅ API response:', data);
       
       if (data.success) {
