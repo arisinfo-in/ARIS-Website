@@ -153,7 +153,7 @@ function createEmailTransporter() {
       secure: false,
       auth: {
         user: 'arisinfo.in@gmail.com',
-        pass: 'jfqb fbqh cohn lauh' // Hardcoded Gmail app password (with spaces as provided)
+        pass: 'yqhs zvme mbfy geos' // Hardcoded Gmail app password (new password)
       },
       tls: {
         rejectUnauthorized: false
