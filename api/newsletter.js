@@ -153,11 +153,14 @@ function createEmailTransporter() {
       secure: false,
       auth: {
         user: 'arisinfo.in@gmail.com',
-        pass: 'yqhszvmembfygeos' // Hardcoded Gmail app password (without spaces)
+        pass: 'yqhs zvme mbfy geos' // Hardcoded Gmail app password (with spaces as provided)
       },
       tls: {
         rejectUnauthorized: false
-      }
+      },
+      connectionTimeout: 60000, // 60 seconds
+      greetingTimeout: 30000, // 30 seconds
+      socketTimeout: 60000 // 60 seconds
     });
     
   } catch (error) {

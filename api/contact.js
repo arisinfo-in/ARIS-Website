@@ -131,6 +131,7 @@ export default async function handler(req, res) {
 // Email sending function
 async function sendContactEmail(formData) {
   try {
+    console.log('📧 Attempting to send contact email...');
     // Create transporter based on environment variables
     const transporter = createEmailTransporter();
     
@@ -138,6 +139,7 @@ async function sendContactEmail(formData) {
       console.warn('⚠️ No email service configured');
       return false;
     }
+    console.log('📧 Email transporter created successfully');
     
     // Email content
     const subject = `New Contact Form Submission from ${formData.name}`;
@@ -175,6 +177,7 @@ Submitted on: ${new Date().toLocaleString()}
     `;
     
     // Send email
+    console.log('📧 Sending email to arisinfo.in@gmail.com...');
     const info = await transporter.sendMail({
       from: 'arisinfo.in@gmail.com',
       to: 'arisinfo.in@gmail.com',
@@ -189,6 +192,12 @@ Submitted on: ${new Date().toLocaleString()}
     
   } catch (error) {
     console.error('❌ Email sending failed:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response
+    });
     return false;
   }
 }
@@ -204,11 +213,14 @@ function createEmailTransporter() {
       secure: false,
       auth: {
         user: 'arisinfo.in@gmail.com',
-        pass: 'yqhszvmembfygeos' // Hardcoded Gmail app password (without spaces)
+        pass: 'yqhs zvme mbfy geos' // Hardcoded Gmail app password (with spaces as provided)
       },
       tls: {
         rejectUnauthorized: false
-      }
+      },
+      connectionTimeout: 60000, // 60 seconds
+      greetingTimeout: 30000, // 30 seconds
+      socketTimeout: 60000 // 60 seconds
     });
     
   } catch (error) {
