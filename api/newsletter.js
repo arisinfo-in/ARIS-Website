@@ -149,11 +149,11 @@ function createEmailTransporter() {
     return nodemailer.createTransporter({
       service: 'gmail',
       host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+      port: 587,
+      secure: false,
       auth: {
         user: 'arisinfo.in@gmail.com',
-        pass: 'yqhszvmembfygeos' // Hardcoded Gmail app password (without spaces)
+        pass: 'yqhs zvme mbfy geos' // Hardcoded Gmail app password (with spaces)
       },
       tls: {
         rejectUnauthorized: false
