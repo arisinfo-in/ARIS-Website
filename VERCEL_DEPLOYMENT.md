@@ -15,7 +15,14 @@ ADMIN_EMAIL=arisinfo.in@gmail.com
 FRONTEND_URL=https://your-vercel-domain.vercel.app
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
+NODE_ENV=production
 ```
+
+**Important Notes:**
+- The `EMAIL_PASS` should be your Gmail App Password (not your regular password)
+- Make sure 2FA is enabled on your Gmail account
+- The app password should be 16 characters without spaces (spaces will be automatically removed)
+- Test the email functionality after deployment
 
 ### How to Add Environment Variables in Vercel:
 

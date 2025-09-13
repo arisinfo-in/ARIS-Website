@@ -88,6 +88,7 @@ module.exports = async function handler(req, res) {
     // Send email notification
     let emailSent = false;
     try {
+      console.log('📧 Attempting to send email notification...');
       emailSent = await sendContactEmail({
         name,
         email,
@@ -106,6 +107,12 @@ module.exports = async function handler(req, res) {
       }
     } catch (emailError) {
       console.error('❌ Email sending error:', emailError);
+      console.error('❌ Email error details:', {
+        message: emailError.message,
+        code: emailError.code,
+        command: emailError.command,
+        response: emailError.response
+      });
       // Don't fail the form submission if email fails
     }
     
@@ -121,9 +128,16 @@ module.exports = async function handler(req, res) {
     
   } catch (error) {
     console.error('❌ Contact form error:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    
     res.status(500).json({
       success: false,
-      message: 'Something went wrong. Please try again later.'
+      message: 'Something went wrong. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 }
@@ -205,15 +219,25 @@ Submitted on: ${new Date().toLocaleString()}
 // Create email transporter based on environment variables
 function createEmailTransporter() {
   try {
-    // Gmail SMTP configuration with hardcoded credentials
+    // Get credentials from environment variables
+    const emailUser = process.env.EMAIL_USER || 'arisinfo.in@gmail.com';
+    const emailPass = process.env.EMAIL_PASS || 'yqhs zvme mbfy geos';
+    
+    console.log('📧 Email configuration:', {
+      user: emailUser,
+      passLength: emailPass ? emailPass.length : 0,
+      hasPass: !!emailPass
+    });
+    
+    // Gmail SMTP configuration
     return nodemailer.createTransporter({
       service: 'gmail',
       host: 'smtp.gmail.com',
       port: 587,
       secure: false,
       auth: {
-        user: 'arisinfo.in@gmail.com',
-        pass: 'yqhs zvme mbfy geos' // Hardcoded Gmail app password (with spaces)
+        user: emailUser,
+        pass: emailPass.replace(/\s/g, '') // Remove spaces from app password
       },
       tls: {
         rejectUnauthorized: false
