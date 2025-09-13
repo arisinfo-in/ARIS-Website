@@ -20,6 +20,13 @@ module.exports = async function handler(req, res) {
   
   try {
     console.log('🔍 Contact form data received:', req.body);
+    console.log('🔍 Environment check:', {
+      NODE_ENV: process.env.NODE_ENV,
+      hasEmailUser: !!process.env.EMAIL_USER,
+      hasEmailPass: !!process.env.EMAIL_PASS,
+      emailUserLength: process.env.EMAIL_USER ? process.env.EMAIL_USER.length : 0,
+      emailPassLength: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.length : 0
+    });
     
     // Enhanced validation matching backend requirements
     const { name, email, company, phone, service, course, message, source } = req.body;
@@ -85,7 +92,7 @@ module.exports = async function handler(req, res) {
       timestamp: new Date().toISOString()
     });
     
-    // Send email notification
+    // Send email notification - with fallback if no env vars
     let emailSent = false;
     try {
       console.log('📧 Attempting to send email notification...');
@@ -94,6 +101,7 @@ module.exports = async function handler(req, res) {
       if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
         console.warn('⚠️ Email credentials not configured in Vercel environment variables');
         console.warn('⚠️ Please set EMAIL_USER and EMAIL_PASS in Vercel dashboard');
+        console.warn('⚠️ Form will still be submitted successfully, but no email notification will be sent');
         emailSent = false;
       } else {
         emailSent = await sendContactEmail({
@@ -124,6 +132,7 @@ module.exports = async function handler(req, res) {
       // Don't fail the form submission if email fails
     }
     
+    // Always return success for form submission
     res.status(200).json({
       success: true,
       message: "Thank you for your message! We'll get back to you within 24 hours.",
@@ -142,10 +151,11 @@ module.exports = async function handler(req, res) {
       name: error.name
     });
     
+    // Return a more user-friendly error
     res.status(500).json({
       success: false,
       message: 'Something went wrong. Please try again later.',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
     });
   }
 }
@@ -154,6 +164,7 @@ module.exports = async function handler(req, res) {
 async function sendContactEmail(formData) {
   try {
     console.log('📧 Attempting to send contact email...');
+    
     // Create transporter based on environment variables
     const transporter = createEmailTransporter();
     
@@ -164,7 +175,7 @@ async function sendContactEmail(formData) {
     console.log('📧 Email transporter created successfully');
     
     // Email content
-    const subject = `New Contact Form Submission from ${formData.name}`;
+    const subject = `New Contact Form Submission - ${formData.source.toUpperCase()}`;
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #f97316;">New Contact Form Submission</h2>
@@ -201,7 +212,7 @@ Submitted on: ${new Date().toLocaleString()}
     // Send email
     console.log('📧 Sending email to arisinfo.in@gmail.com...');
     const info = await transporter.sendMail({
-      from: 'arisinfo.in@gmail.com',
+      from: process.env.EMAIL_USER,
       to: 'arisinfo.in@gmail.com',
       subject: subject,
       text: textContent,
