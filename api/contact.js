@@ -89,21 +89,29 @@ module.exports = async function handler(req, res) {
     let emailSent = false;
     try {
       console.log('📧 Attempting to send email notification...');
-      emailSent = await sendContactEmail({
-        name,
-        email,
-        company,
-        phone,
-        service,
-        course,
-        message,
-        source
-      });
       
-      if (emailSent) {
-        console.log('✅ Email notification sent successfully');
+      // Check if email credentials are available
+      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.warn('⚠️ Email credentials not configured in Vercel environment variables');
+        console.warn('⚠️ Please set EMAIL_USER and EMAIL_PASS in Vercel dashboard');
+        emailSent = false;
       } else {
-        console.warn('⚠️ Email notification failed, but continuing with form submission');
+        emailSent = await sendContactEmail({
+          name,
+          email,
+          company,
+          phone,
+          service,
+          course,
+          message,
+          source
+        });
+        
+        if (emailSent) {
+          console.log('✅ Email notification sent successfully');
+        } else {
+          console.warn('⚠️ Email notification failed, but continuing with form submission');
+        }
       }
     } catch (emailError) {
       console.error('❌ Email sending error:', emailError);
@@ -219,15 +227,25 @@ Submitted on: ${new Date().toLocaleString()}
 // Create email transporter based on environment variables
 function createEmailTransporter() {
   try {
-    // Get credentials from environment variables
-    const emailUser = process.env.EMAIL_USER || 'arisinfo.in@gmail.com';
-    const emailPass = process.env.EMAIL_PASS || 'yqhs zvme mbfy geos';
+    // Get credentials from environment variables - NO FALLBACK VALUES
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
     
-    console.log('📧 Email configuration:', {
-      user: emailUser,
+    console.log('📧 Email configuration check:', {
+      hasUser: !!emailUser,
+      hasPass: !!emailPass,
+      userLength: emailUser ? emailUser.length : 0,
       passLength: emailPass ? emailPass.length : 0,
-      hasPass: !!emailPass
+      nodeEnv: process.env.NODE_ENV
     });
+    
+    // Validate required environment variables
+    if (!emailUser || !emailPass) {
+      console.error('❌ Missing email credentials in environment variables');
+      console.error('❌ EMAIL_USER:', emailUser ? 'SET' : 'MISSING');
+      console.error('❌ EMAIL_PASS:', emailPass ? 'SET' : 'MISSING');
+      return null;
+    }
     
     // Gmail SMTP configuration
     return nodemailer.createTransporter({
