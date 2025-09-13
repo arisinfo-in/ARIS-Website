@@ -65,7 +65,7 @@ export interface ContactFormData {
   service?: string;
   course?: string;
   message: string;
-  source: 'home' | 'services' | 'training';
+  source: 'home' | 'services' | 'training' | 'brochure';
 }
 
 export interface NewsletterData {

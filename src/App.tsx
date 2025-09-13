@@ -4,6 +4,7 @@ import { usePerformance, usePreloadCriticalResources } from './hooks/usePerforma
 import SEO from './components/SEO';
 import GoogleAnalytics from './components/GoogleAnalytics';
 import PerformanceMonitor from './components/PerformanceMonitor';
+import BrochureDownloadModal from './components/BrochureDownloadModal';
 
 // Lazy load components for better performance
 const Home = React.lazy(() => import('./components/Home'));
@@ -16,6 +17,7 @@ type Page = 'home' | 'about' | 'contact' | 'training' | 'services';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [isBrochureModalOpen, setIsBrochureModalOpen] = useState(false);
   
   // Performance monitoring
   usePerformance();
@@ -60,14 +62,20 @@ function App() {
         <GoogleAnalytics measurementId="G-XXXXXXXXXX" />
         
         <Suspense fallback={<LoadingSpinner />}>
-          {currentPage === 'home' && <Home onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} />}
-          {currentPage === 'about' && <About onNavigateHome={navigateToHome} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} />}
-          {currentPage === 'contact' && <Contact onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} />}
-          {currentPage === 'training' && <Training onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateServices={navigateToServices} />}
-          {currentPage === 'services' && <Services onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} />}
+          {currentPage === 'home' && <Home onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
+          {currentPage === 'about' && <About onNavigateHome={navigateToHome} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
+          {currentPage === 'contact' && <Contact onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
+          {currentPage === 'training' && <Training onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
+          {currentPage === 'services' && <Services onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
         </Suspense>
         
         <PerformanceMonitor />
+        
+        {/* Global Brochure Modal */}
+        <BrochureDownloadModal 
+          isOpen={isBrochureModalOpen} 
+          onClose={() => setIsBrochureModalOpen(false)}
+        />
       </div>
     </HelmetProvider>
   );

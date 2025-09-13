@@ -1,5 +1,19 @@
 {
   "version": 2,
+  "functions": {
+    "api/contact.js": {
+      "maxDuration": 10
+    },
+    "api/newsletter.js": {
+      "maxDuration": 10
+    },
+    "api/roadmap.js": {
+      "maxDuration": 10
+    },
+    "api/health.js": {
+      "maxDuration": 5
+    }
+  },
   "routes": [
     {
       "src": "/api/(.*)",

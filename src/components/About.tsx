@@ -26,7 +26,8 @@ import {
   Instagram,
   Youtube,
   Menu,
-  X
+  X,
+  FileText
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -35,6 +36,8 @@ interface AboutProps {
   onNavigateContact: () => void;
   onNavigateTraining: () => void;
   onNavigateServices: () => void;
+  isBrochureModalOpen: boolean;
+  setIsBrochureModalOpen: (open: boolean) => void;
 }
 
 interface FAQItem {
@@ -56,7 +59,7 @@ interface Achievement {
   description: string;
 }
 
-const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavigateTraining, onNavigateServices }) => {
+const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavigateTraining, onNavigateServices, isBrochureModalOpen, setIsBrochureModalOpen }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
@@ -179,9 +182,9 @@ const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavi
       avatar: "BookOpen"
     },
     {
-      name: "Adnan Syed",
-      role: "Senior AI Engineer",
-      expertise: ["MLOps & Deployment", "Research & Innovation", "Leadership & Mentorship"],
+      name: "Eshwar Kumar",
+      role: "Data Analyst Trainer",
+      expertise: ["Data Modeling", "Data Visualization", "Data Analysis"],
       avatar: "Zap"
     }
   ];
@@ -286,6 +289,11 @@ const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavi
                 Contact
                 <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
               </button>
+              <button onClick={() => setIsBrochureModalOpen(true)} className="text-white bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full shadow-lg hover:shadow-orange-500/25 flex items-center space-x-1">
+                <FileText className="w-4 h-4" />
+                <span>Brochure</span>
+                <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-white transition-all duration-300"></span>
+              </button>
             </div>
           </nav>
 
@@ -343,6 +351,16 @@ const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavi
             >
               Contact
               <span className="absolute bottom-2 left-4 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
+            </button>
+            <button 
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsBrochureModalOpen(true);
+              }}
+              className="w-full text-left px-6 py-3 text-white bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 transition-all duration-300 flex items-center rounded-lg mx-2 shadow-lg hover:shadow-orange-500/25"
+            >
+              <span className="w-2 h-2 bg-white rounded-full mr-3"></span>
+              Brochure
             </button>
           </nav>
         </div>

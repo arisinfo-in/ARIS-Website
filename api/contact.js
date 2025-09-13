@@ -42,7 +42,7 @@ module.exports = async function handler(req, res) {
     }
     
     // Source validation
-    if (!source || !['home', 'services', 'training'].includes(source)) {
+    if (!source || !['home', 'services', 'training', 'brochure'].includes(source)) {
       errors.push({ field: 'source', message: 'Invalid source specified' });
     }
     
