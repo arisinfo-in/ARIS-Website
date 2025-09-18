@@ -20,13 +20,6 @@ module.exports = async function handler(req, res) {
   
   try {
     console.log('🔍 Contact form data received:', req.body);
-    console.log('🔍 Environment check:', {
-      NODE_ENV: process.env.NODE_ENV,
-      hasEmailUser: !!process.env.EMAIL_USER,
-      hasEmailPass: !!process.env.EMAIL_PASS,
-      emailUserLength: process.env.EMAIL_USER ? process.env.EMAIL_USER.length : 0,
-      emailPassLength: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.length : 0
-    });
     
     // Enhanced validation matching backend requirements
     const { name, email, company, phone, service, course, message, source } = req.body;
@@ -92,34 +85,26 @@ module.exports = async function handler(req, res) {
       timestamp: new Date().toISOString()
     });
     
-    // Send email notification - with fallback if no env vars
+    // Send email notification using hardcoded ARIS credentials
     let emailSent = false;
     try {
       console.log('📧 Attempting to send email notification...');
       
-      // Check if email credentials are available
-      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-        console.warn('⚠️ Email credentials not configured in Vercel environment variables');
-        console.warn('⚠️ Please set EMAIL_USER and EMAIL_PASS in Vercel dashboard');
-        console.warn('⚠️ Form will still be submitted successfully, but no email notification will be sent');
-        emailSent = false;
+      emailSent = await sendContactEmail({
+        name,
+        email,
+        company,
+        phone,
+        service,
+        course,
+        message,
+        source
+      });
+      
+      if (emailSent) {
+        console.log('✅ Email notification sent successfully');
       } else {
-        emailSent = await sendContactEmail({
-          name,
-          email,
-          company,
-          phone,
-          service,
-          course,
-          message,
-          source
-        });
-        
-        if (emailSent) {
-          console.log('✅ Email notification sent successfully');
-        } else {
-          console.warn('⚠️ Email notification failed, but continuing with form submission');
-        }
+        console.warn('⚠️ Email notification failed, but continuing with form submission');
       }
     } catch (emailError) {
       console.error('❌ Email sending error:', emailError);
@@ -212,7 +197,7 @@ Submitted on: ${new Date().toLocaleString()}
     // Send email
     console.log('📧 Sending email to arisinfo.in@gmail.com...');
     const info = await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: 'arisinfo.in@gmail.com',
       to: 'arisinfo.in@gmail.com',
       subject: subject,
       text: textContent,
@@ -235,38 +220,20 @@ Submitted on: ${new Date().toLocaleString()}
   }
 }
 
-// Create email transporter based on environment variables
+// Create email transporter with hardcoded ARIS credentials
 function createEmailTransporter() {
   try {
-    // Get credentials from environment variables - NO FALLBACK VALUES
-    const emailUser = process.env.EMAIL_USER;
-    const emailPass = process.env.EMAIL_PASS;
+    console.log('📧 Using hardcoded ARIS email credentials');
     
-    console.log('📧 Email configuration check:', {
-      hasUser: !!emailUser,
-      hasPass: !!emailPass,
-      userLength: emailUser ? emailUser.length : 0,
-      passLength: emailPass ? emailPass.length : 0,
-      nodeEnv: process.env.NODE_ENV
-    });
-    
-    // Validate required environment variables
-    if (!emailUser || !emailPass) {
-      console.error('❌ Missing email credentials in environment variables');
-      console.error('❌ EMAIL_USER:', emailUser ? 'SET' : 'MISSING');
-      console.error('❌ EMAIL_PASS:', emailPass ? 'SET' : 'MISSING');
-      return null;
-    }
-    
-    // Gmail SMTP configuration
+    // Gmail SMTP configuration with hardcoded ARIS credentials
     return nodemailer.createTransporter({
       service: 'gmail',
       host: 'smtp.gmail.com',
       port: 587,
-      secure: false,
+      secure: false, // true for 465, false for other ports
       auth: {
-        user: emailUser,
-        pass: emailPass.replace(/\s/g, '') // Remove spaces from app password
+        user: 'arisinfo.in@gmail.com', // ARIS Gmail address
+        pass: 'yqhs zvme mbfy geos' // ARIS Gmail App Password
       },
       tls: {
         rejectUnauthorized: false

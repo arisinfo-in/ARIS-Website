@@ -13,55 +13,18 @@ class EmailService {
   }
 
   private createTransporter(): nodemailer.Transporter {
-    // Gmail SMTP configuration
-    if (process.env.EMAIL_SERVICE === 'gmail') {
-      return nodemailer.createTransport({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-      });
-    }
-
-    // SendGrid configuration
-    if (process.env.SENDGRID_API_KEY) {
-      return nodemailer.createTransport({
-        host: 'smtp.sendgrid.net',
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'apikey',
-          pass: process.env.SENDGRID_API_KEY
-        }
-      });
-    }
-
-    // Mailgun configuration
-    if (process.env.MAILGUN_API_KEY && process.env.MAILGUN_DOMAIN) {
-      return nodemailer.createTransport({
-        host: `smtp.mailgun.org`,
-        port: 587,
-        secure: false,
-        auth: {
-          user: `postmaster@${process.env.MAILGUN_DOMAIN}`,
-          pass: process.env.MAILGUN_API_KEY
-        }
-      });
-    }
-
-    // Default to Gmail if no configuration found
+    // Use hardcoded Gmail credentials for ARIS
     return nodemailer.createTransport({
       service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false, // true for 465, false for other ports
       auth: {
-        user: process.env.EMAIL_USER || 'your-email@gmail.com',
-        pass: process.env.EMAIL_PASS || 'your-app-password'
+        user: 'arisinfo.in@gmail.com', // ARIS Gmail address
+        pass: 'yqhs zvme mbfy geos' // ARIS Gmail App Password
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
   }
@@ -73,7 +36,7 @@ class EmailService {
       const text = this.generateContactFormText(data);
 
       const emailData: EmailTemplate = {
-        to: process.env.CONTACT_EMAIL || process.env.ADMIN_EMAIL || 'contact@yourdomain.com',
+        to: 'arisinfo.in@gmail.com',
         subject,
         html,
         text
@@ -115,7 +78,7 @@ class EmailService {
       const text = this.generateRoadmapText(data);
 
       const emailData: EmailTemplate = {
-        to: process.env.CONTACT_EMAIL || process.env.ADMIN_EMAIL || 'contact@yourdomain.com',
+        to: 'arisinfo.in@gmail.com',
         subject,
         html,
         text
@@ -131,7 +94,7 @@ class EmailService {
 
   private async sendEmail(emailData: EmailTemplate): Promise<void> {
     const mailOptions = {
-      from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@yourdomain.com',
+      from: 'arisinfo.in@gmail.com',
       to: emailData.to,
       subject: emailData.subject,
       html: emailData.html,

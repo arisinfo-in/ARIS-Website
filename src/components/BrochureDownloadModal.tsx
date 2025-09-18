@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  X, Download, Eye, FileText, User, Mail, Phone, CheckCircle, ArrowRight, BarChart3
+  X, Download, Eye, FileText, User, Mail, Phone, CheckCircle, ArrowRight, BarChart3, 
+  Brain, Zap
 } from 'lucide-react';
 import { apiService } from '../services/api';
 
@@ -9,10 +10,27 @@ interface BrochureDownloadModalProps {
   onClose: () => void;
 }
 
+type BrochureType = 'data-analytics' | 'vibe-analytics' | 'prompting-ai-tools';
+
+interface BrochureInfo {
+  id: BrochureType;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+  gradient: string;
+  file: string;
+  features: string[];
+  duration: string;
+  level: string;
+  type: string;
+}
+
 const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({ 
   isOpen, 
   onClose 
 }) => {
+  const [selectedBrochure, setSelectedBrochure] = useState<BrochureType>('data-analytics');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,6 +40,51 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  // Brochure configurations
+  const brochures: BrochureInfo[] = [
+    {
+      id: 'data-analytics',
+      title: 'Data Analytics & AI Course',
+      description: 'Comprehensive training program covering data analysis, AI tools, and practical applications',
+      icon: <BarChart3 className="w-5 h-5" />,
+      color: 'orange',
+      gradient: 'from-orange-500 to-orange-600',
+      file: 'ARIS Data Analytics & AI Course Broucher.pdf',
+      features: ['Detailed Course Curriculum', 'Project Portfolio Examples', 'Career Opportunities', 'Pricing & Payment Plans'],
+      duration: '6 Weeks',
+      level: 'All Levels',
+      type: 'Course'
+    },
+    {
+      id: 'vibe-analytics',
+      title: 'Vibe Analytics',
+      description: 'Advanced analytics focusing on behavioral insights, and emotional intelligence in data',
+      icon: <Brain className="w-5 h-5" />,
+      color: 'orange',
+      gradient: 'from-orange-500 to-orange-600',
+      file: 'ARIS Vibe Analytics Course Broucher.pdf.pdf',
+      features: ['Sentiment Analysis Tools', 'Behavioral Data Insights', 'Emotional Intelligence in AI', 'Advanced Analytics Techniques'],
+      duration: '2 Weeks',
+      level: 'Intermediate',
+      type: 'Specialized'
+    },
+    {
+      id: 'prompting-ai-tools',
+      title: 'Prompting & AI Tools',
+      description: 'Master the art of AI prompting and leverage cutting-edge AI tools for maximum productivity',
+      icon: <Zap className="w-5 h-5" />,
+      color: 'orange',
+      gradient: 'from-orange-500 to-orange-600',
+      file: 'ARIS Prompting & AI Tools Brochure.pdf.pdf',
+      features: ['AI Prompting Techniques', 'Tool Integration Strategies', 'Productivity Optimization', 'Advanced AI Workflows'],
+      duration: '2 Weeks',
+      level: 'Beginner',
+      type: 'Tools'
+    }
+  ];
+
+  const currentBrochure = brochures.find(b => b.id === selectedBrochure) || brochures[0];
 
   // Handle escape key and mouse tracking
   useEffect(() => {
@@ -113,7 +176,7 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
         email: formData.email,
         phone: formData.phone,
         company: '', // Optional field
-        message: 'Requested to download Data Analytics & AI Course Brochure',
+        message: `Requested to download ${currentBrochure.title} Brochure`,
         source: 'brochure'
       });
       
@@ -136,8 +199,8 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
   // Handle brochure download
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = '/ARIS Data Analytics & AI Course Broucher.pdf';
-    link.download = 'ARIS Data Analytics & AI Course Broucher.pdf';
+    link.href = `/${currentBrochure.file}`;
+    link.download = currentBrochure.file;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -145,12 +208,13 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
 
   // Handle brochure view
   const handleView = () => {
-    window.open('/ARIS Data Analytics & AI Course Broucher.pdf', '_blank');
+    window.open(`/${currentBrochure.file}`, '_blank');
   };
 
   // Reset form when modal closes
   useEffect(() => {
     if (!isOpen) {
+      setSelectedBrochure('data-analytics');
       setFormData({ name: '', email: '', phone: '' });
       setFormErrors({});
       setIsFormSubmitted(false);
@@ -208,13 +272,13 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
         aria-labelledby="brochure-download-title"
       >
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-orange-600 to-orange-700 px-4 py-3 border-b border-orange-500/30">
+        <div className={`relative bg-gradient-to-r ${currentBrochure.gradient} px-4 py-3 border-b ${currentBrochure.color}-500/30`}>
           <button
             onClick={onClose}
-            className="absolute top-2 right-2 p-2 hover:bg-orange-800 rounded-lg transition-colors duration-300 group"
+            className={`absolute top-2 right-2 p-2 hover:bg-${currentBrochure.color}-800 rounded-lg transition-colors duration-300 group`}
             aria-label="Close brochure download"
           >
-            <X className="w-5 h-5 text-white group-hover:text-orange-200 transition-colors duration-300" />
+            <X className={`w-5 h-5 text-white group-hover:text-${currentBrochure.color}-200 transition-colors duration-300`} />
           </button>
           
           <div className="text-center pr-10">
@@ -224,8 +288,8 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
                 Download Course Brochure
               </h1>
             </div>
-            <p className="text-orange-100 text-xs max-w-lg mx-auto">
-              Get detailed information about our Data Analytics & AI Course. Enter your details to access the brochure.
+            <p className={`text-${currentBrochure.color}-100 text-xs max-w-lg mx-auto`}>
+              Get detailed information about our {currentBrochure.title}. Enter your details to access the brochure.
             </p>
           </div>
         </div>
@@ -235,26 +299,59 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
           {!isFormSubmitted ? (
             /* Form Section */
             <div className="space-y-4">
+              {/* Brochure Selection */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-white mb-2">Select Brochure:</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {brochures.map((brochure) => (
+                    <button
+                      key={brochure.id}
+                      onClick={() => setSelectedBrochure(brochure.id)}
+                      className={`p-3 rounded-lg border transition-all duration-300 text-left group ${
+                        selectedBrochure === brochure.id
+                          ? `bg-${brochure.color}-600/20 border-${brochure.color}-500/50 shadow-lg`
+                          : 'bg-gray-800/50 border-gray-600 hover:bg-gray-700/50 hover:border-gray-500'
+                      }`}
+                    >
+                      <div className="flex items-start space-x-2">
+                        <div className={`w-8 h-8 bg-gradient-to-br ${brochure.gradient} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                          {brochure.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-xs font-semibold text-white mb-1 truncate">
+                            {brochure.title}
+                          </h4>
+                          <p className="text-gray-400 text-xs leading-tight line-clamp-2">
+                            {brochure.description}
+                          </p>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            <span className={`px-1.5 py-0.5 bg-${brochure.color}-600/20 text-${brochure.color}-400 text-xs rounded-full border border-${brochure.color}-500/30`}>
+                              {brochure.duration}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
               {/* Course Info Card */}
               <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
                 <div className="flex items-start space-x-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <BarChart3 className="w-5 h-5 text-white" />
+                  <div className={`w-10 h-10 bg-gradient-to-br ${currentBrochure.gradient} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                    {currentBrochure.icon}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-base font-semibold text-white mb-1">Data Analytics & AI Course</h3>
+                    <h3 className="text-base font-semibold text-white mb-1">{currentBrochure.title}</h3>
                     <p className="text-gray-300 text-xs mb-2">
-                      Comprehensive training program covering data analysis, AI tools, and practical applications
+                      {currentBrochure.description}
                     </p>
                     <div className="flex flex-wrap gap-1">
-                      <span className="px-1.5 py-0.5 bg-orange-600/20 text-orange-400 text-xs rounded-full border border-orange-500/30">
-                        6 Weeks
-                      </span>
-                      <span className="px-1.5 py-0.5 bg-blue-600/20 text-blue-400 text-xs rounded-full border border-blue-500/30">
-                        All Levels
+                      <span className={`px-1.5 py-0.5 bg-${currentBrochure.color}-600/20 text-${currentBrochure.color}-400 text-xs rounded-full border border-${currentBrochure.color}-500/30`}>
+                        {currentBrochure.duration}
                       </span>
                       <span className="px-1.5 py-0.5 bg-green-600/20 text-green-400 text-xs rounded-full border border-green-500/30">
-                        Projects
+                        {currentBrochure.type}
                       </span>
                     </div>
                   </div>
@@ -344,7 +441,7 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
                   className={`w-full py-2.5 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg group flex items-center justify-center text-sm ${
                     isSubmitting 
                       ? 'bg-gray-600 cursor-not-allowed' 
-                      : 'bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800'
+                      : `bg-gradient-to-r ${currentBrochure.gradient} hover:from-${currentBrochure.color}-700 hover:to-${currentBrochure.color}-800`
                   }`}
                 >
                   {isSubmitting ? (
@@ -354,7 +451,7 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
                     </>
                   ) : (
                     <>
-                      Get Brochure Access
+                      Get {currentBrochure.title} Access
                       <ArrowRight className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
                     </>
                   )}
@@ -383,7 +480,7 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
               <div className="flex flex-col sm:flex-row gap-2 justify-center">
                 <button
                   onClick={handleDownload}
-                  className="group bg-gradient-to-r from-orange-600 to-orange-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:from-orange-700 hover:to-orange-800 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center text-sm"
+                  className={`group bg-gradient-to-r ${currentBrochure.gradient} text-white px-6 py-2.5 rounded-lg font-semibold hover:from-${currentBrochure.color}-700 hover:to-${currentBrochure.color}-800 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center text-sm`}
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Download PDF
@@ -402,22 +499,12 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
               <div className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
                 <h4 className="text-white font-semibold mb-2 text-sm">What's Inside the Brochure:</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-gray-300">
-                  <div className="flex items-center space-x-1.5">
-                    <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
-                    <span>Detailed Course Curriculum</span>
-                  </div>
-                  <div className="flex items-center space-x-1.5">
-                    <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
-                    <span>Project Portfolio Examples</span>
-                  </div>
-                  <div className="flex items-center space-x-1.5">
-                    <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
-                    <span>Career Opportunities</span>
-                  </div>
-                  <div className="flex items-center space-x-1.5">
-                    <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
-                    <span>Pricing & Payment Plans</span>
-                  </div>
+                  {currentBrochure.features.map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-1.5">
+                      <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

@@ -204,3 +204,4 @@ For issues and questions:
 ## License
 
 ISC License - See package.json for details
+Note: Backend now runs on port 5001 by default to avoid conflicts with macOS AirPlay service on port 5000
