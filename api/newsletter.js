@@ -142,18 +142,28 @@ This is an automated notification from your ARIS AI Data Analyst website.
   }
 }
 
-// Create email transporter based on environment variables
+// Create email transporter using environment variables
 function createEmailTransporter() {
   try {
-    // Gmail SMTP configuration with hardcoded credentials
+    // Get credentials from environment variables
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
+    
+    // Validate required environment variables
+    if (!emailUser || !emailPass) {
+      console.error('❌ Missing email credentials in environment variables');
+      return null;
+    }
+    
+    // Gmail SMTP configuration
     return nodemailer.createTransporter({
       service: 'gmail',
       host: 'smtp.gmail.com',
       port: 587,
       secure: false,
       auth: {
-        user: 'arisinfo.in@gmail.com',
-        pass: 'yqhs zvme mbfy geos' // Hardcoded Gmail app password (with spaces)
+        user: emailUser,
+        pass: emailPass
       },
       tls: {
         rejectUnauthorized: false

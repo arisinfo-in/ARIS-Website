@@ -220,20 +220,40 @@ Submitted on: ${new Date().toLocaleString()}
   }
 }
 
-// Create email transporter with hardcoded ARIS credentials
+// Create email transporter using environment variables
 function createEmailTransporter() {
   try {
-    console.log('📧 Using hardcoded ARIS email credentials');
+    console.log('📧 Creating email transporter with environment variables...');
     
-    // Gmail SMTP configuration with hardcoded ARIS credentials
+    // Get credentials from environment variables
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
+    
+    console.log('📧 Email configuration check:', {
+      hasUser: !!emailUser,
+      hasPass: !!emailPass,
+      userLength: emailUser ? emailUser.length : 0,
+      passLength: emailPass ? emailPass.length : 0,
+      nodeEnv: process.env.NODE_ENV
+    });
+    
+    // Validate required environment variables
+    if (!emailUser || !emailPass) {
+      console.error('❌ Missing email credentials in environment variables');
+      console.error('❌ EMAIL_USER:', emailUser ? 'SET' : 'MISSING');
+      console.error('❌ EMAIL_PASS:', emailPass ? 'SET' : 'MISSING');
+      return null;
+    }
+    
+    // Gmail SMTP configuration
     return nodemailer.createTransporter({
       service: 'gmail',
       host: 'smtp.gmail.com',
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: 'arisinfo.in@gmail.com', // ARIS Gmail address
-        pass: 'yqhs zvme mbfy geos' // ARIS Gmail App Password
+        user: emailUser,
+        pass: emailPass
       },
       tls: {
         rejectUnauthorized: false
