@@ -199,7 +199,7 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
   // Handle brochure download
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = `/${currentBrochure.file}`;
+    link.href = `/public/${currentBrochure.file}`;
     link.download = currentBrochure.file;
     document.body.appendChild(link);
     link.click();
@@ -208,7 +208,7 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
 
   // Handle brochure view
   const handleView = () => {
-    window.open(`/${currentBrochure.file}`, '_blank');
+    window.open(`/public/${currentBrochure.file}`, '_blank');
   };
 
   // Reset form when modal closes
