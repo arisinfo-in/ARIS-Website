@@ -85,10 +85,16 @@ export default async function handler(req, res) {
       timestamp: new Date().toISOString()
     });
     
-    // Send email notification using hardcoded ARIS credentials
+    // Send email notification using environment variables
     let emailSent = false;
     try {
       console.log('📧 Attempting to send email notification...');
+      console.log('📧 Environment variables check:', {
+        hasUser: !!process.env.EMAIL_USER,
+        hasPass: !!process.env.EMAIL_PASS,
+        userLength: process.env.EMAIL_USER ? process.env.EMAIL_USER.length : 0,
+        passLength: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.length : 0
+      });
       
       emailSent = await sendContactEmail({
         name,
