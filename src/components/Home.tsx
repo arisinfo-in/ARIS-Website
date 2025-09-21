@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Phone, MapPin, CheckCircle, BarChart3, Brain, Users, Zap, ArrowRight, Star, TrendingUp, Linkedin, Twitter, Instagram, Youtube, Map, User, Menu, X, FileText } from 'lucide-react';
+import { Mail, Phone, MapPin, CheckCircle, BarChart3, Brain, Users, Zap, ArrowRight, Star, TrendingUp, Linkedin, Twitter, Instagram, Youtube, Map, User, Menu, X, FileText, Building, Rocket, Lightbulb, Wrench, Target, Globe, Briefcase, Network, Settings, PieChart, Workflow, Expand, UserPlus } from 'lucide-react';
 import Logo from './Logo';
 import GoogleAnalytics from './GoogleAnalytics';
 import RoadmapOverlay from './RoadmapOverlay';
@@ -29,7 +29,6 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [isVisible, setIsVisible] = useState(false);
-  const [statsVisible, setStatsVisible] = useState(false);
   const [typingText, setTypingText] = useState('');
   const [typingIndex, setTypingIndex] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -52,31 +51,13 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     
     setIsVisible(true);
     
-    // Intersection Observer for stats animation
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setStatsVisible(true);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-
-    const statsElement = document.getElementById('stats-section');
-    if (statsElement) {
-      observer.observe(statsElement);
-    }
-
-    return () => observer.disconnect();
   }, []);
 
   // Typing effect for "AI Data Analyst"
   useEffect(() => {
     const text = "AI Data Analyst.";
-    const typingSpeed = 150; // milliseconds per character
-    const pauseTime = 2000; // pause for 2 seconds when complete
+    const typingSpeed = 80; // milliseconds per character
+    const pauseTime = 1000; // pause for 1 second when complete
     
     if (typingIndex < text.length) {
       // Typing phase
@@ -97,21 +78,32 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     }
   }, [typingIndex]);
 
-  // Mouse movement handler for parallax effect
+  // Mouse movement handler for parallax effect (throttled for performance)
   useEffect(() => {
+    let timeoutId: number | undefined;
+    
     const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
+      // Throttle mouse movement updates
+      if (timeoutId) return;
       
-      setMousePosition({
-        x: (clientX - centerX) / centerX,
-        y: (clientY - centerY) / centerY
-      });
+      timeoutId = setTimeout(() => {
+        const { clientX, clientY } = e;
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        
+        setMousePosition({
+          x: (clientX - centerX) / centerX * 0.3, // Reduce parallax intensity
+          y: (clientY - centerY) / centerY * 0.3
+        });
+        timeoutId = undefined;
+      }, 16); // ~60fps
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -250,12 +242,6 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     }
   ];
 
-  const stats = [
-    { number: "50K+", label: "Students Trained", icon: CheckCircle },
-    { number: "100%", label: "Learner Satisfaction", icon: Star },
-    { number: "50+", label: "Projects Completed", icon: Brain },
-    { number: "200%", label: "Average ROI Increase", icon: TrendingUp }
-  ];
 
   return (
     <div className="min-h-screen bg-gray-900 overflow-x-hidden">
@@ -264,13 +250,13 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
       
       {/* Header */}
       <header className="fixed w-full top-0 z-50 transition-all duration-300 px-4 py-4">
-        <div className="max-w-6xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-full px-6 py-4 border border-gray-700 shadow-lg flex items-center justify-between">
-          <div className={`transform transition-all duration-700 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
+        <div className="max-w-6xl mx-auto bg-gray-800/95 rounded-full px-6 py-4 border border-gray-700 shadow-lg flex items-center justify-between">
+          <div className={`transform transition-all duration-200 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
             <Logo size="sm" />
           </div>
           
           {/* Desktop Navigation */}
-          <nav className={`hidden md:flex transform transition-all duration-700 delay-300 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
+          <nav className={`hidden md:flex transform transition-all duration-200 delay-100 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
             <div className="flex space-x-6">
               <button className="text-orange-400 relative group px-4 py-2 rounded-full bg-gray-700/50">
                 Home
@@ -320,7 +306,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
             ? 'opacity-100 translate-y-0 pointer-events-auto' 
             : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}>
-          <div className="bg-gray-800/95 backdrop-blur-sm rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
+          <div className="bg-gray-800/95 rounded-2xl border border-gray-700 shadow-2xl overflow-hidden">
             <nav className="py-4">
               <div className="space-y-2">
                 <button 
@@ -701,31 +687,116 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section id="stats-section" className="py-12 sm:py-16 bg-gray-800">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <div 
-                  key={index}
-                  className={`text-center transform transition-all duration-700 ${
-                    statsVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-                  }`}
-                  style={{ transitionDelay: `${index * 200}ms` }}
-                >
-                  <div className="bg-gray-700 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 hover:bg-orange-600 transition-colors duration-300">
-                    <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500 group-hover:text-white transition-colors duration-300" />
-                  </div>
-                  <div className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{stat.number}</div>
-                  <div className="text-gray-400 text-sm sm:text-base">{stat.label}</div>
+      {/* About Section */}
+      <section id="about" className="py-16 sm:py-20 bg-gray-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-900/20 to-transparent"></div>
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
+            <div className="space-y-4 sm:space-y-6">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6 sm:mb-8">About ARIS</h3>
+              <div className="space-y-4">
+                <p className="text-base sm:text-lg text-gray-300 leading-relaxed hover:text-white transition-colors duration-300">
+                  ARIS is a leading AI data analytics company specializing in agentic AI training and consultancy. 
+                  Our team of expert data scientists and AI engineers combine cutting-edge technology with deep 
+                  industry knowledge to deliver transformative solutions.
+                </p>
+                <p className="text-base sm:text-lg text-gray-300 leading-relaxed hover:text-white transition-colors duration-300">
+                  We empower organizations to harness the full potential of their data through intelligent, 
+                  autonomous AI systems that can adapt, learn, and make decisions independently.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-4 sm:gap-6 pt-4">
+                <div className="flex items-center group cursor-pointer">
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-gray-300 group-hover:text-white transition-colors duration-300 text-sm sm:text-base">Expert AI Engineers</span>
                 </div>
-              );
-            })}
+                <div className="flex items-center group cursor-pointer">
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-gray-300 group-hover:text-white transition-colors duration-300 text-sm sm:text-base">Custom Solutions</span>
+                </div>
+                <div className="flex items-center group cursor-pointer">
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-gray-300 group-hover:text-white transition-colors duration-300 text-sm sm:text-base">Proven Results</span>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl p-6 sm:p-8 transform hover:scale-105 transition-all duration-500 hover:shadow-xl border border-gray-600">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <div className="bg-gray-900 rounded-lg p-3 sm:p-4 hover:bg-orange-600 transition-colors duration-300 group">
+                    <div className="text-xl sm:text-2xl font-bold text-orange-500 group-hover:text-white transition-colors duration-300">25+</div>
+                    <div className="text-xs sm:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">Years Experience</div>
+                  </div>
+                  <div className="bg-gray-900 rounded-lg p-3 sm:p-4 hover:bg-orange-600 transition-colors duration-300 group">
+                    <div className="text-xl sm:text-2xl font-bold text-orange-500 group-hover:text-white transition-colors duration-300">Online</div>
+                    <div className="text-xs sm:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">Interactive Learning</div>
+                  </div>
+                  <div className="bg-gray-900 rounded-lg p-3 sm:p-4 hover:bg-orange-600 transition-colors duration-300 group">
+                    <div className="text-xl sm:text-2xl font-bold text-orange-500 group-hover:text-white transition-colors duration-300">24/7</div>
+                    <div className="text-xs sm:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">Support</div>
+                  </div>
+                  <div className="bg-gray-900 rounded-lg p-3 sm:p-4 hover:bg-orange-600 transition-colors duration-300 group">
+                    <div className="text-xl sm:text-2xl font-bold text-orange-500 group-hover:text-white transition-colors duration-300">Monthly</div>
+                    <div className="text-xs sm:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">Physical Meetup</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Training Section */}
+      <section id="training" className="py-16 sm:py-20 bg-gray-800 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-900/10 to-transparent"></div>
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <div className="text-center mb-12 sm:mb-16">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">AI Analytics Online Training Programs</h3>
+            <p className="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg">
+            Our AI Analytics Training Program blends data analytics with cutting-edge AI. Gain practical skills in machine learning, generative AI, and ethical data use to drive smarter business decisions.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+            <div className="bg-gray-700 p-6 sm:p-8 rounded-xl border border-gray-600 hover:border-orange-500 transition-all duration-500 hover:shadow-xl hover:shadow-orange-500/20 group">
+              <div className="bg-orange-600 w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-all duration-300">
+                <Brain className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+              </div>
+              <h4 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Vibe Analytics</h4>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">Advanced course on vibe analytics, data preprocessing, and AI models.</p>
+              <div className="flex items-center text-orange-500 font-medium text-sm sm:text-base">
+                <User className="w-4 h-4 mr-2" />
+                Syed Shabaz
+              </div>
+            </div>
+            
+            <div className="bg-gray-700 p-6 sm:p-8 rounded-xl border border-gray-600 hover:border-orange-500 transition-all duration-500 hover:shadow-xl hover:shadow-orange-500/20 group">
+              <div className="bg-orange-600 w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-all duration-300">
+                <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+              </div>
+              <h4 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Data Analytics & AI</h4>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">Learn the basics of data analytics, data preprocessing, and AI models.</p>
+              <div className="flex items-center text-orange-500 font-medium text-sm sm:text-base">
+                <User className="w-4 h-4 mr-2" />
+                Syed Rahman Hussain
+              </div>
+            </div>
+            
+            <div className="bg-gray-700 p-6 sm:p-8 rounded-xl border border-gray-600 hover:border-orange-500 transition-all duration-500 hover:shadow-xl hover:shadow-orange-500/20 group sm:col-span-2 md:col-span-1">
+              <div className="bg-orange-600 w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-all duration-300">
+                <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+              </div>
+              <h4 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Prompting & AI Tools</h4>
+              <p className="text-gray-400 mb-4 text-sm sm:text-base">Transform data into actionable insights with effective AI prompting.</p>
+              <div className="flex items-center text-orange-500 font-medium text-sm sm:text-base">
+                <User className="w-4 h-4 mr-2" />
+                Mohammed Imtiyaz
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
 
       {/* Services Section */}
       <section id="services" className="py-16 sm:py-20 bg-black relative overflow-hidden">
@@ -786,54 +857,163 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         </div>
       </section>
 
-      {/* Training Section */}
-      <section id="training" className="py-16 sm:py-20 bg-gray-800 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-900/10 to-transparent"></div>
+      {/* Business Launchpad Section */}
+      <section id="business-launchpad" className="py-16 sm:py-20 bg-gradient-to-br from-black via-gray-900 to-gray-800 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              radial-gradient(circle at 20% 80%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.05) 0%, transparent 50%),
+              linear-gradient(rgba(249, 115, 22, 0.05) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(249, 115, 22, 0.05) 1px, transparent 1px)
+            `,
+            backgroundSize: '100px 100px, 100px 100px, 40px 40px, 40px 40px'
+          }}></div>
+        </div>
+        
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="text-center mb-12 sm:mb-16">
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">AI Analytics Training Programs</h3>
-            <p className="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg">
-            Our AI Analytics Training Program blends data analytics with cutting-edge AI. Gain practical skills in machine learning, generative AI, and ethical data use to drive smarter business decisions.
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
+              Launch Your Career with 
+              <span className="text-orange-500"> ARIS Support</span>
+            </h3>
+            <p className="text-gray-400 max-w-3xl mx-auto text-base sm:text-lg">
+              Transform your learning into earning. We don't just train you - we help you build your business, 
+              start freelancing, or launch your startup with hands-on support and proven strategies.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-            <div className="bg-gray-700 p-6 sm:p-8 rounded-xl border border-gray-600 hover:border-orange-500 transition-all duration-500 hover:shadow-xl hover:shadow-orange-500/20 group">
-              <div className="bg-orange-600 w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-all duration-300">
-                <Brain className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-              </div>
-              <h4 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Vibe Analytics</h4>
-              <p className="text-gray-400 mb-4 text-sm sm:text-base">Advanced course on vibe analytics, data preprocessing, and AI models.</p>
-              <div className="flex items-center text-orange-500 font-medium text-sm sm:text-base">
-                <User className="w-4 h-4 mr-2" />
-                Syed Shabaz
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-10">
+            {/* Startup Support */}
+            <div className="group">
+              <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gray-700/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/8 to-orange-700/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 scale-110"></div>
+                
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Rocket className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-white group-hover:text-orange-400 transition-colors duration-300">Startup Support</h4>
+                    <p className="text-gray-400 text-sm">From idea to launch</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-center space-x-3">
+                    <Lightbulb className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Idea Validation & Market Research</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Wrench className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Prototype & MVP Development</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Target className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Business Planning & Strategy</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Rocket className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Launch & Growth Support</span>
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-gray-700/50">
+                  <div className="flex items-center justify-between">
+                    <span className="text-orange-400 text-sm font-medium">Success Rate: 85%</span>
+                    <span className="text-gray-400 text-xs">50+ Startups Launched</span>
+                  </div>
+                </div>
               </div>
             </div>
-            
-            <div className="bg-gray-700 p-6 sm:p-8 rounded-xl border border-gray-600 hover:border-orange-500 transition-all duration-500 hover:shadow-xl hover:shadow-orange-500/20 group">
-              <div className="bg-orange-600 w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-all duration-300">
-                <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-              </div>
-              <h4 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Data Analytics & AI</h4>
-              <p className="text-gray-400 mb-4 text-sm sm:text-base">Learn the basics of data analytics, data preprocessing, and AI models.</p>
-              <div className="flex items-center text-orange-500 font-medium text-sm sm:text-base">
-                <User className="w-4 h-4 mr-2" />
-                Syed Rahman Hussain
+
+            {/* Freelancing Support */}
+            <div className="group">
+              <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gray-700/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/8 to-orange-700/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 scale-110"></div>
+                
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-white group-hover:text-orange-400 transition-colors duration-300">Freelancing Support</h4>
+                    <p className="text-gray-400 text-sm">Build your freelance empire</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-center space-x-3">
+                    <Globe className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Platform Setup (Upwork, Fiverr, Freelancer)</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Briefcase className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Portfolio & Profile Optimization</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Network className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Networking & Client Acquisition</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Building className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Agency Building & Scaling</span>
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-gray-700/50">
+                  <div className="flex items-center justify-between">
+                    <span className="text-orange-400 text-sm font-medium">Avg. Income: $5K+/month</span>
+                    <span className="text-gray-400 text-xs">200+ Freelancers</span>
+                  </div>
+                </div>
               </div>
             </div>
-            
-            <div className="bg-gray-700 p-6 sm:p-8 rounded-xl border border-gray-600 hover:border-orange-500 transition-all duration-500 hover:shadow-xl hover:shadow-orange-500/20 group sm:col-span-2 md:col-span-1">
-              <div className="bg-orange-600 w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-all duration-300">
-                <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-              </div>
-              <h4 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Prompting & AI Tools</h4>
-              <p className="text-gray-400 mb-4 text-sm sm:text-base">Transform data into actionable insights with effective AI prompting.</p>
-              <div className="flex items-center text-orange-500 font-medium text-sm sm:text-base">
-                <User className="w-4 h-4 mr-2" />
-                Mohammed Imtiyaz
+
+            {/* SME Support */}
+            <div className="group">
+              <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gray-700/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/8 to-orange-700/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 scale-110"></div>
+                
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Building className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-white group-hover:text-orange-400 transition-colors duration-300">SME Support</h4>
+                    <p className="text-gray-400 text-sm">Digital transformation</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-center space-x-3">
+                    <Settings className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">AI Integration & Automation</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <PieChart className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Custom Analytics Solutions</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Workflow className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Process Optimization</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Expand className="w-4 h-4 text-orange-500" />
+                    <span className="text-gray-300 text-sm">Market Expansion Support</span>
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-gray-700/50">
+                  <div className="flex items-center justify-between">
+                    <span className="text-orange-400 text-sm font-medium">ROI: 300%+</span>
+                    <span className="text-gray-400 text-xs">100+ SMEs Transformed</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -1010,65 +1190,6 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-16 sm:py-20 bg-gray-900 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-900/20 to-transparent"></div>
-        <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
-            <div className="space-y-4 sm:space-y-6">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6 sm:mb-8">About ARIS</h3>
-              <div className="space-y-4">
-                <p className="text-base sm:text-lg text-gray-300 leading-relaxed hover:text-white transition-colors duration-300">
-                  ARIS is a leading AI data analytics company specializing in agentic AI training and consultancy. 
-                  Our team of expert data scientists and AI engineers combine cutting-edge technology with deep 
-                  industry knowledge to deliver transformative solutions.
-                </p>
-                <p className="text-base sm:text-lg text-gray-300 leading-relaxed hover:text-white transition-colors duration-300">
-                  We empower organizations to harness the full potential of their data through intelligent, 
-                  autonomous AI systems that can adapt, learn, and make decisions independently.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-4 sm:gap-6 pt-4">
-                <div className="flex items-center group cursor-pointer">
-                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300" />
-                  <span className="text-gray-300 group-hover:text-white transition-colors duration-300 text-sm sm:text-base">Expert AI Engineers</span>
-                </div>
-                <div className="flex items-center group cursor-pointer">
-                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300" />
-                  <span className="text-gray-300 group-hover:text-white transition-colors duration-300 text-sm sm:text-base">Custom Solutions</span>
-                </div>
-                <div className="flex items-center group cursor-pointer">
-                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 sm:mr-3 group-hover:scale-110 transition-transform duration-300" />
-                  <span className="text-gray-300 group-hover:text-white transition-colors duration-300 text-sm sm:text-base">Proven Results</span>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl p-6 sm:p-8 transform hover:scale-105 transition-all duration-500 hover:shadow-xl border border-gray-600">
-                <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                  <div className="bg-gray-900 rounded-lg p-3 sm:p-4 hover:bg-orange-600 transition-colors duration-300 group">
-                    <div className="text-xl sm:text-2xl font-bold text-orange-500 group-hover:text-white transition-colors duration-300">25+</div>
-                    <div className="text-xs sm:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">Years Experience</div>
-                  </div>
-                  <div className="bg-gray-900 rounded-lg p-3 sm:p-4 hover:bg-orange-600 transition-colors duration-300 group">
-                    <div className="text-xl sm:text-2xl font-bold text-orange-500 group-hover:text-white transition-colors duration-300">100+</div>
-                    <div className="text-xs sm:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">AI Models</div>
-                  </div>
-                  <div className="bg-gray-900 rounded-lg p-3 sm:p-4 hover:bg-orange-600 transition-colors duration-300 group">
-                    <div className="text-xl sm:text-2xl font-bold text-orange-500 group-hover:text-white transition-colors duration-300">24/7</div>
-                    <div className="text-xs sm:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">Support</div>
-                  </div>
-                  <div className="bg-gray-900 rounded-lg p-3 sm:p-4 hover:bg-orange-600 transition-colors duration-300 group">
-                    <div className="text-xl sm:text-2xl font-bold text-orange-500 group-hover:text-white transition-colors duration-300">Monthly</div>
-                    <div className="text-xs sm:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">Physical Meetup</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Contact Section */}
       <section id="contact" className="py-16 sm:py-20 bg-gradient-to-br from-gray-800 to-black">
         <div className="max-w-6xl mx-auto px-4">
@@ -1234,7 +1355,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
       </section>
 
       {/* Footer */}
-      <footer className="bg-black text-white py-12 sm:py-16 relative overflow-hidden">
+      <footer className="bg-black text-white py-16 relative overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 bg-gradient-to-r from-orange-900/20 via-orange-800/10 to-transparent"></div>
         <div className="absolute inset-0 opacity-10">
@@ -1249,78 +1370,78 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           {/* Main Footer Content */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-10 sm:mb-12">
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
             {/* Company Info */}
-            <div className="space-y-3 sm:space-y-4">
+            <div className="space-y-4">
               <div className="group">
-                <Logo size="md" className="justify-start mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <p className="text-gray-400 text-xs sm:text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                <Logo size="md" className="justify-start mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
                   AI Data Analyst Powered By Agentic AI Training & Consultancy
                 </p>
               </div>
-              <div className="space-y-2 sm:space-y-3">
-                <div className="flex items-center space-x-2 sm:space-x-3 group cursor-pointer">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
-                    <Mail className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3 group cursor-pointer">
+                  <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
+                    <Mail className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-xs sm:text-sm">arisinfo.in@gmail.com</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">arisinfo.in@gmail.com</span>
                 </div>
-                <div className="flex items-center space-x-2 sm:space-x-3 group cursor-pointer">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
-                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
+                <div className="flex items-center space-x-3 group cursor-pointer">
+                  <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
+                    <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-xs sm:text-sm">+91 8374316403</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91 8374316403</span>
                 </div>
-                <div className="flex items-center space-x-2 sm:space-x-3 group cursor-pointer">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
-                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
+                <div className="flex items-center space-x-3 group cursor-pointer">
+                  <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
+                    <MapPin className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-xs sm:text-sm">Global Reach</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">Global Reach</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Links */}
-            <div className="space-y-3 sm:space-y-4">
-              <h4 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 group">
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-white mb-4 group">
                 <span className="relative">
                   Quick Links
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300"></span>
                 </span>
               </h4>
-              <div className="space-y-2 sm:space-y-3">
+              <div className="space-y-3">
                 <div className="group cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
-                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-xs sm:text-sm group-hover:translate-x-2 inline-block">
+                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-sm group-hover:translate-x-2 inline-block">
                     Home
                   </span>
                 </div>
                 <div className="group cursor-pointer" onClick={onNavigateServices}>
-                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-xs sm:text-sm group-hover:translate-x-2 inline-block">
+                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-sm group-hover:translate-x-2 inline-block">
                     Services
                   </span>
                 </div>
                 <div className="group cursor-pointer" onClick={onNavigateTraining}>
-                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-xs sm:text-sm group-hover:translate-x-2 inline-block">
+                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-sm group-hover:translate-x-2 inline-block">
                     Training
                   </span>
                 </div>
                 <div className="group cursor-pointer" onClick={onNavigateAbout}>
-                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-xs sm:text-sm group-hover:translate-x-2 inline-block">
+                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-sm group-hover:translate-x-2 inline-block">
                     About
                   </span>
                 </div>
                 <div className="group cursor-pointer" onClick={onNavigateContact}>
-                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-xs sm:text-sm group-hover:translate-x-2 inline-block">
+                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-sm group-hover:translate-x-2 inline-block">
                     Contact
                   </span>
                 </div>
                 <div className="group cursor-pointer" onClick={() => setIsRoadmapOpen(true)}>
-                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-xs sm:text-sm group-hover:translate-x-2 inline-block">
+                  <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-sm group-hover:translate-x-2 inline-block">
                     Roadmap
                   </span>
                 </div>
                 <div className="group cursor-pointer" onClick={() => setIsBrochureModalOpen(true)}>
-                  <span className="text-orange-400 hover:text-orange-300 transition-all duration-300 text-xs sm:text-sm group-hover:translate-x-2 inline-block font-semibold">
+                  <span className="text-orange-400 hover:text-orange-300 transition-all duration-300 text-sm group-hover:translate-x-2 inline-block font-semibold">
                     Brochure
                   </span>
                 </div>
@@ -1328,17 +1449,17 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
             </div>
 
             {/* Services */}
-            <div className="space-y-3 sm:space-y-4">
-              <h4 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 group">
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-white mb-4 group">
                 <span className="relative">
                   Our Services
                   <span className="absolute bottom-0 left-0 w-0 h-0 w-full h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300"></span>
                 </span>
               </h4>
-              <div className="space-y-2 sm:space-y-3">
+              <div className="space-y-3">
                 {['AI Analytics Training', 'Self-Paced Learning', 'AI Consultancy', 'Agentic AI Solutions'].map((service, index) => (
                   <div key={index} className="group cursor-pointer">
-                    <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-xs sm:text-sm group-hover:translate-x-2 inline-block">
+                    <span className="text-gray-400 hover:text-orange-400 transition-all duration-300 text-sm group-hover:translate-x-2 inline-block">
                       {service}
                     </span>
                   </div>
@@ -1347,26 +1468,26 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
             </div>
 
             {/* Newsletter & Social */}
-            <div className="space-y-3 sm:space-y-4">
-              <h4 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 group">
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-white mb-4 group">
                 <span className="relative">
                   Stay Connected
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300"></span>
                 </span>
               </h4>
-              <div className="space-y-3 sm:space-y-4">
-                <form onSubmit={handleNewsletterSubmit} className="space-y-2 sm:space-y-3">
+              <div className="space-y-4">
+                <form onSubmit={handleNewsletterSubmit} className="space-y-3">
                   <input 
                     type="email" 
                     placeholder="Enter your email"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 text-white placeholder-gray-400 text-sm sm:text-base"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 text-white placeholder-gray-400"
                   />
                   <button 
                     type="submit"
                     disabled={newsletterStatus === 'submitting'}
-                    className={`w-full py-2 sm:py-3 px-3 sm:px-4 rounded-lg font-medium transition-all duration-300 hover:scale-105 group flex items-center justify-center text-sm sm:text-base ${
+                    className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 hover:scale-105 group flex items-center justify-center ${
                       newsletterStatus === 'submitting' 
                         ? 'bg-gray-600 cursor-not-allowed' 
                         : 'bg-orange-600 hover:bg-orange-700'
@@ -1374,7 +1495,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   >
                     {newsletterStatus === 'submitting' ? (
                       <>
-                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                         Subscribing...
                       </>
                     ) : (
@@ -1387,18 +1508,18 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   
                   {/* Newsletter Status Messages */}
                   {newsletterStatus === 'success' && (
-                    <div className="p-2 bg-green-600/20 border border-green-500/50 rounded-lg">
-                      <p className="text-green-400 text-center text-xs sm:text-sm">Successfully subscribed!</p>
+                    <div className="p-3 bg-green-600/20 border border-green-500/50 rounded-lg">
+                      <p className="text-green-400 text-center text-sm">Successfully subscribed!</p>
                     </div>
                   )}
                   
                   {newsletterStatus === 'error' && (
-                    <div className="p-2 bg-red-600/20 border border-red-500/50 rounded-lg">
-                      <p className="text-red-400 text-center text-xs sm:text-sm">Subscription failed. Please try again.</p>
+                    <div className="p-3 bg-red-600/20 border border-red-500/50 rounded-lg">
+                      <p className="text-red-400 text-center text-sm">Subscription failed. Please try again.</p>
                     </div>
                   )}
                 </form>
-                <div className="flex space-x-3 sm:space-x-4">
+                <div className="flex space-x-4">
                   {[
                     { icon: Linkedin, label: 'LinkedIn' },
                     { icon: Twitter, label: 'Twitter' },
@@ -1408,8 +1529,8 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                     const IconComponent = social.icon;
                     return (
                       <div key={index} className="group cursor-pointer">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300 group-hover:scale-110">
-                          <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white transition-colors duration-300" />
+                        <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300 group-hover:scale-110">
+                          <IconComponent className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-300" />
                         </div>
                       </div>
                     );
@@ -1420,22 +1541,22 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
           </div>
 
           {/* Bottom Footer */}
-          <div className="border-t border-gray-700 pt-6 sm:pt-8">
-            <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
-              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6">
-                <span className="text-gray-400 text-xs sm:text-sm hover:text-gray-300 transition-colors duration-300 cursor-pointer">
+          <div className="border-t border-gray-700 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <div className="flex items-center space-x-6">
+                <span className="text-gray-400 text-sm hover:text-gray-300 transition-colors duration-300 cursor-pointer">
                   © 2025 ARIS. All rights reserved.
                 </span>
-                <span className="text-gray-400 text-xs sm:text-sm hover:text-orange-400 transition-colors duration-300 cursor-pointer">
+                <span className="text-gray-400 text-sm hover:text-orange-400 transition-colors duration-300 cursor-pointer">
                   Privacy Policy
                 </span>
-                <span className="text-gray-400 text-xs sm:text-sm hover:text-orange-400 transition-colors duration-300 cursor-pointer">
+                <span className="text-gray-400 text-sm hover:text-orange-400 transition-colors duration-300 cursor-pointer">
                   Terms of Service
                 </span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-400 text-xs sm:text-sm">
+              <div className="flex items-center space-x-2 text-gray-400 text-sm">
                 <span>Made with</span>
-                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full animate-pulse"></div>
+                <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
                 <span>by ARIS Team</span>
               </div>
             </div>

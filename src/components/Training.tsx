@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Brain, BarChart3, Zap, BookOpen, Users, Award, CheckCircle, 
   ArrowRight, Star, Target, Lightbulb, Shield, Globe,
-  ChevronDown, ChevronUp, User, TrendingUp, Code, Database,
+  ChevronDown, ChevronUp, User, UserPlus, TrendingUp, Code, Database,
   FileSpreadsheet, PieChart, MapPin, Phone, Mail, Clock,
   Linkedin, Twitter, Instagram, Youtube, Calculator, Cpu,
   Menu, X, FileText
@@ -63,19 +63,30 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
   useEffect(() => {
     setIsVisible(true);
     
+    let timeoutId: number | undefined;
+    
     const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
+      // Throttle mouse movement updates
+      if (timeoutId) return;
       
-      setMousePosition({
-        x: (clientX - centerX) / centerX,
-        y: (clientY - centerY) / centerY
-      });
+      timeoutId = setTimeout(() => {
+        const { clientX, clientY } = e;
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        
+        setMousePosition({
+          x: (clientX - centerX) / centerX * 0.3, // Reduce parallax intensity
+          y: (clientY - centerY) / centerY * 0.3
+        });
+        timeoutId = undefined;
+      }, 16); // ~60fps
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   const trainingPrograms: TrainingProgram[] = [
@@ -326,13 +337,13 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
     <div className="min-h-screen bg-gray-900 overflow-x-hidden">
       {/* Header */}
       <header className="fixed w-full top-0 z-50 transition-all duration-300 px-4 py-4">
-        <div className="max-w-6xl mx-auto bg-gray-800/90 backdrop-blur-sm rounded-full px-6 py-4 border border-gray-700 shadow-lg flex items-center justify-between">
-          <div className={`transform transition-all duration-700 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
+        <div className="max-w-6xl mx-auto bg-gray-800/95 rounded-full px-6 py-4 border border-gray-700 shadow-lg flex items-center justify-between">
+          <div className={`transform transition-all duration-200 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
             <div onClick={onNavigateHome} className="cursor-pointer">
               <Logo size="sm" />
             </div>
           </div>
-          <nav className={`hidden md:flex transform transition-all duration-700 delay-300 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
+          <nav className={`hidden md:flex transform transition-all duration-200 delay-100 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
             <div className="flex space-x-6">
               <button onClick={onNavigateHome} className="text-gray-300 hover:text-orange-400 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full hover:bg-gray-700/50">
                 Home
@@ -383,7 +394,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
           ? 'opacity-100 translate-y-0 pointer-events-auto' 
           : 'opacity-0 -translate-y-4 pointer-events-none'
       }`}>
-        <div className="bg-gray-800/95 backdrop-blur-sm rounded-2xl border border-gray-700 shadow-xl p-6">
+        <div className="bg-gray-800/95 rounded-2xl border border-gray-700 shadow-xl p-6">
           <nav className="flex flex-col space-y-4">
             <button 
               onClick={() => { onNavigateHome(); setIsMobileMenuOpen(false); }}
@@ -985,7 +996,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
               <h4 className="text-lg font-semibold text-white mb-4 group">
                 <span className="relative">
                   Quick Links
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300"></span>
                 </span>
               </h4>
               <div className="space-y-3">

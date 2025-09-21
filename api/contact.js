@@ -251,7 +251,7 @@ function createEmailTransporter() {
       return null;
     }
     
-    // Gmail SMTP configuration
+    // Gmail SMTP configuration with enhanced settings for Vercel
     return nodemailer.createTransporter({
       service: 'gmail',
       host: 'smtp.gmail.com',
@@ -262,8 +262,12 @@ function createEmailTransporter() {
         pass: emailPass
       },
       tls: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+        ciphers: 'SSLv3'
+      },
+      connectionTimeout: 60000, // 60 seconds
+      greetingTimeout: 30000, // 30 seconds
+      socketTimeout: 60000 // 60 seconds
     });
     
   } catch (error) {
