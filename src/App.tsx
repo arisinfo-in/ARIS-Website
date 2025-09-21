@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { usePerformance, usePreloadCriticalResources } from './hooks/usePerformance';
 import SEO from './components/SEO';
@@ -22,6 +22,22 @@ function App() {
   // Performance monitoring
   usePerformance();
   usePreloadCriticalResources();
+
+  // First-time visitor detection and brochure modal
+  useEffect(() => {
+    const hasVisitedBefore = localStorage.getItem('aris-visited');
+    
+    if (!hasVisitedBefore) {
+      // Show brochure modal after a short delay for better UX
+      const timer = setTimeout(() => {
+        setIsBrochureModalOpen(true);
+        // Mark as visited so it doesn't show again
+        localStorage.setItem('aris-visited', 'true');
+      }, 2000); // 2 second delay
+      
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const navigateToHome = () => {
     setCurrentPage('home');
