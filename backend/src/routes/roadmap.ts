@@ -1,6 +1,6 @@
 import express from 'express';
 import { RoadmapData, ApiResponse } from '../types';
-import emailService from '../services/emailService';
+import firebaseService from '../services/firebaseService';
 import { validateRoadmap } from '../middleware/validation';
 
 const router = express.Router();
@@ -59,14 +59,14 @@ router.post('/selection', validateRoadmap, async (req: express.Request, res: exp
       preferences: req.body.preferences || []
     };
 
-    // Send email notification about roadmap selection
-    const emailSent = await emailService.sendRoadmapSelectionEmail(roadmapData);
+    // Store roadmap selection in Firebase
+    const firebaseStored = await firebaseService.storeRoadmapSelection(roadmapData);
 
-    if (!emailSent) {
+    if (!firebaseStored) {
       return res.status(500).json({
         success: false,
-        message: 'Failed to send notification email. Please try again later.',
-        error: 'Email service unavailable'
+        message: 'Failed to store roadmap selection. Please try again later.',
+        error: 'Firebase service unavailable'
       } as ApiResponse);
     }
 
@@ -90,7 +90,8 @@ router.post('/selection', validateRoadmap, async (req: express.Request, res: exp
         contactInfo: {
           email: roadmapData.email,
           name: roadmapData.name
-        }
+        },
+        firebaseStored: firebaseStored
       }
     } as ApiResponse);
 

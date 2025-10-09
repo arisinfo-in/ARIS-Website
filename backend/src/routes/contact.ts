@@ -1,6 +1,6 @@
 import express from 'express';
 import { ContactFormData, ApiResponse } from '../types';
-import emailService from '../services/emailService';
+import firebaseService from '../services/firebaseService';
 import { validateContactForm } from '../middleware/validation';
 
 const router = express.Router();
@@ -19,18 +19,18 @@ router.post('/', validateContactForm, async (req: express.Request, res: express.
       source: req.body.source
     };
 
-    // Send email notification (optional - don't fail if email fails)
-    let emailSent = false;
+    // Store in Firebase database
+    let firebaseStored = false;
     try {
-      emailSent = await emailService.sendContactFormEmail(formData);
-      if (emailSent) {
-        console.log('✅ Email notification sent successfully');
+      firebaseStored = await firebaseService.storeContactForm(formData);
+      if (firebaseStored) {
+        console.log('✅ Contact form stored in Firebase successfully');
       } else {
-        console.warn('⚠️ Email notification failed, but continuing with form submission');
+        console.warn('⚠️ Firebase storage failed, but continuing with form submission');
       }
-    } catch (emailError) {
-      console.error('❌ Email service error:', emailError);
-      console.warn('⚠️ Email notification failed, but continuing with form submission');
+    } catch (firebaseError) {
+      console.error('❌ Firebase service error:', firebaseError);
+      console.warn('⚠️ Firebase storage failed, but continuing with form submission');
     }
 
     // Log the submission (in production, you might want to log to a file or service)
@@ -43,11 +43,11 @@ router.post('/', validateContactForm, async (req: express.Request, res: express.
     res.status(200).json({
       success: true,
       message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
-      data: {
-        submittedAt: new Date().toISOString(),
-        source: formData.source,
-        emailNotificationSent: emailSent
-      }
+        data: {
+          submittedAt: new Date().toISOString(),
+          source: formData.source,
+          firebaseStored: firebaseStored
+        }
     } as ApiResponse);
 
   } catch (error) {

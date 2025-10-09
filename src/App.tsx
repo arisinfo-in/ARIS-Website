@@ -75,7 +75,7 @@ function App() {
     <HelmetProvider>
       <div>
         <SEO />
-        <GoogleAnalytics measurementId="G-XXXXXXXXXX" />
+        <GoogleAnalytics measurementId="G-09B0ZGXG1B" />
         
         <Suspense fallback={<LoadingSpinner />}>
           {currentPage === 'home' && <Home onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}

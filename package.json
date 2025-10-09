@@ -30,6 +30,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.6.2",
     "d3": "^7.9.0",
+    "firebase": "^12.3.0",
     "framer-motion": "^12.23.12",
     "gsap": "^3.13.0",
     "lottie-react": "^2.4.1",

@@ -12,6 +12,7 @@ import rateLimit from 'express-rate-limit';
 import contactRoutes from './routes/contact';
 import newsletterRoutes from './routes/newsletter';
 import roadmapRoutes from './routes/roadmap';
+import dashboardRoutes from './routes/dashboard';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -72,6 +73,7 @@ app.get('/health', (req, res) => {
 app.use('/api/contact', contactRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/roadmap', roadmapRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // 404 handler
 app.use((req, res) => {

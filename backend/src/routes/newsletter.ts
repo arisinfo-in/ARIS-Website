@@ -1,6 +1,6 @@
 import express from 'express';
 import { NewsletterData, ApiResponse } from '../types';
-import emailService from '../services/emailService';
+import firebaseService from '../services/firebaseService';
 import { validateNewsletter } from '../middleware/validation';
 
 const router = express.Router();
@@ -13,14 +13,14 @@ router.post('/', validateNewsletter, async (req: express.Request, res: express.R
       source: req.body.source || 'website'
     };
 
-    // Send welcome email to subscriber
-    const emailSent = await emailService.sendNewsletterConfirmation(newsletterData);
+    // Store newsletter subscription in Firebase
+    const firebaseStored = await firebaseService.storeNewsletterSubscription(newsletterData);
 
-    if (!emailSent) {
+    if (!firebaseStored) {
       return res.status(500).json({
         success: false,
-        message: 'Failed to send confirmation email. Please try again later.',
-        error: 'Email service unavailable'
+        message: 'Failed to store subscription. Please try again later.',
+        error: 'Firebase service unavailable'
       } as ApiResponse);
     }
 
@@ -33,10 +33,11 @@ router.post('/', validateNewsletter, async (req: express.Request, res: express.R
 
     res.status(200).json({
       success: true,
-      message: 'Successfully subscribed to our newsletter! Check your email for confirmation.',
+      message: 'Successfully subscribed to our newsletter! You\'ll receive updates about AI and data analytics.',
       data: {
         subscribedAt: new Date().toISOString(),
-        email: newsletterData.email
+        email: newsletterData.email,
+        firebaseStored: firebaseStored
       }
     } as ApiResponse);
 

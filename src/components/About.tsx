@@ -22,7 +22,7 @@ import {
   Phone,
   MapPin,
   Linkedin,
-  Twitter,
+  Facebook,
   Instagram,
   Youtube,
   Menu,
@@ -963,18 +963,18 @@ const About: React.FC<AboutProps> = ({ onNavigateHome, onNavigateContact, onNavi
               <div className="space-y-4">
                 <div className="flex space-x-4">
                   {[
-                    { icon: Linkedin, label: 'LinkedIn' },
-                    { icon: Twitter, label: 'Twitter' },
-                    { icon: Instagram, label: 'Instagram' },
-                    { icon: Youtube, label: 'YouTube' }
+                    { icon: Linkedin, label: 'LinkedIn', url: 'https://www.linkedin.com/company/arisinfo-in' },
+                    { icon: Facebook, label: 'Facebook', url: 'https://www.facebook.com/arisinfo.in' },
+                    { icon: Instagram, label: 'Instagram', url: 'https://www.instagram.com/arisinfo.in/' },
+                    { icon: Youtube, label: 'YouTube', url: 'https://www.youtube.com/@arisaidataanalyst' }
                   ].map((social, index) => {
                     const IconComponent = social.icon;
                     return (
-                      <div key={index} className="group cursor-pointer">
+                      <a key={index} href={social.url} target="_blank" rel="noopener noreferrer" className="group cursor-pointer">
                         <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300 group-hover:scale-110">
                           <IconComponent className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-300" />
                         </div>
-                      </div>
+                      </a>
                     );
                   })}
                 </div>

@@ -24,7 +24,10 @@ export const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({ measurementId 
       window.dataLayer.push(args);
     }
     gtag('js', new Date());
-    gtag('config', measurementId);
+    gtag('config', measurementId, {
+      page_title: document.title,
+      page_location: window.location.href,
+    });
 
     return () => {
       if (document.head.contains(script)) {
