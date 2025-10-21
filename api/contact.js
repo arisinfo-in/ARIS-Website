@@ -1,4 +1,21 @@
 import nodemailer from 'nodemailer';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore';
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
+};
+
+// Initialize Firebase app and Firestore
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 export default async function handler(req, res) {
   // Set CORS headers
@@ -123,6 +140,33 @@ export default async function handler(req, res) {
       // Don't fail the form submission if email fails
     }
     
+    // Store in Firestore database
+    let firestoreStored = false;
+    try {
+      console.log('🔥 Storing contact form in Firestore...');
+      
+      const contactData = {
+        name,
+        email,
+        company: company || '',
+        phone: phone || '',
+        service: service || '',
+        course: course || '',
+        message,
+        source: source || 'website',
+        timestamp: Timestamp.now(),
+        status: 'new',
+        createdAt: Timestamp.now()
+      };
+
+      const docRef = await addDoc(collection(db, 'website-contacts', 'contact-forms'), contactData);
+      firestoreStored = true;
+      console.log('✅ Contact form stored in Firestore successfully:', docRef.id);
+    } catch (firestoreError) {
+      console.error('❌ Firestore storage error:', firestoreError);
+      console.warn('⚠️ Firestore storage failed, but continuing with form submission');
+    }
+    
     // Always return success for form submission
     res.status(200).json({
       success: true,
@@ -130,7 +174,8 @@ export default async function handler(req, res) {
       data: {
         submittedAt: new Date().toISOString(),
         source: source,
-        emailNotificationSent: emailSent
+        emailNotificationSent: emailSent,
+        firestoreStored: firestoreStored
       }
     });
     

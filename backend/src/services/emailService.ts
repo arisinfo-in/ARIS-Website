@@ -13,15 +13,22 @@ class EmailService {
   }
 
   private createTransporter(): nodemailer.Transporter {
-    // Use hardcoded Gmail credentials for ARIS
+    // Use environment variables for Gmail credentials
+    const emailUser = process.env.EMAIL_USER || process.env.CONTACT_EMAIL;
+    const emailPass = process.env.EMAIL_PASS;
+    
+    if (!emailUser || !emailPass) {
+      throw new Error('Missing email credentials. Please set EMAIL_USER and EMAIL_PASS environment variables.');
+    }
+    
     return nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: 'arisinfo.in@gmail.com', // ARIS Gmail address
-        pass: 'yqhs zvme mbfy geos' // ARIS Gmail App Password
+        user: emailUser,
+        pass: emailPass
       },
       tls: {
         rejectUnauthorized: false
@@ -36,7 +43,7 @@ class EmailService {
       const text = this.generateContactFormText(data);
 
       const emailData: EmailTemplate = {
-        to: 'arisinfo.in@gmail.com',
+        to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER || 'arisinfo.in@gmail.com',
         subject,
         html,
         text
@@ -78,7 +85,7 @@ class EmailService {
       const text = this.generateRoadmapText(data);
 
       const emailData: EmailTemplate = {
-        to: 'arisinfo.in@gmail.com',
+        to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER || 'arisinfo.in@gmail.com',
         subject,
         html,
         text
@@ -94,7 +101,7 @@ class EmailService {
 
   private async sendEmail(emailData: EmailTemplate): Promise<void> {
     const mailOptions = {
-      from: 'arisinfo.in@gmail.com',
+      from: process.env.EMAIL_USER || process.env.CONTACT_EMAIL || 'arisinfo.in@gmail.com',
       to: emailData.to,
       subject: emailData.subject,
       html: emailData.html,

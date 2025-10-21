@@ -1,4 +1,21 @@
 import nodemailer from 'nodemailer';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore';
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
+};
+
+// Initialize Firebase app and Firestore
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 export default async function handler(req, res) {
   // Set CORS headers
@@ -70,6 +87,27 @@ export default async function handler(req, res) {
       // Don't fail the subscription if email fails
     }
     
+    // Store in Firestore database
+    let firestoreStored = false;
+    try {
+      console.log('🔥 Storing newsletter subscription in Firestore...');
+      
+      const newsletterData = {
+        email,
+        source: source || 'website',
+        timestamp: Timestamp.now(),
+        status: 'active',
+        createdAt: Timestamp.now()
+      };
+
+      const docRef = await addDoc(collection(db, 'website-contacts', 'newsletter-subscriptions'), newsletterData);
+      firestoreStored = true;
+      console.log('✅ Newsletter subscription stored in Firestore successfully:', docRef.id);
+    } catch (firestoreError) {
+      console.error('❌ Firestore storage error:', firestoreError);
+      console.warn('⚠️ Firestore storage failed, but continuing with subscription');
+    }
+    
     res.status(200).json({
       success: true,
       message: 'Successfully subscribed to our newsletter!',
@@ -77,7 +115,8 @@ export default async function handler(req, res) {
         subscribedAt: new Date().toISOString(),
         email: email,
         source: source || 'unknown',
-        emailNotificationSent: emailSent
+        emailNotificationSent: emailSent,
+        firestoreStored: firestoreStored
       }
     });
     
