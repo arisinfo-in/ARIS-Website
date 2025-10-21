@@ -37,6 +37,15 @@ export default async function handler(req, res) {
   
   try {
     console.log('🔍 Contact form data received:', req.body);
+    console.log('🔧 Firebase environment check:', {
+      apiKey: process.env.FIREBASE_API_KEY ? 'Set' : 'Missing',
+      authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      appId: process.env.FIREBASE_APP_ID,
+      measurementId: process.env.FIREBASE_MEASUREMENT_ID
+    });
     
     // Enhanced validation matching backend requirements
     const { name, email, company, phone, service, course, message, source } = req.body;
@@ -168,6 +177,12 @@ export default async function handler(req, res) {
       console.log(`✅ ${source === 'brochure' ? 'Brochure download' : 'Contact form'} stored in Firestore successfully:`, docRef.id);
     } catch (firestoreError) {
       console.error('❌ Firestore storage error:', firestoreError);
+      console.error('❌ Firestore error details:', {
+        message: firestoreError.message,
+        code: firestoreError.code,
+        stack: firestoreError.stack,
+        name: firestoreError.name
+      });
       console.warn('⚠️ Firestore storage failed, but continuing with form submission');
     }
     
