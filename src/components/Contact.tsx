@@ -20,7 +20,8 @@ import {
   Youtube,
   Menu,
   X,
-  FileText
+  FileText,
+  UserPlus
 } from 'lucide-react';
 import Logo from './Logo';
 import { apiService } from '../services/api';
@@ -59,7 +60,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
   useEffect(() => {
     setIsVisible(true);
     
-    let timeoutId: number | undefined;
+    let timeoutId: NodeJS.Timeout | undefined;
     
     const handleMouseMove = (e: MouseEvent) => {
       // Throttle mouse movement updates
@@ -271,6 +272,19 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
         </div>
       </header>
 
+      {/* Join Button - Outside Navigation */}
+      <div className="hidden md:block fixed top-8 right-4 z-50 transform transition-all duration-200 delay-200 translate-x-0 opacity-100">
+        <a 
+          href="https://arisinfo.netlify.app/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center space-x-2"
+        >
+          <UserPlus className="w-4 h-4" />
+          <span>Join</span>
+        </a>
+      </div>
+
       {/* Mobile Navigation Menu */}
       <div className={`md:hidden fixed top-20 left-4 right-4 z-40 transition-all duration-300 ${
         isMobileMenuOpen 
@@ -321,6 +335,16 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
               <span className="w-2 h-2 bg-white rounded-full mr-3"></span>
               Brochure
             </button>
+            <a 
+              href="https://arisinfo.netlify.app/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full text-left px-6 py-3 text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all duration-300 flex items-center rounded-lg mx-2 shadow-lg hover:shadow-orange-500/25"
+            >
+              <UserPlus className="w-4 h-4 mr-3" />
+              Join
+            </a>
           </nav>
         </div>
       </div>

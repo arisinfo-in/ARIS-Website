@@ -461,11 +461,34 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
                   <span className="w-2 h-2 bg-white rounded-full mr-3"></span>
                   Brochure
                 </button>
+                <a 
+                  href="https://arisinfo.netlify.app/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-full text-left px-6 py-3 text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all duration-300 flex items-center rounded-lg mx-2 shadow-lg hover:shadow-orange-500/25"
+                >
+                  <UserPlus className="w-4 h-4 mr-3" />
+                  Join
+                </a>
               </div>
             </nav>
           </div>
         </div>
       </header>
+
+      {/* Join Button - Outside Navigation */}
+      <div className="hidden md:block fixed top-8 right-4 z-50 transform transition-all duration-200 delay-200 translate-x-0 opacity-100">
+        <a 
+          href="https://arisinfo.netlify.app/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center space-x-2"
+        >
+          <UserPlus className="w-4 h-4" />
+          <span>Join</span>
+        </a>
+      </div>
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-black py-32 mt-20 relative overflow-hidden">
