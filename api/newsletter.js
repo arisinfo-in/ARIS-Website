@@ -100,7 +100,7 @@ export default async function handler(req, res) {
         createdAt: Timestamp.now()
       };
 
-      const docRef = await addDoc(collection(db, 'website-contacts', 'newsletter-subscriptions'), newsletterData);
+      const docRef = await addDoc(collection(db, 'newsletter-subscriptions'), newsletterData);
       firestoreStored = true;
       console.log('✅ Newsletter subscription stored in Firestore successfully:', docRef.id);
     } catch (firestoreError) {

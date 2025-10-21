@@ -172,7 +172,7 @@ export default async function handler(req, res) {
         createdAt: Timestamp.now()
       };
 
-      const docRef = await addDoc(collection(db, 'website-contacts', collectionName), contactData);
+      const docRef = await addDoc(collection(db, collectionName), contactData);
       firestoreStored = true;
       console.log(`✅ ${source === 'brochure' ? 'Brochure download' : 'Contact form'} stored in Firestore successfully:`, docRef.id);
     } catch (firestoreError) {
