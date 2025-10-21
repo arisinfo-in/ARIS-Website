@@ -143,7 +143,11 @@ export default async function handler(req, res) {
     // Store in Firestore database
     let firestoreStored = false;
     try {
-      console.log('🔥 Storing contact form in Firestore...');
+      console.log(`🔥 Storing ${source === 'brochure' ? 'brochure download' : 'contact form'} in Firestore...`);
+      
+      // Determine collection based on source
+      const collectionName = source === 'brochure' ? 'brochure-downloads' : 'contact-forms';
+      const status = source === 'brochure' ? 'downloaded' : 'new';
       
       const contactData = {
         name,
@@ -155,13 +159,13 @@ export default async function handler(req, res) {
         message,
         source: source || 'website',
         timestamp: Timestamp.now(),
-        status: 'new',
+        status: status,
         createdAt: Timestamp.now()
       };
 
-      const docRef = await addDoc(collection(db, 'website-contacts', 'contact-forms'), contactData);
+      const docRef = await addDoc(collection(db, 'website-contacts', collectionName), contactData);
       firestoreStored = true;
-      console.log('✅ Contact form stored in Firestore successfully:', docRef.id);
+      console.log(`✅ ${source === 'brochure' ? 'Brochure download' : 'Contact form'} stored in Firestore successfully:`, docRef.id);
     } catch (firestoreError) {
       console.error('❌ Firestore storage error:', firestoreError);
       console.warn('⚠️ Firestore storage failed, but continuing with form submission');
