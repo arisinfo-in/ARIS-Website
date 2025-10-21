@@ -195,7 +195,7 @@ function createEmailTransporter() {
     }
     
     // Gmail SMTP configuration with enhanced settings for Vercel
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',
       port: 587,
