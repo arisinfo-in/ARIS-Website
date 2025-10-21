@@ -1,45 +1,57 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, push, set, get, child } from 'firebase/database';
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
 import { ContactFormData, NewsletterData, RoadmapData } from '../types';
 
-// Firebase configuration
+// Firebase configuration from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyDXoFyPkjgyspJy4cpqaPYHe70h-DqNf7k",
-  authDomain: "aris-aidataanlayst.firebaseapp.com",
-  databaseURL: "https://aris-aidataanlayst-default-rtdb.firebaseio.com",
-  projectId: "aris-aidataanlayst",
-  storageBucket: "aris-aidataanlayst.firebasestorage.app",
-  messagingSenderId: "1038441051375",
-  appId: "1:1038441051375:web:811f7401afc04b8e61171a",
-  measurementId: "G-09B0ZGXG1B"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
+
+// Validate Firebase configuration
+const requiredEnvVars = [
+  'FIREBASE_API_KEY',
+  'FIREBASE_AUTH_DOMAIN', 
+  'FIREBASE_PROJECT_ID',
+  'FIREBASE_STORAGE_BUCKET',
+  'FIREBASE_MESSAGING_SENDER_ID',
+  'FIREBASE_APP_ID'
+];
+
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+if (missingVars.length > 0) {
+  console.error('❌ Missing required Firebase environment variables:', missingVars);
+  console.error('📝 Please check your .env file and ensure all Firebase credentials are set');
+  throw new Error(`Missing Firebase environment variables: ${missingVars.join(', ')}`);
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+const db = getFirestore(app);
 
 class FirebaseService {
-  private db = database;
+  private db = db;
 
   // Store contact form submission
   async storeContactForm(data: ContactFormData): Promise<boolean> {
     try {
-      console.log('🔥 Storing contact form in Firebase...');
-      
-      const contactRef = ref(this.db, 'website-contacts/contact-forms');
-      const newContactRef = push(contactRef);
+      console.log('🔥 Storing contact form in Firestore...');
       
       const contactData = {
         ...data,
-        timestamp: new Date().toISOString(),
-        id: newContactRef.key,
+        timestamp: Timestamp.now(),
         status: 'new',
-        createdAt: Date.now()
+        createdAt: Timestamp.now()
       };
 
-      await set(newContactRef, contactData);
+      const docRef = await addDoc(collection(this.db, 'website-contacts', 'contact-forms'), contactData);
       
-      console.log('✅ Contact form stored successfully:', newContactRef.key);
+      console.log('✅ Contact form stored successfully:', docRef.id);
       return true;
     } catch (error) {
       console.error('❌ Error storing contact form:', error);
@@ -50,22 +62,18 @@ class FirebaseService {
   // Store newsletter subscription
   async storeNewsletterSubscription(data: NewsletterData): Promise<boolean> {
     try {
-      console.log('🔥 Storing newsletter subscription in Firebase...');
-      
-      const newsletterRef = ref(this.db, 'website-contacts/newsletter-subscriptions');
-      const newNewsletterRef = push(newsletterRef);
+      console.log('🔥 Storing newsletter subscription in Firestore...');
       
       const newsletterData = {
         ...data,
-        timestamp: new Date().toISOString(),
-        id: newNewsletterRef.key,
+        timestamp: Timestamp.now(),
         status: 'subscribed',
-        createdAt: Date.now()
+        createdAt: Timestamp.now()
       };
 
-      await set(newNewsletterRef, newsletterData);
+      const docRef = await addDoc(collection(this.db, 'website-contacts', 'newsletter-subscriptions'), newsletterData);
       
-      console.log('✅ Newsletter subscription stored successfully:', newNewsletterRef.key);
+      console.log('✅ Newsletter subscription stored successfully:', docRef.id);
       return true;
     } catch (error) {
       console.error('❌ Error storing newsletter subscription:', error);
@@ -76,22 +84,18 @@ class FirebaseService {
   // Store brochure download request
   async storeBrochureDownload(data: ContactFormData): Promise<boolean> {
     try {
-      console.log('🔥 Storing brochure download in Firebase...');
-      
-      const brochureRef = ref(this.db, 'website-contacts/brochure-downloads');
-      const newBrochureRef = push(brochureRef);
+      console.log('🔥 Storing brochure download in Firestore...');
       
       const brochureData = {
         ...data,
-        timestamp: new Date().toISOString(),
-        id: newBrochureRef.key,
+        timestamp: Timestamp.now(),
         status: 'downloaded',
-        createdAt: Date.now()
+        createdAt: Timestamp.now()
       };
 
-      await set(newBrochureRef, brochureData);
+      const docRef = await addDoc(collection(this.db, 'website-contacts', 'brochure-downloads'), brochureData);
       
-      console.log('✅ Brochure download stored successfully:', newBrochureRef.key);
+      console.log('✅ Brochure download stored successfully:', docRef.id);
       return true;
     } catch (error) {
       console.error('❌ Error storing brochure download:', error);
@@ -102,22 +106,18 @@ class FirebaseService {
   // Store roadmap selection
   async storeRoadmapSelection(data: RoadmapData): Promise<boolean> {
     try {
-      console.log('🔥 Storing roadmap selection in Firebase...');
-      
-      const roadmapRef = ref(this.db, 'website-contacts/roadmap-selections');
-      const newRoadmapRef = push(roadmapRef);
+      console.log('🔥 Storing roadmap selection in Firestore...');
       
       const roadmapData = {
         ...data,
-        timestamp: new Date().toISOString(),
-        id: newRoadmapRef.key,
+        timestamp: Timestamp.now(),
         status: 'selected',
-        createdAt: Date.now()
+        createdAt: Timestamp.now()
       };
 
-      await set(newRoadmapRef, roadmapData);
+      const docRef = await addDoc(collection(this.db, 'website-contacts', 'roadmap-selections'), roadmapData);
       
-      console.log('✅ Roadmap selection stored successfully:', newRoadmapRef.key);
+      console.log('✅ Roadmap selection stored successfully:', docRef.id);
       return true;
     } catch (error) {
       console.error('❌ Error storing roadmap selection:', error);
@@ -128,13 +128,14 @@ class FirebaseService {
   // Get all contact forms
   async getAllContactForms(): Promise<any[]> {
     try {
-      const contactRef = ref(this.db, 'website-contacts/contact-forms');
-      const snapshot = await get(contactRef);
+      const contactFormsRef = collection(this.db, 'website-contacts', 'contact-forms');
+      const q = query(contactFormsRef, orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(q);
       
-      if (snapshot.exists()) {
-        return Object.values(snapshot.val());
-      }
-      return [];
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
     } catch (error) {
       console.error('❌ Error fetching contact forms:', error);
       return [];
@@ -144,13 +145,14 @@ class FirebaseService {
   // Get all newsletter subscriptions
   async getAllNewsletterSubscriptions(): Promise<any[]> {
     try {
-      const newsletterRef = ref(this.db, 'website-contacts/newsletter-subscriptions');
-      const snapshot = await get(newsletterRef);
+      const newsletterRef = collection(this.db, 'website-contacts', 'newsletter-subscriptions');
+      const q = query(newsletterRef, orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(q);
       
-      if (snapshot.exists()) {
-        return Object.values(snapshot.val());
-      }
-      return [];
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
     } catch (error) {
       console.error('❌ Error fetching newsletter subscriptions:', error);
       return [];
@@ -160,13 +162,14 @@ class FirebaseService {
   // Get all brochure downloads
   async getAllBrochureDownloads(): Promise<any[]> {
     try {
-      const brochureRef = ref(this.db, 'website-contacts/brochure-downloads');
-      const snapshot = await get(brochureRef);
+      const brochureRef = collection(this.db, 'website-contacts', 'brochure-downloads');
+      const q = query(brochureRef, orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(q);
       
-      if (snapshot.exists()) {
-        return Object.values(snapshot.val());
-      }
-      return [];
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
     } catch (error) {
       console.error('❌ Error fetching brochure downloads:', error);
       return [];
@@ -176,13 +179,14 @@ class FirebaseService {
   // Get all roadmap selections
   async getAllRoadmapSelections(): Promise<any[]> {
     try {
-      const roadmapRef = ref(this.db, 'website-contacts/roadmap-selections');
-      const snapshot = await get(roadmapRef);
+      const roadmapRef = collection(this.db, 'website-contacts', 'roadmap-selections');
+      const q = query(roadmapRef, orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(q);
       
-      if (snapshot.exists()) {
-        return Object.values(snapshot.val());
-      }
-      return [];
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
     } catch (error) {
       console.error('❌ Error fetching roadmap selections:', error);
       return [];
