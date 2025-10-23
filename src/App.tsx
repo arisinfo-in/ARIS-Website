@@ -1,4 +1,5 @@
 import React, { useState, Suspense, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { usePerformance, usePreloadCriticalResources } from './hooks/usePerformance';
 import SEO from './components/SEO';
@@ -15,10 +16,10 @@ const Services = React.lazy(() => import('./components/Services'));
 const PrivacyPolicy = React.lazy(() => import('./components/PrivacyPolicy'));
 const TermsOfService = React.lazy(() => import('./components/TermsOfService'));
 
-type Page = 'home' | 'about' | 'contact' | 'training' | 'services' | 'privacy' | 'terms';
-
-function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('home');
+// App Content Component that handles routing
+function AppContent() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isBrochureModalOpen, setIsBrochureModalOpen] = useState(false);
   
   // Performance monitoring
@@ -42,37 +43,37 @@ function App() {
   }, []);
 
   const navigateToHome = () => {
-    setCurrentPage('home');
+    navigate('/');
     window.scrollTo(0, 0);
   };
 
   const navigateToAbout = () => {
-    setCurrentPage('about');
+    navigate('/about');
     window.scrollTo(0, 0);
   };
 
   const navigateToContact = () => {
-    setCurrentPage('contact');
+    navigate('/contact');
     window.scrollTo(0, 0);
   };
 
   const navigateToTraining = () => {
-    setCurrentPage('training');
+    navigate('/training');
     window.scrollTo(0, 0);
   };
 
   const navigateToServices = () => {
-    setCurrentPage('services');
+    navigate('/services');
     window.scrollTo(0, 0);
   };
 
   const navigateToPrivacy = () => {
-    setCurrentPage('privacy');
+    navigate('/privacy');
     window.scrollTo(0, 0);
   };
 
   const navigateToTerms = () => {
-    setCurrentPage('terms');
+    navigate('/terms');
     window.scrollTo(0, 0);
   };
 
@@ -90,13 +91,15 @@ function App() {
         <GoogleAnalytics measurementId="G-09B0ZGXG1B" />
         
         <Suspense fallback={<LoadingSpinner />}>
-          {currentPage === 'home' && <Home onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} onNavigatePrivacy={navigateToPrivacy} onNavigateTerms={navigateToTerms} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
-          {currentPage === 'about' && <About onNavigateHome={navigateToHome} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
-          {currentPage === 'contact' && <Contact onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
-          {currentPage === 'training' && <Training onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
-          {currentPage === 'services' && <Services onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
-          {currentPage === 'privacy' && <PrivacyPolicy onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} onNavigateTerms={navigateToTerms} />}
-          {currentPage === 'terms' && <TermsOfService onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} onNavigatePrivacy={navigateToPrivacy} />}
+          <Routes>
+            <Route path="/" element={<Home onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} onNavigatePrivacy={navigateToPrivacy} onNavigateTerms={navigateToTerms} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />} />
+            <Route path="/about" element={<About onNavigateHome={navigateToHome} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />} />
+            <Route path="/contact" element={<Contact onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />} />
+            <Route path="/training" element={<Training onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />} />
+            <Route path="/services" element={<Services onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />} />
+            <Route path="/privacy" element={<PrivacyPolicy onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} onNavigateTerms={navigateToTerms} />} />
+            <Route path="/terms" element={<TermsOfService onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} onNavigatePrivacy={navigateToPrivacy} />} />
+          </Routes>
         </Suspense>
         
         <PerformanceMonitor />
@@ -108,6 +111,15 @@ function App() {
         />
       </div>
     </HelmetProvider>
+  );
+}
+
+// Main App component with Router
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 
