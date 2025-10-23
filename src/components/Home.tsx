@@ -13,11 +13,13 @@ interface HomeProps {
   onNavigateContact: () => void;
   onNavigateTraining: () => void;
   onNavigateServices: () => void;
+  onNavigatePrivacy: () => void;
+  onNavigateTerms: () => void;
   isBrochureModalOpen: boolean;
   setIsBrochureModalOpen: (open: boolean) => void;
 }
 
-const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavigateTraining, onNavigateServices, isBrochureModalOpen, setIsBrochureModalOpen }) => {
+const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavigateTraining, onNavigateServices, onNavigatePrivacy, onNavigateTerms, setIsBrochureModalOpen }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -1570,10 +1572,16 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                 <span className="text-gray-400 text-sm hover:text-gray-300 transition-colors duration-300 cursor-pointer">
                   © 2025 ARIS. All rights reserved.
                 </span>
-                <span className="text-gray-400 text-sm hover:text-orange-400 transition-colors duration-300 cursor-pointer">
+                <span 
+                  onClick={onNavigatePrivacy}
+                  className="text-gray-400 text-sm hover:text-orange-400 transition-colors duration-300 cursor-pointer"
+                >
                   Privacy Policy
                 </span>
-                <span className="text-gray-400 text-sm hover:text-orange-400 transition-colors duration-300 cursor-pointer">
+                <span 
+                  onClick={onNavigateTerms}
+                  className="text-gray-400 text-sm hover:text-orange-400 transition-colors duration-300 cursor-pointer"
+                >
                   Terms of Service
                 </span>
               </div>

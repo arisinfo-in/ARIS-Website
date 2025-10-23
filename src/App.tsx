@@ -12,8 +12,10 @@ const About = React.lazy(() => import('./components/About'));
 const Contact = React.lazy(() => import('./components/Contact'));
 const Training = React.lazy(() => import('./components/Training'));
 const Services = React.lazy(() => import('./components/Services'));
+const PrivacyPolicy = React.lazy(() => import('./components/PrivacyPolicy'));
+const TermsOfService = React.lazy(() => import('./components/TermsOfService'));
 
-type Page = 'home' | 'about' | 'contact' | 'training' | 'services';
+type Page = 'home' | 'about' | 'contact' | 'training' | 'services' | 'privacy' | 'terms';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -64,6 +66,16 @@ function App() {
     window.scrollTo(0, 0);
   };
 
+  const navigateToPrivacy = () => {
+    setCurrentPage('privacy');
+    window.scrollTo(0, 0);
+  };
+
+  const navigateToTerms = () => {
+    setCurrentPage('terms');
+    window.scrollTo(0, 0);
+  };
+
   // Loading component
   const LoadingSpinner = () => (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
@@ -78,11 +90,13 @@ function App() {
         <GoogleAnalytics measurementId="G-09B0ZGXG1B" />
         
         <Suspense fallback={<LoadingSpinner />}>
-          {currentPage === 'home' && <Home onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
+          {currentPage === 'home' && <Home onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} onNavigatePrivacy={navigateToPrivacy} onNavigateTerms={navigateToTerms} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
           {currentPage === 'about' && <About onNavigateHome={navigateToHome} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
           {currentPage === 'contact' && <Contact onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
           {currentPage === 'training' && <Training onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateServices={navigateToServices} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
           {currentPage === 'services' && <Services onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} isBrochureModalOpen={isBrochureModalOpen} setIsBrochureModalOpen={setIsBrochureModalOpen} />}
+          {currentPage === 'privacy' && <PrivacyPolicy onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} onNavigateTerms={navigateToTerms} />}
+          {currentPage === 'terms' && <TermsOfService onNavigateHome={navigateToHome} onNavigateAbout={navigateToAbout} onNavigateContact={navigateToContact} onNavigateTraining={navigateToTraining} onNavigateServices={navigateToServices} onNavigatePrivacy={navigateToPrivacy} />}
         </Suspense>
         
         <PerformanceMonitor />
