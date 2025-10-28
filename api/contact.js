@@ -152,11 +152,11 @@ export default async function handler(req, res) {
     // Store in Firestore database
     let firestoreStored = false;
     try {
-      console.log(`🔥 Storing ${source === 'brochure' ? 'brochure download' : 'contact form'} in Firestore collection: ${collectionName}...`);
-      
       // Determine collection based on source
       const collectionName = source === 'brochure' ? 'brochure-downloads' : 'contact-forms';
       const status = source === 'brochure' ? 'downloaded' : 'new';
+      
+      console.log(`🔥 Storing ${source === 'brochure' ? 'brochure download' : 'contact form'} in Firestore collection: ${collectionName}...`);
       
       const contactData = {
         name,
