@@ -49,7 +49,7 @@ class FirebaseService {
         createdAt: Timestamp.now()
       };
 
-      const docRef = await addDoc(collection(this.db, 'website-contacts', 'contact-forms'), contactData);
+      const docRef = await addDoc(collection(this.db, 'contact-forms'), contactData);
       
       console.log('✅ Contact form stored successfully:', docRef.id);
       return true;
@@ -71,7 +71,7 @@ class FirebaseService {
         createdAt: Timestamp.now()
       };
 
-      const docRef = await addDoc(collection(this.db, 'website-contacts', 'newsletter-subscriptions'), newsletterData);
+      const docRef = await addDoc(collection(this.db, 'newsletter-subscriptions'), newsletterData);
       
       console.log('✅ Newsletter subscription stored successfully:', docRef.id);
       return true;
@@ -93,7 +93,7 @@ class FirebaseService {
         createdAt: Timestamp.now()
       };
 
-      const docRef = await addDoc(collection(this.db, 'website-contacts', 'brochure-downloads'), brochureData);
+      const docRef = await addDoc(collection(this.db, 'brochure-downloads'), brochureData);
       
       console.log('✅ Brochure download stored successfully:', docRef.id);
       return true;
@@ -115,7 +115,7 @@ class FirebaseService {
         createdAt: Timestamp.now()
       };
 
-      const docRef = await addDoc(collection(this.db, 'website-contacts', 'roadmap-selections'), roadmapData);
+      const docRef = await addDoc(collection(this.db, 'roadmap-selections'), roadmapData);
       
       console.log('✅ Roadmap selection stored successfully:', docRef.id);
       return true;
@@ -128,7 +128,7 @@ class FirebaseService {
   // Get all contact forms
   async getAllContactForms(): Promise<any[]> {
     try {
-      const contactFormsRef = collection(this.db, 'website-contacts', 'contact-forms');
+      const contactFormsRef = collection(this.db, 'contact-forms');
       const q = query(contactFormsRef, orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
       
@@ -145,7 +145,7 @@ class FirebaseService {
   // Get all newsletter subscriptions
   async getAllNewsletterSubscriptions(): Promise<any[]> {
     try {
-      const newsletterRef = collection(this.db, 'website-contacts', 'newsletter-subscriptions');
+      const newsletterRef = collection(this.db, 'newsletter-subscriptions');
       const q = query(newsletterRef, orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
       
@@ -162,7 +162,7 @@ class FirebaseService {
   // Get all brochure downloads
   async getAllBrochureDownloads(): Promise<any[]> {
     try {
-      const brochureRef = collection(this.db, 'website-contacts', 'brochure-downloads');
+      const brochureRef = collection(this.db, 'brochure-downloads');
       const q = query(brochureRef, orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
       
@@ -179,7 +179,7 @@ class FirebaseService {
   // Get all roadmap selections
   async getAllRoadmapSelections(): Promise<any[]> {
     try {
-      const roadmapRef = collection(this.db, 'website-contacts', 'roadmap-selections');
+      const roadmapRef = collection(this.db, 'roadmap-selections');
       const q = query(roadmapRef, orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
       

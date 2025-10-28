@@ -14,6 +14,7 @@ Updated the API routes to use direct collections instead of subcollections:
 - `contact-forms` (instead of `website-contacts/contact-forms`)
 - `brochure-downloads` (instead of `website-contacts/brochure-downloads`) 
 - `newsletter-subscriptions` (instead of `website-contacts/newsletter-subscriptions`)
+- `roadmap-selections` (instead of `website-contacts/roadmap-selections`)
 
 ## Updated Firestore Rules
 
@@ -80,6 +81,12 @@ service cloud.firestore {
       allow read: if request.auth != null;
       allow write: if true; // Public write access for newsletter subscriptions
     }
+    
+    // Roadmap Selections - Public write access for roadmap selections, authenticated read
+    match /roadmap-selections/{document} {
+      allow read: if request.auth != null;
+      allow write: if true; // Public write access for roadmap selections
+    }
   }
 }
 ```
@@ -96,3 +103,13 @@ After updating the rules, form submissions should work properly and data will be
 - `contact-forms` collection for contact form submissions
 - `brochure-downloads` collection for brochure download requests  
 - `newsletter-subscriptions` collection for newsletter signups
+- `roadmap-selections` collection for roadmap selections
+
+## Test Results
+
+✅ Contact forms are being stored successfully
+✅ Brochure downloads are being stored successfully  
+✅ Newsletter subscriptions are being stored successfully
+❌ Roadmap selections need Firestore rules update (permission denied)
+
+After updating the Firestore rules to include the roadmap-selections collection, all data storage will work correctly.
