@@ -17,29 +17,46 @@ import dashboardRoutes from './routes/dashboard';
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Environment variable validation
+const requiredEnvVars = ['EMAIL_SERVICE', 'CONTACT_EMAIL', 'ADMIN_EMAIL'];
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingEnvVars.length > 0 && process.env.NODE_ENV === 'production') {
+  console.error('❌ Missing required environment variables:', missingEnvVars.join(', '));
+  console.error('Please set all required environment variables before starting the server.');
+  process.exit(1);
+} else if (missingEnvVars.length > 0) {
+  console.warn('⚠️  Missing optional environment variables (in development):', missingEnvVars.join(', '));
+}
+
 // Security middleware
 app.use(helmet());
 
-// CORS configuration - Temporarily allowing all origins for debugging
-app.use(cors({
-  origin: true, // Allow all origins for debugging
+// CORS configuration
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? (process.env.FRONTEND_URL?.split(',') || ['https://arisinfo.in', 'https://www.arisinfo.in'])
+    : ['http://localhost:5173', 'http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
-}));
+};
+app.use(cors(corsOptions));
 
 // Logging middleware
-app.use(morgan('combined'));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-// Additional request logging for debugging
-app.use((req, res, next) => {
-  console.log(`🌐 Incoming ${req.method} request to ${req.path}`);
-  console.log('📋 Headers:', req.headers);
-  if (req.body && Object.keys(req.body).length > 0) {
-    console.log('📦 Body:', JSON.stringify(req.body, null, 2));
-  }
-  next();
-});
+// Additional request logging for debugging (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    console.log(`🌐 Incoming ${req.method} request to ${req.path}`);
+    console.log('📋 Headers:', req.headers);
+    if (req.body && Object.keys(req.body).length > 0) {
+      console.log('📦 Body:', JSON.stringify(req.body, null, 2));
+    }
+    next();
+  });
+}
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));

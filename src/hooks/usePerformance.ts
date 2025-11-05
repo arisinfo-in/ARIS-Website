@@ -61,10 +61,8 @@ export const usePerformance = () => {
         }).observe({ entryTypes: ['layout-shift'] });
       }
 
-      // Log metrics after page load
+      // Send metrics to analytics
       setTimeout(() => {
-        console.log('Performance Metrics:', metrics);
-        
         // Send to analytics (if implemented)
         if (window.gtag) {
           window.gtag('event', 'performance_metrics', {
@@ -94,33 +92,37 @@ export const usePerformance = () => {
 // Preload critical resources
 export const usePreloadCriticalResources = () => {
   useEffect(() => {
-    // Preload critical fonts
+    // Preload critical fonts with font-display: swap
     const fontLink = document.createElement('link');
     fontLink.rel = 'preload';
     fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
     fontLink.as = 'style';
+    fontLink.crossOrigin = 'anonymous';
     document.head.appendChild(fontLink);
+    
+    // Add font-display: swap via style injection for better performance
+    const fontStyle = document.createElement('style');
+    fontStyle.textContent = `
+      @font-face {
+        font-family: 'Inter';
+        font-display: swap;
+      }
+    `;
+    document.head.appendChild(fontStyle);
 
-    // Preload critical images
-    const criticalImages = [
-      '/og-image.jpg',
-      '/logo.png',
-    ];
-
-    criticalImages.forEach((src) => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.href = src;
-      link.as = 'image';
-      document.head.appendChild(link);
-    });
+    // Preload critical images only if they exist
+    // Note: Only preload images that actually exist in the public folder
+    // Favicons are automatically loaded by the browser, so no need to preload them
+    // Removed og-image.jpg and logo.png as they don't exist in public folder
 
     // Preload critical API endpoints
-    const apiLink = document.createElement('link');
-    apiLink.rel = 'preconnect';
-    apiLink.href = process.env.NODE_ENV === 'production' 
-      ? 'https://your-backend-domain.com' 
-      : 'http://localhost:5001';
-    document.head.appendChild(apiLink);
+    // In production, API is on same domain (Vercel handles routing), so preconnect is not needed
+    // Only preconnect in development when API is on different port
+    if (process.env.NODE_ENV !== 'production') {
+      const apiLink = document.createElement('link');
+      apiLink.rel = 'preconnect';
+      apiLink.href = 'http://localhost:5001';
+      document.head.appendChild(apiLink);
+    }
   }, []);
 };

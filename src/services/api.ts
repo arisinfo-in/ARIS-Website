@@ -14,15 +14,16 @@ const api = axios.create({
   },
 });
 
-// Request interceptor for logging
+// Request interceptor for logging (development only)
 api.interceptors.request.use(
   (config) => {
-    console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
-    console.log('📤 Request data:', JSON.stringify(config.data, null, 2));
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
+    }
     return config;
   },
   (error) => {
-    console.error('❌ API Request Error:', error);
+    console.error('API Request Error:', error);
     return Promise.reject(error);
   }
 );
@@ -30,18 +31,13 @@ api.interceptors.request.use(
 // Response interceptor for error handling
 api.interceptors.response.use(
   (response) => {
-    console.log(`✅ API Response: ${response.status} ${response.config.url}`);
-    console.log('📥 Response data:', response.data);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`API Response: ${response.status} ${response.config.url}`);
+    }
     return response;
   },
   (error) => {
-    console.error('❌ API Response Error:', error.response?.data || error.message);
-    console.error('🔍 Error details:', {
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      url: error.config?.url,
-      method: error.config?.method
-    });
+    console.error('API Response Error:', error.response?.data || error.message);
     
     // Handle different error types
     if (error.response?.status === 429) {

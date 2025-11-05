@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 .env
 .vercel
+
+# Large video files
+ARIS Intro Video.mp4
+*.mp4

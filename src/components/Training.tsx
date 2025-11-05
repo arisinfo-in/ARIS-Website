@@ -41,7 +41,6 @@ interface FAQItem {
 }
 
 const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, onNavigateContact, onNavigateServices, isBrochureModalOpen, setIsBrochureModalOpen }) => {
-  const [isVisible, setIsVisible] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<'main' | 'additional'>('main');
@@ -61,8 +60,6 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    setIsVisible(true);
-    
     let timeoutId: number | undefined;
     
     const handleMouseMove = (e: MouseEvent) => {
@@ -338,12 +335,12 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
       {/* Header */}
       <header className="fixed w-full top-0 z-50 transition-all duration-300 px-4 py-4">
         <div className="max-w-6xl mx-auto bg-gray-800/95 rounded-full px-6 py-4 border border-gray-700 shadow-lg flex items-center justify-between">
-          <div className={`transform transition-all duration-200 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
+          <div>
             <div onClick={onNavigateHome} className="cursor-pointer">
               <Logo size="sm" />
             </div>
           </div>
-          <nav className={`hidden md:flex transform transition-all duration-200 delay-100 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
+          <nav className="hidden md:flex">
             <div className="flex space-x-6">
               <button onClick={onNavigateHome} className="text-gray-300 hover:text-orange-400 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full hover:bg-gray-700/50">
                 Home
@@ -365,11 +362,20 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
                 Contact
                 <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
               </button>
-              <button onClick={() => setIsBrochureModalOpen(true)} className="text-white bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full shadow-lg hover:shadow-orange-500/25 flex items-center space-x-1">
-                <FileText className="w-4 h-4" />
+              <button onClick={() => setIsBrochureModalOpen(true)} className="text-gray-300 hover:text-orange-400 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full hover:bg-gray-700/50 flex items-center space-x-1">
                 <span>Brochure</span>
-                <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-white transition-all duration-300"></span>
+                <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
               </button>
+              <a 
+                href="https://aris-aidataanlayst.web.app/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full shadow-lg hover:shadow-orange-500/25 flex items-center space-x-1"
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>Join</span>
+                <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-6"></span>
+              </a>
             </div>
           </nav>
 
@@ -387,19 +393,6 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
           </button>
         </div>
       </header>
-
-      {/* Join Button - Outside Navigation */}
-      <div className="hidden md:block fixed top-8 right-4 z-50 transform transition-all duration-200 delay-200 translate-x-0 opacity-100">
-        <a 
-          href="https://arisinfo.netlify.app/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center space-x-2"
-        >
-          <UserPlus className="w-4 h-4" />
-          <span>Join</span>
-        </a>
-      </div>
 
       {/* Mobile Navigation Menu */}
       <div className={`md:hidden fixed top-20 left-4 right-4 z-40 transition-all duration-300 ${
@@ -452,7 +445,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
               Brochure
             </button>
             <a 
-              href="https://arisinfo.netlify.app/" 
+              href="https://aris-aidataanlayst.web.app/" 
               target="_blank" 
               rel="noopener noreferrer"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -496,7 +489,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
 
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="text-center space-y-8">
-            <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div>
               <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
                 TRAINING PROGRAMS
               </h1>
@@ -505,7 +498,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
               </div>
             </div>
             
-            <div className={`transform transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-4xl mx-auto">
                 Transform your career with our comprehensive AI and data analytics training programs. 
                 From foundational skills to advanced AI implementation, we provide the knowledge and 
@@ -514,7 +507,7 @@ const Training: React.FC<TrainingProps> = ({ onNavigateHome, onNavigateAbout, on
             </div>
 
             {/* Category Navigation */}
-            <div className={`flex flex-wrap justify-center gap-4 transform transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div className="flex flex-wrap justify-center gap-4">
               <button
                 onClick={() => setActiveCategory('main')}
                 className={`flex items-center space-x-2 px-6 py-3 rounded-full transition-all duration-300 ${

@@ -168,8 +168,6 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
 
     // Send data to backend API
     try {
-      console.log('📧 Sending brochure download request:', formData);
-      
       // Send contact form data with brochure source
       const response = await apiService.submitContactForm({
         name: formData.name,
@@ -180,15 +178,13 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
         source: 'brochure'
       });
       
-      console.log('✅ Brochure request response:', response);
-      
       if (response.success) {
         setIsFormSubmitted(true);
       } else {
         throw new Error(response.message || 'Failed to submit brochure request');
       }
     } catch (error) {
-      console.error('❌ Error submitting brochure request:', error);
+      console.error('Error submitting brochure request:', error);
       // Still show success to user, but log the error
       setIsFormSubmitted(true);
     } finally {

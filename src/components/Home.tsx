@@ -7,6 +7,7 @@ import RoadmapSelectionModal from './RoadmapSelectionModal';
 import ArticleOverlay from './ArticleOverlay';
 import ArticleSelectionModal from './ArticleSelectionModal';
 import { apiService } from '../services/api';
+import ProductTeaser from './ProductTeaser';
 
 interface HomeProps {
   onNavigateAbout: () => void;
@@ -30,7 +31,6 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [isVisible, setIsVisible] = useState(false);
   const [typingText, setTypingText] = useState('');
   const [typingIndex, setTypingIndex] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -50,9 +50,6 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     if (window.location.hash) {
       window.history.replaceState(null, '', window.location.pathname);
     }
-    
-    setIsVisible(true);
-    
   }, []);
 
   // Typing effect for "AI Data Analyst"
@@ -125,7 +122,6 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('🚀 Contact form submission started');
     setFormStatus('submitting');
     
     // Basic validation
@@ -140,22 +136,17 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
     if (formData.message.trim().length < 10) errors.message = 'Message must be at least 10 characters long';
     
     if (Object.keys(errors).length > 0) {
-      console.log('❌ Validation errors:', errors);
       setFormErrors(errors);
       setFormStatus('idle');
       return;
     }
     
     try {
-      console.log('📤 Submitting form data:', formData);
-      
       // Use the API service which handles environment-based URLs
       const data = await apiService.submitContactForm({
         ...formData,
         source: 'home'
       });
-      
-      console.log('✅ API response:', data);
       
       if (data.success) {
         setFormStatus('success');
@@ -246,19 +237,19 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
 
 
   return (
-    <div className="min-h-screen bg-gray-900 overflow-x-hidden">
+    <div className="min-h-screen bg-gray-950 overflow-x-hidden">
       {/* Google Analytics */}
-      <GoogleAnalytics measurementId="G-XXXXXXXXXX" />
+      <GoogleAnalytics measurementId="G-09B0ZGXG1B" />
       
       {/* Header */}
       <header className="fixed w-full top-0 z-50 transition-all duration-300 px-4 py-4">
         <div className="max-w-6xl mx-auto bg-gray-800/95 rounded-full px-6 py-4 border border-gray-700 shadow-lg flex items-center justify-between">
-          <div className={`transform transition-all duration-200 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
+          <div>
             <Logo size="sm" />
           </div>
           
           {/* Desktop Navigation */}
-          <nav className={`hidden md:flex transform transition-all duration-200 delay-100 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
+          <nav className="hidden md:flex">
             <div className="flex space-x-6">
               <button className="text-orange-400 relative group px-4 py-2 rounded-full bg-gray-700/50">
                 Home
@@ -280,11 +271,20 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                 Contact
                 <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
               </button>
-              <button onClick={() => setIsBrochureModalOpen(true)} className="text-white bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full shadow-lg hover:shadow-orange-500/25 flex items-center space-x-1">
-                <FileText className="w-4 h-4" />
+              <button onClick={() => setIsBrochureModalOpen(true)} className="text-gray-300 hover:text-orange-400 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full hover:bg-gray-700/50 flex items-center space-x-1">
                 <span>Brochure</span>
-                <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-white transition-all duration-300"></span>
+                <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-6"></span>
               </button>
+              <a 
+                href="https://aris-aidataanlayst.web.app/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all duration-300 hover:scale-105 relative group px-4 py-2 rounded-full shadow-lg hover:shadow-orange-500/25 flex items-center space-x-1"
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>Join</span>
+                <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-6"></span>
+              </a>
             </div>
           </nav>
 
@@ -300,19 +300,6 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
               <Menu className="w-6 h-6" />
             )}
           </button>
-        </div>
-
-        {/* Join Button - Outside Navigation */}
-        <div className="hidden md:block fixed top-8 right-4 z-50 transform transition-all duration-200 delay-200 translate-x-0 opacity-100">
-          <a 
-            href="https://arisinfo.netlify.app/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 flex items-center space-x-2"
-          >
-            <UserPlus className="w-4 h-4" />
-            <span>Join</span>
-          </a>
         </div>
 
         {/* Mobile Navigation Menu */}
@@ -380,7 +367,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   Brochure
                 </button>
                 <a 
-                  href="https://arisinfo.netlify.app/" 
+                  href="https://aris-aidataanlayst.web.app/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -402,7 +389,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
           <div className="flex flex-col md:grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Left Side - Text Content */}
             <div className="text-center md:text-left space-y-6 md:space-y-8 order-1">
-              <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <div>
                 <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
                   Transform Your Career Into
                 </h2>
@@ -415,12 +402,12 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   </span>
                 </h2>
               </div>
-              <div className={`transform transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <div>
                 <p className="text-lg sm:text-xl text-gray-300 mb-6 md:mb-8 leading-relaxed">
                 Master data and AI with ARIS — your gateway to expert-led training and consulting. Learn faster, grow smarter, and transform your business with practical analytics skills and real-world AI integration.
                 </p>
               </div>
-              <div className={`flex flex-col sm:flex-row gap-4 transform transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <div className="flex flex-col sm:flex-row gap-4">
                 <button onClick={onNavigateContact} className="group bg-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-orange-700 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center">
                   Get Started
                   <ArrowRight className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
@@ -433,7 +420,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
             </div>
 
             {/* Quote - Mobile: Below buttons */}
-            <div className={`transform transition-all duration-1000 delay-600 order-2 md:hidden ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div className="order-2 md:hidden">
               <div className="flex justify-center mb-6">
                 <div className="relative text-center">
                   <div 
@@ -492,7 +479,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
             </div>
 
             {/* Right Side - Dynamic Logo */}
-            <div className={`transform transition-all duration-1000 delay-700 order-3 md:order-2 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div className="order-3 md:order-2">
               <div className="relative flex justify-center">
                 {/* Quote - Desktop: Above logo */}
                 <div className="hidden md:block absolute -top-40 left-1/2 transform -translate-x-1/2 z-20 text-center">
@@ -713,7 +700,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 sm:py-20 bg-gray-900 relative overflow-hidden">
+      <section id="about" className="py-16 sm:py-20 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-900/20 to-transparent"></div>
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
@@ -771,8 +758,11 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
         </div>
       </section>
 
+      {/* Product Teaser Section - placed right after About */}
+      <ProductTeaser />
+
       {/* Training Section */}
-      <section id="training" className="py-16 sm:py-20 bg-gray-800 relative overflow-hidden">
+      <section id="training" className="py-16 sm:py-20 bg-gradient-to-b from-gray-950 to-gray-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-900/10 to-transparent"></div>
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="text-center mb-12 sm:mb-16">
@@ -824,7 +814,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
 
 
       {/* Services Section */}
-      <section id="services" className="py-16 sm:py-20 bg-black relative overflow-hidden">
+      <section id="services" className="py-16 sm:py-20 bg-gradient-to-b from-gray-900 to-gray-950 relative overflow-hidden">
         {/* Sophisticated Grid Background */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0" style={{
@@ -883,7 +873,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
       </section>
 
       {/* Business Launchpad Section */}
-      <section id="business-launchpad" className="py-16 sm:py-20 bg-gradient-to-br from-black via-gray-900 to-gray-800 relative overflow-hidden">
+      <section id="business-launchpad" className="py-16 sm:py-20 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 relative overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute inset-0" style={{
             backgroundImage: `
@@ -1043,7 +1033,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
       </section>
 
       {/* Blog Section */}
-      <section id="blog" className="py-16 sm:py-20 bg-gradient-to-br from-gray-900 to-black relative overflow-hidden">
+      <section id="blog" className="py-16 sm:py-20 bg-gradient-to-br from-gray-950 to-gray-900 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0" style={{
             backgroundImage: `
@@ -1216,7 +1206,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-16 sm:py-20 bg-gradient-to-br from-gray-800 to-black">
+      <section id="contact" className="py-16 sm:py-20 bg-gradient-to-br from-gray-900 to-gray-950">
         <div className="max-w-6xl mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-10 sm:mb-12">
@@ -1380,7 +1370,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
       </section>
 
       {/* Footer */}
-      <footer className="bg-black text-white py-16 relative overflow-hidden">
+      <footer className="bg-gray-950 text-white py-16 relative overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 bg-gradient-to-r from-orange-900/20 via-orange-800/10 to-transparent"></div>
         <div className="absolute inset-0 opacity-10">
@@ -1693,4 +1683,4 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
   );
 };
 
-export default Home;
+export default React.memo(Home);
