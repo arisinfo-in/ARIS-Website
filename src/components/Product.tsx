@@ -23,15 +23,13 @@ const Product: React.FC = () => {
             A complete learning and practice environment for AI-driven data analytics.
           </p>
           <div className="mt-8 rounded-2xl overflow-hidden border border-gray-700 bg-black">
-            <video
-              controls
-              playsInline
-              preload="metadata"
-              poster="/poster-aris-intro.jpg"
+            <iframe
+              src="https://www.youtube.com/embed/BN36xYagafc"
+              title="ARIS Product Tour"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
               className="w-full aspect-video"
-            >
-              <source src="/aris-intro.mp4" type="video/mp4" />
-            </video>
+            ></iframe>
           </div>
         </div>
       </section>

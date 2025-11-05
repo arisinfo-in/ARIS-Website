@@ -2,9 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 
 const ProductTeaser: React.FC = () => {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [isIntersecting, setIsIntersecting] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const [counters, setCounters] = useState({ users: 0, modules: 0, tools: 0 });
@@ -14,25 +12,7 @@ const ProductTeaser: React.FC = () => {
   const ctaTargetRef = useRef<HTMLDivElement | null>(null);
   const floatingBtnRef = useRef<HTMLAnchorElement | null>(null);
   const [inSectionView, setInSectionView] = useState(false);
-
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!el) return;
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        setIsIntersecting(entry.isIntersecting);
-        if (entry.isIntersecting) {
-          el.play().catch(() => {});
-        } else {
-          el.pause();
-        }
-      },
-      { threshold: 0.35 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  const [isVisible, setIsVisible] = useState(false);
 
   // Section-level parallax like hero
   useEffect(() => {
@@ -97,9 +77,21 @@ const ProductTeaser: React.FC = () => {
     };
   }, [inSectionView, mousePosition]);
 
+  // Animate counters when section is visible
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.35 }
+    );
+    if (sectionMainRef.current) obs.observe(sectionMainRef.current);
+    return () => obs.disconnect();
+  }, []);
+
   // Animate counters when visible
   useEffect(() => {
-    if (!isIntersecting) return;
+    if (!isVisible) return;
     let raf = 0;
     const duration = 900;
     const start = performance.now();
@@ -116,7 +108,7 @@ const ProductTeaser: React.FC = () => {
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [isIntersecting]);
+  }, [isVisible]);
 
   // Subtle 3D tilt on mouse move
   useEffect(() => {
@@ -187,19 +179,13 @@ const ProductTeaser: React.FC = () => {
           <div className="absolute inset-0 rounded-2xl bg-gray-800/40 border border-gray-700/50 translate-x-6 translate-y-6 -z-10"></div>
           <div className="absolute -inset-1 bg-gradient-to-r from-orange-600 to-orange-400 rounded-2xl blur opacity-30 group-hover:opacity-60 transition"></div>
           <div className="relative bg-gray-800 rounded-2xl overflow-hidden border border-gray-700">
-            <video
-              ref={videoRef}
-              playsInline
-              muted
-              loop
-              controls
-              preload="metadata"
-              poster="/poster-aris-intro.jpg"
+            <iframe
+              src="https://www.youtube.com/embed/BN36xYagafc"
+              title="ARIS Product Introduction"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
               className="w-full aspect-video"
-            >
-              <source src="/aris-intro.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            ></iframe>
             {/* Subtle overlay cue */}
             <div className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 to-transparent transition-opacity ${hovered ? 'opacity-0' : 'opacity-100'}`}></div>
             {/* Floating hint badge */}
