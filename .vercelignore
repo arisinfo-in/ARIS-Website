@@ -4,9 +4,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Production build
-dist
-
 # Environment variables
 .env
 .env.local
@@ -32,3 +29,27 @@ coverage
 # Misc
 *.log
 .cache
+
+# Large video/media files (not needed for deployment)
+*.mp4
+*.mov
+*.avi
+ARIS Intro Video.mp4
+public/aris-intro.mp4
+
+# Backend source (only dist is needed if deployed separately)
+backend/src
+backend/tsconfig.json
+backend/node_modules
+
+# Development files
+anaconda_projects
+*.pdf
+*.md
+!README.md
+
+# Test files
+test-*.js
+test-*.sh
+api/test-*.js
+api/debug.js
