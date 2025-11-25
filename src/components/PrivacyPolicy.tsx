@@ -198,8 +198,8 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({
                 </p>
                 <div className="bg-gray-700/50 rounded-lg p-4">
                   <p className="text-gray-300">
-                    <strong>Email:</strong> arisinfo.in@gmail.com<br/>
-                    <strong>Phone:</strong> +91 8374316403<br/>
+                    <strong>Email:</strong> contact@arisinfo.in<br/>
+                    <strong>Phone:</strong> +91 8790955213<br/>
                     <strong>Location:</strong> Hyderabad, India
                   </p>
                 </div>

@@ -1227,7 +1227,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                     </div>
                     <div>
                       <div className="font-medium text-white text-sm sm:text-base">Email</div>
-                      <div className="text-gray-400 text-xs sm:text-sm">arisinfo.in@gmail.com</div>
+                      <div className="text-gray-400 text-xs sm:text-sm">contact@arisinfo.in</div>
                     </div>
                   </div>
                   <div className="flex items-center group hover:bg-gray-700 hover:shadow-md rounded-lg p-3 sm:p-4 transition-all duration-300 cursor-pointer">
@@ -1236,7 +1236,7 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                     </div>
                     <div>
                       <div className="font-medium text-white text-sm sm:text-base">Phone</div>
-                      <div className="text-gray-400 text-xs sm:text-sm">+91 8374316403</div>
+                      <div className="text-gray-400 text-xs sm:text-sm">+91 8790955213</div>
                     </div>
                   </div>
                   <div className="flex items-center group hover:bg-gray-700 hover:shadow-md rounded-lg p-3 sm:p-4 transition-all duration-300 cursor-pointer">
@@ -1399,13 +1399,13 @@ const Home: React.FC<HomeProps> = ({ onNavigateAbout, onNavigateContact, onNavig
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Mail className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">arisinfo.in@gmail.com</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">contact@arisinfo.in</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91 8374316403</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91 8790955213</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">

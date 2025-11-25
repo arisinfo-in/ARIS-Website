@@ -1029,13 +1029,13 @@ const Services: React.FC<ServicesProps> = ({ onNavigateHome, onNavigateAbout, on
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Mail className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">arisinfo.in@gmail.com</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">contact@arisinfo.in</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91 8374316403</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91 8790955213</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">

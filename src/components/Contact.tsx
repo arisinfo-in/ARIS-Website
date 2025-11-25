@@ -196,14 +196,14 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
       icon: Phone,
       title: "Call Us Anytime",
       subtitle: "we're here whenever you need us.",
-      info: "+91 8374316403",
+      info: "+91 8790955213",
       color: "from-orange-500 to-orange-600"
     },
     {
       icon: Mail,
       title: "Email Us Directly", 
       subtitle: "we're here whenever you need us.",
-      info: "arisinfo.in@gmail.com",
+      info: "contact@arisinfo.in",
       color: "from-orange-500 to-orange-600"
     },
     {
@@ -433,7 +433,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                   <div className="text-orange-500 font-medium text-lg">
                     {method.title === "Live Chat Support" ? (
                       <a 
-                        href="https://wa.me/+918374316403" 
+                        href="https://wa.me/+918790955213" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="hover:text-orange-400 transition-colors duration-300 cursor-pointer"
@@ -664,7 +664,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                     </div>
                     <div>
                       <div className="font-medium text-white mb-1">Email Address</div>
-                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">arisinfo.in@gmail.com</div>
+                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">contact@arisinfo.in</div>
                       <div className="text-orange-500 text-sm mt-1">Response within 24 hours</div>
                     </div>
                   </div>
@@ -675,7 +675,7 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                     </div>
                     <div>
                       <div className="font-medium text-white mb-1">Phone Number</div>
-                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">+91 8374316403</div>
+                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">+91 8790955213</div>
                       <div className="text-orange-500 text-sm mt-1">Available 9 AM - 6 PM PST</div>
                     </div>
                   </div>
@@ -817,13 +817,13 @@ const Contact: React.FC<ContactProps> = ({ onNavigateHome, onNavigateAbout, onNa
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Mail className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">arisinfo.in@gmail.com</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">contact@arisinfo.in</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
                     <Phone className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors duration-300" />
                   </div>
-                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91 8374316403</span>
+                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300 text-sm">+91 8790955213</span>
                 </div>
                 <div className="flex items-center space-x-3 group cursor-pointer">
                   <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center group-hover:bg-orange-600 transition-all duration-300">
