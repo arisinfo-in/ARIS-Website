@@ -4,6 +4,7 @@ import {
   Brain, Zap
 } from 'lucide-react';
 import { apiService } from '../services/api';
+import { getBrochureUrl } from '../services/firebase';
 
 interface BrochureDownloadModalProps {
   isOpen: boolean;
@@ -43,6 +44,9 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [brochureUrls, setBrochureUrls] = useState<Record<string, string>>({});
+  const [isLoadingUrl, setIsLoadingUrl] = useState(false);
+  const [urlError, setUrlError] = useState<string | null>(null);
 
   // Brochure configurations
   const brochures: BrochureInfo[] = [
@@ -88,6 +92,36 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
   ];
 
   const currentBrochure = brochures.find(b => b.id === selectedBrochure) || brochures[0];
+
+  // Fetch brochure URL from Firebase Storage when brochure is selected or modal opens
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const fetchBrochureUrl = async () => {
+      // Check if URL is already cached
+      if (brochureUrls[selectedBrochure]) {
+        console.log('[BROCHURE] Using cached URL for:', selectedBrochure);
+        return;
+      }
+
+      setIsLoadingUrl(true);
+      setUrlError(null);
+      
+      try {
+        console.log('[BROCHURE] Fetching URL from Firebase Storage for:', selectedBrochure);
+        const url = await getBrochureUrl(selectedBrochure);
+        setBrochureUrls(prev => ({ ...prev, [selectedBrochure]: url }));
+        console.log('[BROCHURE] URL fetched successfully:', url);
+      } catch (error) {
+        console.error('[BROCHURE] Error fetching URL from Firebase:', error);
+        setUrlError(`Failed to load brochure. Please try again.`);
+      } finally {
+        setIsLoadingUrl(false);
+      }
+    };
+
+    fetchBrochureUrl();
+  }, [isOpen, selectedBrochure, brochureUrls]);
 
   // Handle escape key and mouse tracking
   useEffect(() => {
@@ -206,30 +240,29 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
 
   // Handle brochure download
   const handleDownload = async () => {
-    // Use absolute URL to ensure proper file serving on Vercel
-    const fileUrl = `${window.location.origin}/${encodeURI(currentBrochure.file)}`;
-    // #region agent log
-    console.log('[BROCHURE DEBUG] Download triggered:', {fileUrl, originalFile: currentBrochure.file, encodedFile: encodeURI(currentBrochure.file), origin: window.location.origin});
-    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:196',message:'Download triggered',data:{fileUrl,originalFile:currentBrochure.file,encodedFile:encodeURI(currentBrochure.file),origin:window.location.origin},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-    // #endregion
+    // Get URL from Firebase Storage
+    let fileUrl = brochureUrls[selectedBrochure];
     
-    // Verify file exists before attempting download
-    try {
-      const response = await fetch(fileUrl, { method: 'HEAD' });
-      // #region agent log
-      console.log('[BROCHURE DEBUG] File check response:', {status: response.status, statusText: response.statusText, headers: Object.fromEntries(response.headers.entries())});
-      fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:202',message:'File check response',data:{status:response.status,statusText:response.statusText,contentType:response.headers.get('content-type')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
-      
-      if (!response.ok) {
-        console.error('[BROCHURE DEBUG] File not found:', fileUrl, response.status);
-        alert(`Brochure file not found. Please contact support. (Status: ${response.status})`);
+    if (!fileUrl) {
+      console.log('[BROCHURE] URL not cached, fetching from Firebase...');
+      setIsLoadingUrl(true);
+      try {
+        fileUrl = await getBrochureUrl(selectedBrochure);
+        setBrochureUrls(prev => ({ ...prev, [selectedBrochure]: fileUrl }));
+      } catch (error) {
+        console.error('[BROCHURE] Error fetching URL:', error);
+        alert('Failed to load brochure. Please try again or contact support.');
+        setIsLoadingUrl(false);
         return;
+      } finally {
+        setIsLoadingUrl(false);
       }
-    } catch (error) {
-      console.error('[BROCHURE DEBUG] File check failed:', error);
-      // Continue with download attempt anyway
     }
+
+    // #region agent log
+    console.log('[BROCHURE DEBUG] Download triggered:', {fileUrl, brochureId: selectedBrochure, originalFile: currentBrochure.file});
+    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:208',message:'Download triggered',data:{fileUrl,brochureId:selectedBrochure,originalFile:currentBrochure.file},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
     
     const link = document.createElement('a');
     link.href = fileUrl;
@@ -246,30 +279,29 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
 
   // Handle brochure view
   const handleView = async () => {
-    // Use absolute URL to ensure proper file serving on Vercel
-    const fileUrl = `${window.location.origin}/${encodeURI(currentBrochure.file)}`;
-    // #region agent log
-    console.log('[BROCHURE DEBUG] View triggered:', {fileUrl, originalFile: currentBrochure.file, encodedFile: encodeURI(currentBrochure.file), origin: window.location.origin});
-    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:209',message:'View triggered',data:{fileUrl,originalFile:currentBrochure.file,encodedFile:encodeURI(currentBrochure.file),origin:window.location.origin},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-    // #endregion
+    // Get URL from Firebase Storage
+    let fileUrl = brochureUrls[selectedBrochure];
     
-    // Verify file exists before opening
-    try {
-      const response = await fetch(fileUrl, { method: 'HEAD' });
-      // #region agent log
-      console.log('[BROCHURE DEBUG] View file check:', {status: response.status, statusText: response.statusText, contentType: response.headers.get('content-type')});
-      fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:216',message:'View file check response',data:{status:response.status,statusText:response.statusText,contentType:response.headers.get('content-type')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
-      
-      if (!response.ok) {
-        console.error('[BROCHURE DEBUG] File not found for view:', fileUrl, response.status);
-        alert(`Brochure file not found. Please contact support. (Status: ${response.status})`);
+    if (!fileUrl) {
+      console.log('[BROCHURE] URL not cached, fetching from Firebase...');
+      setIsLoadingUrl(true);
+      try {
+        fileUrl = await getBrochureUrl(selectedBrochure);
+        setBrochureUrls(prev => ({ ...prev, [selectedBrochure]: fileUrl }));
+      } catch (error) {
+        console.error('[BROCHURE] Error fetching URL:', error);
+        alert('Failed to load brochure. Please try again or contact support.');
+        setIsLoadingUrl(false);
         return;
+      } finally {
+        setIsLoadingUrl(false);
       }
-    } catch (error) {
-      console.error('[BROCHURE DEBUG] View file check failed:', error);
-      // Continue with view attempt anyway
     }
+
+    // #region agent log
+    console.log('[BROCHURE DEBUG] View triggered:', {fileUrl, brochureId: selectedBrochure, originalFile: currentBrochure.file});
+    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:248',message:'View triggered',data:{fileUrl,brochureId:selectedBrochure,originalFile:currentBrochure.file},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
     
     window.open(fileUrl, '_blank');
   };
@@ -282,6 +314,8 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
       setFormErrors({});
       setIsFormSubmitted(false);
       setIsSubmitting(false);
+      setUrlError(null);
+      // Keep brochureUrls cached for better performance
     }
   }, [isOpen]);
 
@@ -554,22 +588,53 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
                 </p>
               </div>
 
+              {/* Error Message */}
+              {urlError && (
+                <div className="bg-red-600/20 border border-red-500/50 rounded-lg p-3">
+                  <p className="text-red-400 text-sm text-center">{urlError}</p>
+                </div>
+              )}
+
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2 justify-center">
                 <button
                   onClick={handleDownload}
-                  className={`group bg-gradient-to-r ${currentBrochure.gradient} text-white px-6 py-2.5 rounded-lg font-semibold hover:from-${currentBrochure.color}-700 hover:to-${currentBrochure.color}-800 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center text-sm`}
+                  disabled={isLoadingUrl}
+                  className={`group bg-gradient-to-r ${currentBrochure.gradient} text-white px-6 py-2.5 rounded-lg font-semibold hover:from-${currentBrochure.color}-700 hover:to-${currentBrochure.color}-800 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center text-sm ${
+                    isLoadingUrl ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download PDF
+                  {isLoadingUrl ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Loading...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-4 h-4 mr-2" />
+                      Download PDF
+                    </>
+                  )}
                 </button>
                 
                 <button
                   onClick={handleView}
-                  className="group bg-gray-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center text-sm"
+                  disabled={isLoadingUrl}
+                  className={`group bg-gray-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center text-sm ${
+                    isLoadingUrl ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
-                  <Eye className="w-4 h-4 mr-2" />
-                  View Online
+                  {isLoadingUrl ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Loading...
+                    </>
+                  ) : (
+                    <>
+                      <Eye className="w-4 h-4 mr-2" />
+                      View Online
+                    </>
+                  )}
                 </button>
               </div>
 

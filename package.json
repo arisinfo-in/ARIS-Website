@@ -20,7 +20,8 @@
     "start:full": "concurrently \"npm run preview\" \"npm run backend:start\"",
     "analyze": "node analyze-bundle.js",
     "audit": "npm audit",
-    "audit:fix": "npm audit fix"
+    "audit:fix": "npm audit fix",
+    "upload-brochures": "node upload-brochures.js"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -53,6 +54,7 @@
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",
+    "firebase-admin": "^13.6.0",
     "globals": "^15.9.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
