@@ -4,6 +4,9 @@ import axios from 'axios';
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? '' // Use same domain as frontend (Vercel will handle routing)
   : 'http://localhost:5001';
+// #region agent log
+fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:6',message:'API base URL configured',data:{apiBaseUrl:API_BASE_URL,nodeEnv:process.env.NODE_ENV,origin:typeof window!=='undefined'?window.location.origin:'server'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+// #endregion
 
 // Create axios instance with default config
 const api = axios.create({
@@ -101,8 +104,21 @@ export const apiService = {
 
   // Contact form submission
   async submitContactForm(data: ContactFormData): Promise<ApiResponse> {
-    const response = await api.post('/api/contact', data);
-    return response.data;
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:103',message:'API call started',data:{endpoint:'/api/contact',baseUrl:api.defaults.baseURL,source:data.source},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+    // #endregion
+    try {
+      const response = await api.post('/api/contact', data);
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:106',message:'API call succeeded',data:{status:response.status,success:response.data.success},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
+      return response.data;
+    } catch (error: any) {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'api.ts:110',message:'API call failed',data:{errorMessage:error?.message,status:error?.response?.status,statusText:error?.response?.statusText,responseData:error?.response?.data},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
+      throw error;
+    }
   },
 
   // Newsletter subscription

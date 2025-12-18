@@ -30,11 +30,17 @@ function AppContent() {
   // First-time visitor detection and brochure modal
   useEffect(() => {
     const hasVisitedBefore = localStorage.getItem('aris-visited');
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.tsx:32',message:'Brochure modal check',data:{hasVisitedBefore:!!hasVisitedBefore,origin:typeof window!=='undefined'?window.location.origin:'server'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     
     if (!hasVisitedBefore) {
       // Show brochure modal after a short delay for better UX
       const timer = setTimeout(() => {
         setIsBrochureModalOpen(true);
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.tsx:37',message:'Brochure modal opened automatically',data:{origin:typeof window!=='undefined'?window.location.origin:'server'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
         // Mark as visited so it doesn't show again
         localStorage.setItem('aris-visited', 'true');
       }, 2000); // 2 second delay

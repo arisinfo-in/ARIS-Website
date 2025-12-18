@@ -30,6 +30,9 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
   isOpen, 
   onClose 
 }) => {
+  // #region agent log
+  if (isOpen) fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:33',message:'Modal opened',data:{isOpen,origin:window.location.origin,pathname:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+  // #endregion
   const [selectedBrochure, setSelectedBrochure] = useState<BrochureType>('data-analytics');
   const [formData, setFormData] = useState({
     name: '',
@@ -167,6 +170,9 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
     }
 
     // Send data to backend API
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:172',message:'Form submission started',data:{formData,brochure:currentBrochure.title,apiBaseUrl:process.env.NODE_ENV==='production'?'':`http://localhost:5001`},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+    // #endregion
     try {
       // Send contact form data with brochure source
       const response = await apiService.submitContactForm({
@@ -177,6 +183,9 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
         message: `Requested to download ${currentBrochure.title} Brochure`,
         source: 'brochure'
       });
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:181',message:'Form submission response received',data:{success:response.success,message:response.message,hasData:!!response.data},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
       
       if (response.success) {
         setIsFormSubmitted(true);
@@ -185,6 +194,9 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
       }
     } catch (error) {
       console.error('Error submitting brochure request:', error);
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:187',message:'Form submission error',data:{errorMessage:error instanceof Error?error.message:String(error),errorStack:error instanceof Error?error.stack:undefined},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
       // Still show success to user, but log the error
       setIsFormSubmitted(true);
     } finally {
@@ -193,18 +205,73 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
   };
 
   // Handle brochure download
-  const handleDownload = () => {
+  const handleDownload = async () => {
+    // Use absolute URL to ensure proper file serving on Vercel
+    const fileUrl = `${window.location.origin}/${encodeURI(currentBrochure.file)}`;
+    // #region agent log
+    console.log('[BROCHURE DEBUG] Download triggered:', {fileUrl, originalFile: currentBrochure.file, encodedFile: encodeURI(currentBrochure.file), origin: window.location.origin});
+    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:196',message:'Download triggered',data:{fileUrl,originalFile:currentBrochure.file,encodedFile:encodeURI(currentBrochure.file),origin:window.location.origin},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
+    
+    // Verify file exists before attempting download
+    try {
+      const response = await fetch(fileUrl, { method: 'HEAD' });
+      // #region agent log
+      console.log('[BROCHURE DEBUG] File check response:', {status: response.status, statusText: response.statusText, headers: Object.fromEntries(response.headers.entries())});
+      fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:202',message:'File check response',data:{status:response.status,statusText:response.statusText,contentType:response.headers.get('content-type')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
+      
+      if (!response.ok) {
+        console.error('[BROCHURE DEBUG] File not found:', fileUrl, response.status);
+        alert(`Brochure file not found. Please contact support. (Status: ${response.status})`);
+        return;
+      }
+    } catch (error) {
+      console.error('[BROCHURE DEBUG] File check failed:', error);
+      // Continue with download attempt anyway
+    }
+    
     const link = document.createElement('a');
-    link.href = `/${currentBrochure.file}`;
+    link.href = fileUrl;
     link.download = currentBrochure.file;
+    link.target = '_blank';
     document.body.appendChild(link);
     link.click();
+    // #region agent log
+    console.log('[BROCHURE DEBUG] Download link clicked:', {fileUrl});
+    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:220',message:'Download link clicked',data:{fileUrl},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
     document.body.removeChild(link);
   };
 
   // Handle brochure view
-  const handleView = () => {
-    window.open(`/${currentBrochure.file}`, '_blank');
+  const handleView = async () => {
+    // Use absolute URL to ensure proper file serving on Vercel
+    const fileUrl = `${window.location.origin}/${encodeURI(currentBrochure.file)}`;
+    // #region agent log
+    console.log('[BROCHURE DEBUG] View triggered:', {fileUrl, originalFile: currentBrochure.file, encodedFile: encodeURI(currentBrochure.file), origin: window.location.origin});
+    fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:209',message:'View triggered',data:{fileUrl,originalFile:currentBrochure.file,encodedFile:encodeURI(currentBrochure.file),origin:window.location.origin},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
+    
+    // Verify file exists before opening
+    try {
+      const response = await fetch(fileUrl, { method: 'HEAD' });
+      // #region agent log
+      console.log('[BROCHURE DEBUG] View file check:', {status: response.status, statusText: response.statusText, contentType: response.headers.get('content-type')});
+      fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:216',message:'View file check response',data:{status:response.status,statusText:response.statusText,contentType:response.headers.get('content-type')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
+      
+      if (!response.ok) {
+        console.error('[BROCHURE DEBUG] File not found for view:', fileUrl, response.status);
+        alert(`Brochure file not found. Please contact support. (Status: ${response.status})`);
+        return;
+      }
+    } catch (error) {
+      console.error('[BROCHURE DEBUG] View file check failed:', error);
+      // Continue with view attempt anyway
+    }
+    
+    window.open(fileUrl, '_blank');
   };
 
   // Reset form when modal closes
@@ -217,6 +284,21 @@ const BrochureDownloadModal: React.FC<BrochureDownloadModalProps> = ({
       setIsSubmitting(false);
     }
   }, [isOpen]);
+
+  // #region agent log
+  useEffect(() => {
+    if (isOpen) {
+      console.log('[BROCHURE DEBUG] Modal render check:', {
+        isOpen,
+        selectedBrochure,
+        currentFile: currentBrochure.file,
+        origin: window.location.origin,
+        isProduction: process.env.NODE_ENV === 'production'
+      });
+      fetch('http://127.0.0.1:7242/ingest/67342be6-0439-4144-a28e-3e3b2f7d386f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BrochureDownloadModal.tsx:221',message:'Modal rendered',data:{isOpen,selectedBrochure,currentFile:currentBrochure.file,origin:window.location.origin,isProduction:process.env.NODE_ENV==='production'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    }
+  }, [isOpen, selectedBrochure, currentBrochure.file]);
+  // #endregion
 
   if (!isOpen) return null;
 
